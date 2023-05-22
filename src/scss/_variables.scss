@@ -1,0 +1,51 @@
+// THEME SWITCHER
+:root[data-theme="light"] {
+  --color-basic: #fff;
+  --color-background: #f4f7fd;
+  --color-text: #000112;
+  --color-column: #ecf2fb;
+  --color-btn: #efeff9;
+  --color-checkbox: #dbd7f1;
+  --color-dropdown: #fff;
+  --color-skeleton-1: #e4ebfa;
+  --color-skeleton-2: #f4f7fd;
+}
+
+:root[data-theme="dark"] {
+  --color-basic: #2b2c37;
+  --color-background: #20212c;
+  --color-text: #fff;
+  --color-column: #22242e;
+  --color-btn: #fff;
+  --color-checkbox: #39395b;
+  --color-dropdown: #20212c;
+
+  --color-skeleton-1: #3e3f4e;
+  --color-skeleton-2: #474856;
+}
+
+// COLOR VARIABLES
+$color-primary: #635fc7;
+$color-primary-light-1: #a8a4ff;
+$color-primary-light-2: #f4f7fd;
+
+$color-white: #fff;
+$color-black: #000112;
+
+$color-grey-dark-1: #20212c;
+$color-grey-dark-2: #2b2c37;
+$color-grey-dark-3: #3e3f4e;
+$color-grey-light-1: #828fa3;
+$color-grey-light-2: #e4ebfa;
+
+$color-warning: #ea5555;
+$color-warning-light: #ff9898;
+
+// FONT VARIABLES
+$font-primary: "Plus Jakarta Sans", sans-serif;
+
+// SCREEN SIZE
+$size-tablet-1: 850px;
+$size-tablet-2: 700px;
+$size-mobile-1: 670px;
+$size-mobile-2: 515px;

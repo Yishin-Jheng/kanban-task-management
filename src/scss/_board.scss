@@ -1,0 +1,137 @@
+main {
+  @extend %scrollbar;
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  width: 100%;
+  height: calc(100vh - 97px);
+  background-color: var(--color-background);
+  overflow-x: scroll;
+  transition: all 0.3s;
+}
+
+.board {
+  position: relative;
+  width: max-content;
+  height: calc(100% - 4rem);
+  margin: 2.4rem 2.4rem 1.6rem 2.4rem;
+}
+
+.empty {
+  position: absolute;
+  top: 50%;
+  width: calc(100vw - 300px);
+  margin: 0 auto;
+
+  display: flex;
+  gap: 3rem;
+  flex-direction: column;
+  align-items: center;
+  transform: translateY(-50%);
+
+  &__title {
+    @extend %heading-l;
+    color: $color-grey-light-1;
+  }
+}
+
+.column {
+  height: 100%;
+
+  &__container {
+    height: 100%;
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  &__status {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+
+    &__icon {
+      width: 15px;
+      height: 15px;
+      border-radius: 100%;
+    }
+
+    &__title {
+      @extend %heading-s;
+    }
+  }
+
+  &__block {
+    @extend %scrollbar;
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    height: calc(100% - 39px);
+    padding-right: 5px;
+    list-style: none;
+    overflow-y: scroll;
+  }
+
+  &__create {
+    @extend %heading-xl;
+
+    width: 300px;
+    height: calc(100% - 39px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: $color-grey-light-1;
+    border-radius: 5px;
+    background-color: var(--color-column);
+    transition: all 0.3s;
+    cursor: pointer;
+
+    &:hover {
+      color: $color-primary;
+    }
+  }
+}
+
+.task {
+  width: 28rem;
+  padding: 2.3rem 1.6rem;
+  border-radius: 5px;
+  background-color: var(--color-basic);
+  box-shadow: 0 5px 5px rgba($color-black, 0.05);
+  transition: all 0.3s;
+  cursor: pointer;
+
+  &:hover > &__description {
+    color: $color-primary;
+  }
+
+  &:not(:last-child) {
+    margin-bottom: 2rem;
+  }
+
+  &:last-child {
+    margin-bottom: 1rem;
+  }
+
+  &__description {
+    @extend %heading-m;
+    color: var(--color-text);
+    margin-bottom: 8px;
+    transition: all 0.3s;
+  }
+
+  &__subtasks {
+    @extend %body-m;
+    color: $color-grey-light-1;
+  }
+}
+
+@media only screen and (max-width: $size-mobile-1) {
+  main {
+    height: calc(100vh - 64px);
+  }
+}
