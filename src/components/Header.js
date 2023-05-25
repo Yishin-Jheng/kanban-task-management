@@ -1,4 +1,4 @@
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { setModal } from "../store";
 import DotMenu from "./small-components/DotMenu";
 import Skeleton from "./small-components/Skeleton";
@@ -6,6 +6,9 @@ import logoMin from "../assets/logo-mobile.svg";
 
 function Header({ isMobile, sidebarHidden, handleHidden }) {
   const dispatch = useDispatch();
+  const { data: boardsData, activeBoardId } = useSelector((state) => {
+    return state.boards;
+  });
   const modalAddTask = () => {
     dispatch(
       setModal({
@@ -48,8 +51,16 @@ function Header({ isMobile, sidebarHidden, handleHidden }) {
     <header className="header">
       {isMobile ? <img src={logoMin} alt="mobile version logo" /> : null}
 
-      {/* <Skeleton times={1} className="skeleton__outer--title" /> */}
-      <span className="header__title">Platform Launch</span>
+      {boardsData.length ? (
+        <span className="header__title">
+          {
+            boardsData.filter((board) => board.id === activeBoardId)[0]
+              .boardName
+          }
+        </span>
+      ) : (
+        <Skeleton times={1} className="skeleton__outer--title" />
+      )}
 
       {isMobile ? (
         <div className="header__sidebar-btn" onClick={handleHidden}>

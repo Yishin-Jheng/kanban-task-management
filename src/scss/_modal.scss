@@ -80,6 +80,7 @@
     border-radius: 5px;
     background-color: var(--color-background);
     transition: all 0.3s;
+    pointer-events: none;
 
     &:not(:last-child) {
       margin-bottom: 8px;
@@ -96,6 +97,7 @@
     align-items: center;
     position: relative;
     cursor: pointer;
+    pointer-events: auto;
 
     p {
       @extend %body-m;

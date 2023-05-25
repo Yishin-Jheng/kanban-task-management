@@ -22,6 +22,7 @@ function TaskDetailModal() {
       <div className="subtask">
         <span className="modal__subtitle">Subtasks (2 of 3)</span>
 
+        {/* TODO: if there is no subtask, we should show some message */}
         <CheckBox
           itemObj={{
             id: 1,

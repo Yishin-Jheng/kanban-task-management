@@ -1,13 +1,12 @@
-import { useState } from "react";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useThunk } from "../hooks/useThunk";
-import { fetchBoards } from "../store";
+import { fetchBoards, setActiveBoard } from "../store";
 import Skeleton from "./small-components/Skeleton";
 
 function BoardsList() {
-  const [activeId, setActiveId] = useState(1);
-  const { data: boardsData } = useSelector((state) => {
+  const dispatch = useDispatch();
+  const { data: boardsData, activeBoardId } = useSelector((state) => {
     return state.boards;
   });
   const [doFetchBoards, isLoadingBoards, loadingBoardsError] =
@@ -15,10 +14,6 @@ function BoardsList() {
 
   useEffect(() => {
     doFetchBoards();
-
-    if (boardsData[0]) {
-      setActiveId(boardsData[0].id);
-    }
   }, [doFetchBoards]);
 
   if (isLoadingBoards) {
@@ -31,11 +26,11 @@ function BoardsList() {
         return (
           <li
             key={board.id}
-            className={`boards__list__item boards__list__item--${
-              activeId === board.id ? "active" : ""
+            className={`boards__list__item ${
+              activeBoardId === board.id ? "boards__list__item--active" : ""
             }`}
             onClick={() => {
-              setActiveId(board.id);
+              dispatch(setActiveBoard(board.id));
             }}
           >
             <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">

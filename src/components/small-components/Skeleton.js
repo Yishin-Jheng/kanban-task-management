@@ -1,5 +1,5 @@
 function Skeleton({ times, className }) {
-  const loadingboxes = Array(times)
+  const loadingBoxes = Array(times)
     .fill(0)
     .map((_, i) => {
       return (
@@ -9,7 +9,7 @@ function Skeleton({ times, className }) {
       );
     });
 
-  return loadingboxes;
+  return loadingBoxes;
 }
 
 export default Skeleton;

@@ -1,17 +1,38 @@
-import { Column, NewColumn } from "./Column";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useThunk } from "../hooks/useThunk";
+import { fetchColumns } from "../store";
+import { Column, LoadingColumn, NewColumn } from "./Column";
 
-function Board({ statusArr, taskArr }) {
+function Board({ boardId, statusArr, taskArr }) {
+  const { data: columnsData } = useSelector((state) => {
+    return state.columns;
+  });
+  const [doFetchColumns, isLoadingColumns, loadingColumnsError] =
+    useThunk(fetchColumns);
+
+  useEffect(() => {
+    // TODO: make boardId not hardcode
+    doFetchColumns({ boardId: 1 });
+  }, [doFetchColumns]);
+
+  if (isLoadingColumns) {
+    return (
+      <div className="column__container">
+        <LoadingColumn times={3} />
+      </div>
+    );
+  }
+
   return (
     <div className="column__container">
-      {statusArr.map((status) => {
+      {columnsData.map((status) => {
         return (
           <Column
             key={status.id}
             statusName={status.statusName}
             decorationColor={status.decorationColor}
-            taskArr={taskArr.filter(
-              (task) => task.status === status.statusName
-            )}
+            columnId={status.id}
           />
         );
       })}
