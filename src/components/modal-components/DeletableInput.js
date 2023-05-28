@@ -55,11 +55,13 @@ function DeletableInput({ inputArr, subTitle, btnText }) {
     <div className="input-box">
       <span className="modal__subtitle">{subTitle}</span>
 
-      {inputArr.map((obj) => {
-        return <InputItem key={obj.id} itemObj={obj} />;
-      })}
+      <div className="modal__scrollbox">
+        {inputArr.map((obj) => {
+          return <InputItem key={obj.id} itemObj={obj} />;
+        })}
 
-      {newInputJSX}
+        {newInputJSX}
+      </div>
 
       <button className="btn-medium" onClick={handleAddInput}>
         {btnText}

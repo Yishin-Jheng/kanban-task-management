@@ -43,7 +43,7 @@ function Dropdown({ selectObj }) {
           {selectObj.options.map((option) => {
             return (
               <li key={option} data-value={option}>
-                {option}
+                {option[0].toUpperCase() + option.slice(1)}
               </li>
             );
           })}

@@ -1,6 +1,6 @@
 function DeleteModal({ boardOrTask, title }) {
   return (
-    <form className="modal modal">
+    <form className="modal">
       <div className="modal__title modal__delete">
         <span>{`Delete this ${boardOrTask}?`}</span>
       </div>

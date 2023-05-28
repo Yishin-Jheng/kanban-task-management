@@ -7,6 +7,7 @@ const modalSlice = createSlice({
     whichOpen: "",
     createOrNot: true,
     deleteBoardOrTask: "",
+    detailObj: {},
   },
   reducers: {
     setModal(state, action) {

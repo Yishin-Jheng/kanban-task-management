@@ -47,6 +47,7 @@
     color: var(--color-text);
     display: flex;
     gap: 2.4rem;
+    justify-content: space-between;
     align-items: center;
   }
 
@@ -55,6 +56,22 @@
     display: inline-block;
     color: $color-grey-light-1;
     margin-bottom: 1rem;
+  }
+
+  &__scrollbox {
+    @extend %scrollbar;
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    padding: 1px;
+    max-height: 14rem;
+    margin-bottom: 1rem;
+
+    overflow-y: scroll;
   }
 
   &__content {
@@ -89,6 +106,13 @@
     &:hover {
       background-color: var(--color-checkbox);
     }
+  }
+
+  &__message {
+    @extend %body-l;
+    margin: 0.8rem 0;
+    text-align: center;
+    color: $color-grey-light-1;
   }
 
   &__checkbox {
@@ -256,7 +280,8 @@
 
     svg {
       cursor: pointer;
-      margin-left: 1.6rem;
+      margin-left: 1rem;
+      margin-right: 0.6rem;
       fill: $color-grey-light-1;
       transition: all 0.3s;
 

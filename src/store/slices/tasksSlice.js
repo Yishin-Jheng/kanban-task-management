@@ -10,8 +10,7 @@ const tasksSlice = createSlice({
   extraReducers(builder) {
     // tasks/fetch
     builder.addCase(fetchTasks.fulfilled, (state, action) => {
-      state.data = action.payload;
-      console.log(state.data);
+      state.data.push(...action.payload);
     });
     builder.addCase(fetchTasks.rejected, (state, action) => {
       state.error = action.error;

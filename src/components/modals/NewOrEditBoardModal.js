@@ -7,7 +7,7 @@ function NewOrEditBoardModal({ createOrNot, valueObj }) {
     : ["Edit Board", "Save Changes"];
 
   return (
-    <form className="modal modal" onSubmit={(e) => e.preventDefault()}>
+    <form className="modal" onSubmit={(e) => e.preventDefault()}>
       <div className="modal__title">
         <span>{title}</span>
       </div>

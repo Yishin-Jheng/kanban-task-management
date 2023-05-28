@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { setModal, closeModal } from "../store";
+import { closeModal } from "../store";
 import DeleteModal from "./modals/DeleteModal";
 import NewOrEditBoardModal from "./modals/NewOrEditBoardModal";
 import NewOrEditTaskModal from "./modals/NewOrEditTaskModal";
@@ -7,11 +7,10 @@ import TaskDetailModal from "./modals/TaskDetailModal";
 
 function Modal() {
   const dispatch = useDispatch();
-  const { isOpen, whichOpen, createOrNot, deleteBoardOrTask } = useSelector(
-    (state) => {
+  const { isOpen, whichOpen, createOrNot, deleteBoardOrTask, detailObj } =
+    useSelector((state) => {
       return state.modal;
-    }
-  );
+    });
 
   function ModalBackground() {
     return (
@@ -57,7 +56,7 @@ function Modal() {
 
   return (
     <>
-      <TaskDetailModal />
+      <TaskDetailModal detailObj={detailObj} />
       <ModalBackground />
     </>
   );

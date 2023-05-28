@@ -13,10 +13,11 @@ function Column({ statusName, decorationColor, columnId }) {
   const [doFetchTasks, isLoadingTasks, loadingTasksError] =
     useThunk(fetchTasks);
 
-  const modalTaskDetail = () => {
+  const modalTaskDetail = (taskObj) => {
     dispatch(
       setModal({
         isOpen: true,
+        detailObj: taskObj,
       })
     );
   };
@@ -58,10 +59,16 @@ function Column({ statusName, decorationColor, columnId }) {
               .filter((task) => task.columnId === columnId)
               .map((task) => {
                 return (
-                  <li key={task.id} className="task" onClick={modalTaskDetail}>
-                    <p className="task__description">{task.description}</p>
+                  <li
+                    key={task.id}
+                    className="task"
+                    onClick={() => {
+                      modalTaskDetail(task);
+                    }}
+                  >
+                    <p className="task__description">{task.title}</p>
                     <p className="task__subtasks">
-                      0 of {task.subtasksNum} subtasks
+                      {task.finishedSubNum} of {task.totalSubNum} subtasks
                     </p>
                   </li>
                 );

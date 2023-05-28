@@ -15,7 +15,6 @@ function Header({ isMobile, sidebarHidden, handleHidden }) {
         isOpen: true,
         whichOpen: "taskModal",
         createOrNot: true,
-        deleteBoardOrTask: "",
       })
     );
   };
