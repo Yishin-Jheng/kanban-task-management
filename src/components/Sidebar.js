@@ -21,6 +21,14 @@ function Sidebar({ isMobile, sidebarHidden, handleHidden }) {
       })
     );
   };
+  const testLoadingModal = () => {
+    dispatch(
+      setModal({
+        isOpen: true,
+        whichOpen: "loadingModal",
+      })
+    );
+  };
 
   const handleThemeSwitch = function () {
     if (theme === "light") {
@@ -40,7 +48,7 @@ function Sidebar({ isMobile, sidebarHidden, handleHidden }) {
 
   return (
     <aside className={sidebarHidden ? "min-sidebar__aside" : ""}>
-      <figure className="logo-img">
+      <figure className="logo-img" onClick={testLoadingModal}>
         <img src={logo} alt="logo" />
       </figure>
 

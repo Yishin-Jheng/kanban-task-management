@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import { setModal } from "../../store";
 
-function DotMenu({ position }) {
+function DotMenu({ position, detailObj }) {
   const dispatch = useDispatch();
   const inTaskModal = position === "modal";
   const modalEdit = () => {
@@ -10,6 +10,7 @@ function DotMenu({ position }) {
         isOpen: true,
         whichOpen: inTaskModal ? "taskModal" : "boardModal",
         createOrNot: false,
+        detailObj: inTaskModal ? detailObj : null,
       })
     );
   };

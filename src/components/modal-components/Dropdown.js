@@ -1,9 +1,20 @@
 import { useState } from "react";
 import { useMediaQuery } from "react-responsive";
+import { useThunk } from "../../hooks/useThunk";
+import { updateTasks } from "../../store/thunks/updateTasks";
+import { IconContext } from "react-icons";
+import { TbLoader } from "react-icons/tb";
+
+// TODO: How to make dropdown status change correctly in both TaskDetailModal and NewOrEditTaskModal?
+// 原先的計畫中，我希望在 TaskDetailModal 中只要狀態有任何更動就會立刻送出 request 給後端，但是在 NewOrEditTaskModal 中則是會在按下提交按鈕後才送 request。不過目前的 Dropdown 是沒有辦法同時滿足這兩個 modal 的需求。
 
 function Dropdown({ selectObj }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [currentStatus, setCurrentStatus] = useState(selectObj.selected);
   const isMobileTwo = useMediaQuery({ query: `(max-width: 515px)` });
+  // TODO: updating task status, and how to re-render column components?
+  const [doUpdateTasks, isLoadingTasks, loadingTasksError] =
+    useThunk(updateTasks);
 
   const handleClick = function () {
     setIsOpen(!isOpen);
@@ -30,8 +41,12 @@ function Dropdown({ selectObj }) {
             isOpen ? "status__selected--open" : ""
           }`}
         >
-          <span>{selectObj.selected}</span>
+          <span>{currentStatus[0].toUpperCase() + currentStatus.slice(1)}</span>
           <figure className="status__icon">{isOpen ? upIcon : downIcon}</figure>
+
+          {/* <IconContext.Provider value={{ size: "16px", color: "#635fc7" }}>
+            <TbLoader className="loading-icon" />
+          </IconContext.Provider> */}
         </div>
 
         <ul
@@ -42,7 +57,13 @@ function Dropdown({ selectObj }) {
         >
           {selectObj.options.map((option) => {
             return (
-              <li key={option} data-value={option}>
+              <li
+                key={option}
+                data-value={option}
+                onClick={() => {
+                  setCurrentStatus(option);
+                }}
+              >
                 {option[0].toUpperCase() + option.slice(1)}
               </li>
             );

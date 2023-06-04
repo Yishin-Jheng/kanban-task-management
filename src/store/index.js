@@ -5,6 +5,13 @@ import { columnsReducer } from "./slices/columnsSlice";
 import { tasksReducer } from "./slices/tasksSlice";
 import { subtasksReducer } from "./slices/subtasksSlice";
 import { modalReducer, setModal, closeModal } from "./slices/modalSlice";
+import {
+  formReducer,
+  setForm,
+  setListArray,
+  addListArray,
+  removeListArray,
+} from "./slices/formSlice";
 
 const store = configureStore({
   reducer: {
@@ -13,6 +20,7 @@ const store = configureStore({
     tasks: tasksReducer,
     subtasks: subtasksReducer,
     modal: modalReducer,
+    form: formReducer,
   },
 });
 
@@ -22,4 +30,14 @@ export * from "./thunks/fetchBoards";
 export * from "./thunks/fetchColumns";
 export * from "./thunks/fetchTasks";
 export * from "./thunks/fetchSubtasks";
-export { store, setActiveBoard, setModal, closeModal };
+export * from "./thunks/updateSubtasks";
+export {
+  store,
+  setActiveBoard,
+  setModal,
+  closeModal,
+  setForm,
+  setListArray,
+  addListArray,
+  removeListArray,
+};

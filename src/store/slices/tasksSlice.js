@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchTasks } from "../thunks/fetchTasks";
+import { updateTasks } from "../thunks/updateTasks";
 
 const tasksSlice = createSlice({
   name: "tasks",
@@ -13,6 +14,17 @@ const tasksSlice = createSlice({
       state.data.push(...action.payload);
     });
     builder.addCase(fetchTasks.rejected, (state, action) => {
+      state.error = action.error;
+    });
+
+    // tasks/update
+    builder.addCase(updateTasks.fulfilled, (state, action) => {
+      const taskData = state.data.find(
+        (tasks) => tasks.id === action.payload.taskId
+      );
+      taskData.columnId = action.payload.columnId;
+    });
+    builder.addCase(updateTasks.rejected, (state, action) => {
       state.error = action.error;
     });
   },

@@ -1,6 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { closeModal } from "../store";
 import DeleteModal from "./modals/DeleteModal";
+import LoadingModal from "./modals/LoadingModal";
 import NewOrEditBoardModal from "./modals/NewOrEditBoardModal";
 import NewOrEditTaskModal from "./modals/NewOrEditTaskModal";
 import TaskDetailModal from "./modals/TaskDetailModal";
@@ -12,12 +13,14 @@ function Modal() {
       return state.modal;
     });
 
-  function ModalBackground() {
+  function ModalBackground({ disable }) {
     return (
       <div
         className="modal__background"
         onClick={() => {
-          dispatch(closeModal());
+          if (!disable) {
+            dispatch(closeModal());
+          }
         }}
       ></div>
     );
@@ -39,7 +42,7 @@ function Modal() {
   if (whichOpen === "taskModal") {
     return (
       <>
-        <NewOrEditTaskModal createOrNot={createOrNot} />
+        <NewOrEditTaskModal createOrNot={createOrNot} detailObj={detailObj} />
         <ModalBackground />
       </>
     );
@@ -50,6 +53,15 @@ function Modal() {
       <>
         <DeleteModal boardOrTask={deleteBoardOrTask} />
         <ModalBackground />
+      </>
+    );
+  }
+
+  if (whichOpen === "loadingModal") {
+    return (
+      <>
+        <LoadingModal isLoading={false} />
+        <ModalBackground disable={true} />
       </>
     );
   }

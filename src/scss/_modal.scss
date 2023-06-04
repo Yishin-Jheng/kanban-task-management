@@ -8,6 +8,15 @@
   }
 }
 
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .modal {
   z-index: 99999;
   position: fixed;
@@ -190,6 +199,11 @@
 }
 
 .status {
+  &__icon {
+    display: flex;
+    align-items: center;
+  }
+
   &__container {
     position: relative;
     cursor: pointer;
@@ -198,6 +212,7 @@
   &__selected {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
     padding: 1rem 1.4rem;
 
@@ -333,6 +348,11 @@
       font-family: $font-primary;
     }
   }
+}
+
+.loading-icon {
+  flex-shrink: 0;
+  animation: rotate 2s linear infinite;
 }
 
 @media only screen and (max-width: $size-mobile-2) {

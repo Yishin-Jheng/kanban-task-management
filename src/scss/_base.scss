@@ -115,6 +115,9 @@ body {
   font-weight: 700;
   font-family: $font-primary;
 
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   border: none;
   border-radius: 999px;

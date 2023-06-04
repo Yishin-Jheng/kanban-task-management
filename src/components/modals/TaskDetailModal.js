@@ -16,12 +16,14 @@ function TaskDetailModal({ detailObj }) {
   });
   const [doFetchSubtasks, isLoadingSubtasks, loadingSubtasksError] =
     useThunk(fetchSubtasks);
+
   const modalEditTask = () => {
     dispatch(
       setModal({
         isOpen: true,
         whichOpen: "taskModal",
         createOrNot: false,
+        detailObj: detailObj,
       })
     );
   };
@@ -36,11 +38,11 @@ function TaskDetailModal({ detailObj }) {
       subtaskContent = (
         <>
           <div className="subtask__message">
-            No subtask yet. Try to add new One.
+            No subtask yet. Try to add new one.
           </div>
-          <button className="btn-medium" onClick={modalEditTask}>
+          <div className="btn-medium" onClick={modalEditTask}>
             + New Subtask
-          </button>
+          </div>
         </>
       );
     }
@@ -56,7 +58,7 @@ function TaskDetailModal({ detailObj }) {
     <form className="modal">
       <div className="modal__title">
         <span>{detailObj.title}</span>
-        <DotMenu position={"modal"} />
+        <DotMenu position={"modal"} detailObj={detailObj} />
       </div>
 
       <p className="modal__content">{detailObj.description}</p>
@@ -72,7 +74,7 @@ function TaskDetailModal({ detailObj }) {
       <Dropdown
         selectObj={{
           title: "Current Status",
-          selected: "Doing",
+          selected: statusData[detailObj.columnId - 1].statusName,
           options: statusData.map((status) => status.statusName),
         }}
       />
