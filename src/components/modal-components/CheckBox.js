@@ -1,4 +1,4 @@
-import { updateSubtasks } from "../../store";
+import { updateSubtasks, updateTasksSubNum } from "../../store";
 import { useThunk } from "../../hooks/useThunk";
 import { IconContext } from "react-icons";
 import { TbLoader } from "react-icons/tb";
@@ -6,6 +6,8 @@ import { TbLoader } from "react-icons/tb";
 function CheckBox({ itemObj }) {
   const [doUpdateSubtasks, isLoadingSubtasks, loadingSubtasksError] =
     useThunk(updateSubtasks);
+  const [doUpdateTasks, isLoadingTasks, loadingTasksError] =
+    useThunk(updateTasksSubNum);
 
   return (
     <div className="subtask__box">
@@ -27,6 +29,10 @@ function CheckBox({ itemObj }) {
                 doUpdateSubtasks({
                   currentCheck: itemObj.checkOrNot,
                   subtaskId: itemObj.id,
+                });
+                doUpdateTasks({
+                  taskId: itemObj.taskId,
+                  subNum: itemObj.checkOrNot ? -1 : 1,
                 });
               }}
             />

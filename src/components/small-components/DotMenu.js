@@ -20,6 +20,7 @@ function DotMenu({ position, detailObj }) {
         isOpen: true,
         whichOpen: "deleteModal",
         deleteBoardOrTask: inTaskModal ? "task" : "board",
+        detailObj: inTaskModal ? detailObj : null,
       })
     );
   };

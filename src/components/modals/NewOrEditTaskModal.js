@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setForm } from "../../store";
 import Input from "../modal-components/Input";
-import Dropdown from "../modal-components/Dropdown";
+import { Dropdown } from "../modal-components/Dropdown";
 import Textarea from "../modal-components/Textarea";
 import DeletableInput from "../modal-components/DeletableInput";
 
@@ -72,10 +72,7 @@ function NewOrEditTaskModal({ createOrNot, detailObj }) {
       <Dropdown
         selectObj={{
           title: "Status",
-          selected: createOrNot
-            ? statusData[0].statusName
-            : statusData[detailObj.columnId - 1].statusName,
-          options: statusData.map((status) => status.statusName),
+          options: statusData,
         }}
       />
       <button className="btn-medium btn-medium--primary">{btnText}</button>

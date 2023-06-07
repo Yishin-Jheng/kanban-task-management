@@ -30,6 +30,7 @@ export * from "./thunks/fetchBoards";
 export * from "./thunks/fetchColumns";
 export * from "./thunks/fetchTasks";
 export * from "./thunks/fetchSubtasks";
+export * from "./thunks/updateTasks";
 export * from "./thunks/updateSubtasks";
 export {
   store,

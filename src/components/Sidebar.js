@@ -53,8 +53,6 @@ function Sidebar({ isMobile, sidebarHidden, handleHidden }) {
       </figure>
 
       <div className="boards">
-        <span className="boards__title">All Borads (3)</span>
-
         <BoardsList />
 
         <div
