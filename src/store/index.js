@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/dist/query";
 import { boardsReducer, setActiveBoard } from "./slices/boardsSlice";
 import { columnsReducer } from "./slices/columnsSlice";
-import { tasksReducer } from "./slices/tasksSlice";
+import { tasksReducer, resetTasks } from "./slices/tasksSlice";
 import { subtasksReducer } from "./slices/subtasksSlice";
 import { modalReducer, setModal, closeModal } from "./slices/modalSlice";
 import {
@@ -32,9 +32,12 @@ export * from "./thunks/fetchTasks";
 export * from "./thunks/fetchSubtasks";
 export * from "./thunks/updateTasks";
 export * from "./thunks/updateSubtasks";
+export * from "./thunks/createTasks";
+export * from "./thunks/deleteTasks";
 export {
   store,
   setActiveBoard,
+  resetTasks,
   setModal,
   closeModal,
   setForm,

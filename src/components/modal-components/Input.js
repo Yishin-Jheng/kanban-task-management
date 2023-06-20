@@ -1,23 +1,37 @@
-import { useSelector, useDispatch } from "react-redux";
-import { setForm } from "../../store";
+import { useState, useEffect } from "react";
 
-function Input({ inputObj }) {
-  const dispatch = useDispatch();
-  const formObj = useSelector((state) => state.form);
+function Input({ checkInvalid, label, value, placeholder, handleFormChange }) {
+  const [input, setInput] = useState(value);
+  const [clicked, setClicked] = useState(false);
+  const isInvalid = (clicked && !input) || (checkInvalid && !input);
 
-  const handleChange = (e) => {
-    dispatch(setForm({ title: e.target.value }));
-  };
+  useEffect(() => {
+    if (input) {
+      handleFormChange(input);
+    }
+  }, [input]);
 
   return (
     <div className="input-box">
-      <span className="modal__subtitle">{inputObj.title}</span>
+      <span className="modal__subtitle">{label}</span>
+
+      {isInvalid ? (
+        <span className="warning__text--title">Can't be empty</span>
+      ) : null}
+
       <input
-        id={inputObj.id}
+        id={label}
+        className={isInvalid ? "warning" : ""}
         type="text"
-        value={formObj.title}
-        placeholder={inputObj.placeholder}
-        onChange={handleChange}
+        value={input}
+        placeholder={placeholder}
+        onBlur={() => {
+          setClicked(true);
+        }}
+        onChange={(e) => {
+          setInput(e.target.value);
+          handleFormChange(e.target.value);
+        }}
       />
     </div>
   );

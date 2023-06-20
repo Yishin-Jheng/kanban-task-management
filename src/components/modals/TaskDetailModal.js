@@ -33,7 +33,7 @@ function TaskDetailModal({ detailObj }) {
 
   let subtaskContent;
   if (!isLoadingSubtasks) {
-    if (subtasksData.length > 0) {
+    if (subtasksData && subtasksData.length > 0) {
       subtaskContent = subtasksData.map((subtask) => {
         return <CheckBox key={subtask.id} itemObj={subtask} />;
       });
@@ -75,12 +75,12 @@ function TaskDetailModal({ detailObj }) {
       </div>
 
       <DropdownRequestVer
-        selectObj={{
-          title: "Current Status",
-          taskId: detailObj.id,
-          options: statusData,
-          selected: statusData[detailObj.columnId - 1].statusName,
-        }}
+        label="Current Status"
+        value={
+          statusData.find((col) => col.id === detailObj.columnId).statusName
+        }
+        options={statusData}
+        taskId={detailObj.id}
       />
     </form>
   );

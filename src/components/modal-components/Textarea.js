@@ -1,24 +1,44 @@
-import { useSelector, useDispatch } from "react-redux";
-import { setForm } from "../../store";
+import { useState, useEffect } from "react";
 
-function Textarea({ inputObj }) {
-  const dispatch = useDispatch();
-  const formObj = useSelector((state) => state.form);
+function Textarea({
+  checkInvalid,
+  label,
+  value,
+  placeholder,
+  handleFormChange,
+}) {
+  const [input, setInput] = useState(value);
+  const [clicked, setClicked] = useState(false);
+  const isInvalid = (clicked && !input) || (checkInvalid && !input);
 
-  const handleChange = (e) => {
-    dispatch(setForm({ description: e.target.value }));
-  };
+  useEffect(() => {
+    if (input) {
+      handleFormChange(input);
+    }
+  }, [input]);
 
   return (
     <div className="input-box">
-      <span className="modal__subtitle">{inputObj.title}</span>
+      <span className="modal__subtitle">{label}</span>
+
+      {isInvalid ? (
+        <span className="warning__text--description">Can't be empty</span>
+      ) : null}
+
       <textarea
-        id={inputObj.id}
+        id={label}
+        className={isInvalid ? "warning" : ""}
         type="text"
         rows="5"
-        value={formObj.description}
-        placeholder={inputObj.placeholder}
-        onChange={handleChange}
+        value={input}
+        placeholder={placeholder}
+        onBlur={() => {
+          setClicked(true);
+        }}
+        onChange={(e) => {
+          setInput(e.target.value);
+          handleFormChange(e.target.value);
+        }}
       />
     </div>
   );

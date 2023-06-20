@@ -8,10 +8,10 @@ import logoDark from "../assets/logo-light.svg";
 function Sidebar({ isMobile, sidebarHidden, handleHidden }) {
   const dispatch = useDispatch();
   const [theme, setTheme] = useState("light");
-
   const logo = theme === "light" ? logoLight : logoDark;
   let themeRoot = document.querySelector("#theme-root");
   themeRoot.dataset.theme = theme;
+
   const modalAddBoard = () => {
     dispatch(
       setModal({
@@ -21,15 +21,6 @@ function Sidebar({ isMobile, sidebarHidden, handleHidden }) {
       })
     );
   };
-  const testLoadingModal = () => {
-    dispatch(
-      setModal({
-        isOpen: true,
-        whichOpen: "loadingModal",
-      })
-    );
-  };
-
   const handleThemeSwitch = function () {
     if (theme === "light") {
       setTheme("dark");
@@ -48,7 +39,7 @@ function Sidebar({ isMobile, sidebarHidden, handleHidden }) {
 
   return (
     <aside className={sidebarHidden ? "min-sidebar__aside" : ""}>
-      <figure className="logo-img" onClick={testLoadingModal}>
+      <figure className="logo-img">
         <img src={logo} alt="logo" />
       </figure>
 

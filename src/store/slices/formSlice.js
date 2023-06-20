@@ -7,7 +7,9 @@ const formSlice = createSlice({
     description: "",
     subtasks: [],
     columns: [],
+    columnId: 0,
     status: "",
+    formCheck: false,
   },
   reducers: {
     setForm(state, action) {

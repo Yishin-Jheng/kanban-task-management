@@ -1,7 +1,11 @@
+import { useDispatch } from "react-redux";
 import { IconContext } from "react-icons";
 import { TbLoader } from "react-icons/tb";
+import { closeModal } from "../../store/slices/modalSlice";
 
 function LoadingModal({ isLoading }) {
+  const dispatch = useDispatch();
+
   return (
     <form className="modal">
       <div className="modal__title">
@@ -17,7 +21,13 @@ function LoadingModal({ isLoading }) {
       </p>
 
       <div className="modal__btns">
-        <button className="btn-medium" disabled={isLoading}>
+        <div
+          className="btn-medium"
+          disabled={isLoading}
+          onClick={() => {
+            dispatch(closeModal());
+          }}
+        >
           {isLoading ? (
             <IconContext.Provider value={{ size: "2rem" }}>
               <TbLoader className="loading-icon" />
@@ -25,7 +35,7 @@ function LoadingModal({ isLoading }) {
           ) : (
             "Close"
           )}
-        </button>
+        </div>
       </div>
     </form>
   );

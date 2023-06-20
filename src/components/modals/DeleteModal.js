@@ -1,5 +1,9 @@
 import { useSelector, useDispatch } from "react-redux";
+import { useThunk } from "../../hooks/useThunk";
+import { deleteTasks } from "../../store";
 import { closeModal } from "../../store/slices/modalSlice";
+import { IconContext } from "react-icons";
+import { TbLoader } from "react-icons/tb";
 
 function DeleteModal({ boardOrTask, taskObj }) {
   const dispatch = useDispatch();
@@ -11,6 +15,8 @@ function DeleteModal({ boardOrTask, taskObj }) {
   const boardTitle = boardsData.find(
     (board) => board.id === activeBoardId
   ).boardName;
+  const [doDeleteTasks, isDeletingTasks, deletingTasksError] =
+    useThunk(deleteTasks);
 
   return (
     <form className="modal">
@@ -26,15 +32,28 @@ function DeleteModal({ boardOrTask, taskObj }) {
       </p>
 
       <div className="modal__delete__btns">
-        <button className="btn-medium btn-medium--warning">Delete</button>
-        <button
+        <div
+          className="btn-medium btn-medium--warning"
+          onClick={() => {
+            doDeleteTasks({ taskId: taskObj.id });
+          }}
+        >
+          {isDeletingTasks ? (
+            <IconContext.Provider value={{ size: "16px", color: "#fff" }}>
+              <TbLoader className="loading-icon" />
+            </IconContext.Provider>
+          ) : (
+            "Delete"
+          )}
+        </div>
+        <div
           className="btn-medium"
           onClick={() => {
             dispatch(closeModal());
           }}
         >
           Cancel
-        </button>
+        </div>
       </div>
     </form>
   );

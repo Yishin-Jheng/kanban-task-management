@@ -1,22 +1,25 @@
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useThunk } from "../hooks/useThunk";
-import { fetchColumns } from "../store";
+import { fetchColumns, resetTasks } from "../store";
 import { Column, LoadingColumn, NewColumn } from "./Column";
 
-function Board({ boardId, statusArr, taskArr }) {
-  const { data: columnsData } = useSelector((state) => {
-    return state.columns;
+function Board() {
+  const dispatch = useDispatch();
+  const [columnsData, activeBoardId] = useSelector((state) => {
+    const columnsData = state.columns.data;
+    const activeBoardId = state.boards.activeBoardId;
+    return [columnsData, activeBoardId];
   });
   const [doFetchColumns, isLoadingColumns, loadingColumnsError] =
     useThunk(fetchColumns);
 
   useEffect(() => {
-    // TODO: make boardId not hardcode
-    doFetchColumns({ boardId: 1 });
-  }, [doFetchColumns]);
+    dispatch(resetTasks());
+    if (activeBoardId !== 0) doFetchColumns({ boardId: activeBoardId });
+  }, [doFetchColumns, activeBoardId]);
 
-  if (isLoadingColumns) {
+  if (isLoadingColumns || activeBoardId === 0) {
     return (
       <div className="column__container">
         <LoadingColumn times={3} />

@@ -8,10 +8,16 @@ import TaskDetailModal from "./modals/TaskDetailModal";
 
 function Modal() {
   const dispatch = useDispatch();
-  const { isOpen, whichOpen, createOrNot, deleteBoardOrTask, detailObj } =
-    useSelector((state) => {
-      return state.modal;
-    });
+  const {
+    isOpen,
+    whichOpen,
+    createOrNot,
+    deleteBoardOrTask,
+    detailObj,
+    isLoading,
+  } = useSelector((state) => {
+    return state.modal;
+  });
 
   function ModalBackground({ disable }) {
     return (
@@ -60,7 +66,7 @@ function Modal() {
   if (whichOpen === "loadingModal") {
     return (
       <>
-        <LoadingModal isLoading={false} />
+        <LoadingModal isLoading={isLoading} />
         <ModalBackground disable={true} />
       </>
     );

@@ -17,13 +17,17 @@ function BoardsList() {
   }, [doFetchBoards]);
 
   if (isLoadingBoards) {
-    return <Skeleton times={3} className="skeleton__outer--board" />;
+    return (
+      <>
+        <span className="boards__title">All Borads (-)</span>
+        <Skeleton times={3} className="skeleton__outer--board" />;
+      </>
+    );
   }
 
   return (
     <>
       <span className="boards__title">All Borads ({boardsData.length})</span>
-
       <ul className="boards__list">
         {boardsData.map((board) => {
           return (
