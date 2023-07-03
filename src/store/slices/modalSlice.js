@@ -2,6 +2,9 @@ import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { updateTasksByForm } from "../thunks/updateTasks";
 import { createTasks } from "../thunks/createTasks";
 import { deleteTasks } from "../thunks/deleteTasks";
+import { createBoards } from "../thunks/createBoards";
+import { updateBoards } from "../thunks/updateBoards";
+import { deleteBoards } from "../thunks/deleteBoards";
 
 const modalSlice = createSlice({
   name: "modal",
@@ -22,11 +25,15 @@ const modalSlice = createSlice({
     },
   },
   extraReducers(builder) {
-    // tasks/update/byForm & /create & /delete
+    // boards/create & boards/update & boards/delete
+    // tasks/create & tasks/update/byForm & tasks/delete
     builder.addMatcher(
       isAnyOf(
-        updateTasksByForm.fulfilled,
+        createBoards.fulfilled,
         createTasks.fulfilled,
+        updateBoards.fulfilled,
+        updateTasksByForm.fulfilled,
+        deleteBoards.fulfilled,
         deleteTasks.fulfilled
       ),
       (state, action) => {

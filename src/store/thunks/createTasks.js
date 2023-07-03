@@ -2,12 +2,11 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import supabase from "../supabase";
 
 const createTasks = createAsyncThunk("tasks/create", async (arg) => {
-  const { title, description, columnId, subtasks } = arg;
   const insertData = {
-    title: title,
-    description: description,
-    columnId: columnId,
-    totalSubNum: subtasks.length,
+    title: arg.title,
+    description: arg.description,
+    columnId: arg.columnId,
+    totalSubNum: arg.subtasks.length,
     finishedSubNum: 0,
   };
 
@@ -16,18 +15,15 @@ const createTasks = createAsyncThunk("tasks/create", async (arg) => {
     .insert([insertData])
     .select();
 
-  await supabase
-    .from("subtasks")
-    .insert(
-      subtasks.map((subtask) => {
-        return {
-          description: subtask.description,
-          checkOrNot: false,
-          taskId: taskData[0].id,
-        };
-      })
-    )
-    .select();
+  await supabase.from("subtasks").insert(
+    arg.subtasks.map((subtask) => {
+      return {
+        description: subtask.description,
+        checkOrNot: false,
+        taskId: taskData[0].id,
+      };
+    })
+  );
 
   return taskData[0];
 });

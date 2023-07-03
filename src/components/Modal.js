@@ -57,7 +57,7 @@ function Modal() {
   if (whichOpen === "deleteModal") {
     return (
       <>
-        <DeleteModal boardOrTask={deleteBoardOrTask} taskObj={detailObj} />
+        <DeleteModal boardOrTask={deleteBoardOrTask} detailObj={detailObj} />
         <ModalBackground />
       </>
     );

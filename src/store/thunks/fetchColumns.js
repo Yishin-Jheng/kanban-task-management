@@ -6,6 +6,7 @@ const fetchColumns = createAsyncThunk("columns/fetch", async (arg) => {
   const { data, error } = await supabase
     .from("columns")
     .select("*")
+    .order("id", { ascending: true })
     .eq("boardId", boardId);
 
   return data;

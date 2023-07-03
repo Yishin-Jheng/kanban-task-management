@@ -1,11 +1,11 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useThunk } from "../../hooks/useThunk";
-import { deleteTasks } from "../../store";
+import { deleteTasks, deleteBoards } from "../../store";
 import { closeModal } from "../../store/slices/modalSlice";
 import { IconContext } from "react-icons";
 import { TbLoader } from "react-icons/tb";
 
-function DeleteModal({ boardOrTask, taskObj }) {
+function DeleteModal({ boardOrTask, detailObj }) {
   const dispatch = useDispatch();
   const [boardsData, activeBoardId] = useSelector((state) => {
     const boardsData = state.boards.data;
@@ -17,6 +17,13 @@ function DeleteModal({ boardOrTask, taskObj }) {
   ).boardName;
   const [doDeleteTasks, isDeletingTasks, deletingTasksError] =
     useThunk(deleteTasks);
+  const [doDeleteBoards, isDeletingBoards, deletingBoardsError] =
+    useThunk(deleteBoards);
+
+  const handleDelete =
+    boardOrTask === "task"
+      ? () => doDeleteTasks({ taskId: detailObj.id })
+      : () => doDeleteBoards({ boardId: activeBoardId });
 
   return (
     <form className="modal">
@@ -26,19 +33,14 @@ function DeleteModal({ boardOrTask, taskObj }) {
 
       <p className="modal__content">
         {boardOrTask === "task"
-          ? `Are you sure you want to delete the ‘${taskObj.title}’ task and its subtasks? This action cannot be reversed.`
+          ? `Are you sure you want to delete the ‘${detailObj.title}’ task and its subtasks? This action cannot be reversed.`
           : `Are you sure you want to delete the ‘${boardTitle}’ board? This action
         will remove all columns and tasks and cannot be reversed.`}
       </p>
 
       <div className="modal__delete__btns">
-        <div
-          className="btn-medium btn-medium--warning"
-          onClick={() => {
-            doDeleteTasks({ taskId: taskObj.id });
-          }}
-        >
-          {isDeletingTasks ? (
+        <div className="btn-medium btn-medium--warning" onClick={handleDelete}>
+          {isDeletingTasks || isDeletingBoards ? (
             <IconContext.Provider value={{ size: "16px", color: "#fff" }}>
               <TbLoader className="loading-icon" />
             </IconContext.Provider>
@@ -46,6 +48,7 @@ function DeleteModal({ boardOrTask, taskObj }) {
             "Delete"
           )}
         </div>
+
         <div
           className="btn-medium"
           onClick={() => {

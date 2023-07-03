@@ -9,8 +9,5 @@ export function useFormData(initialData = {}) {
     };
   };
 
-  return {
-    getFormData,
-    handleFormChange,
-  };
+  return [getFormData, handleFormChange];
 }

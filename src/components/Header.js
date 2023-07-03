@@ -6,8 +6,11 @@ import logoMin from "../assets/logo-mobile.svg";
 
 function Header({ isMobile, sidebarHidden, handleHidden }) {
   const dispatch = useDispatch();
-  const { data: boardsData, activeBoardId } = useSelector((state) => {
-    return state.boards;
+  const [boardsData, activeBoardId, statusData] = useSelector((state) => {
+    const boardsData = state.boards.data;
+    const activeBoardId = state.boards.activeBoardId;
+    const statusData = state.columns.data;
+    return [boardsData, activeBoardId, statusData];
   });
   const modalAddTask = () => {
     dispatch(
@@ -68,9 +71,9 @@ function Header({ isMobile, sidebarHidden, handleHidden }) {
       ) : null}
 
       <button
-        disabled={showHiddenMenu}
+        disabled={showHiddenMenu || !statusData[0]}
         className={`btn ${isMobile ? "btn--mobile" : ""} ${
-          showHiddenMenu ? "btn--disable" : ""
+          showHiddenMenu || !statusData[0] ? "btn--disable" : ""
         } header__create`}
         onClick={modalAddTask}
       >

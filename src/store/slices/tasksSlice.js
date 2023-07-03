@@ -53,13 +53,16 @@ const tasksSlice = createSlice({
     // tasks/update/byForm
     builder.addCase(updateTasksByForm.fulfilled, (state, action) => {
       const taskData = state.data.find(
-        (tasks) => tasks.id === action.payload.task.taskId
+        (task) => task.id === action.payload.taskId
       );
       Object.assign(taskData, {
-        title: action.payload.task.title,
-        description: action.payload.task.description,
-        columnId: action.payload.task.columnId,
-        totalSubNum: action.payload.task.subtasks.length,
+        title: action.payload.title,
+        description: action.payload.description,
+        columnId: action.payload.columnId,
+        totalSubNum: action.payload.subtasks.length,
+        finishedSubNum:
+          taskData.finishedSubNum -
+          action.payload.deleteFinishedSubtasks.length,
       });
     });
     builder.addCase(updateTasksByForm.rejected, (state, action) => {
@@ -68,9 +71,7 @@ const tasksSlice = createSlice({
 
     // tasks/create
     builder.addCase(createTasks.fulfilled, (state, action) => {
-      state.data.push({
-        ...action.payload,
-      });
+      state.data.push(action.payload);
     });
     builder.addCase(createTasks.rejected, (state, action) => {
       state.error = action.error;

@@ -61,7 +61,7 @@ function TaskDetailModal({ detailObj }) {
     <form className="modal">
       <div className="modal__title">
         <span>{detailObj.title}</span>
-        <DotMenu position={"modal"} detailObj={detailObj} />
+        <DotMenu position="modal" detailObj={detailObj} />
       </div>
 
       <p className="modal__content">{detailObj.description}</p>

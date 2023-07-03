@@ -11,18 +11,17 @@ import { DeletableInput } from "../modal-components/DeletableInput";
 function NewOrEditTaskModal({ createOrNot, detailObj }) {
   const dispatch = useDispatch();
   const [subtasksData, statusData] = useSelector((state) => {
-    const subtasksData = state.subtasks.data.filter(
-      (s) => s.taskId === detailObj.id
-    );
+    const subtasksData = state.subtasks.data;
     const statusData = state.columns.data;
     return [subtasksData, statusData];
   });
-  const { getFormData, handleFormChange } = useFormData();
-  const formData = getFormData();
   const [checkInvalid, setCheckInvalid] = useState(false);
-  const [doUpdateTask, isUpdatingTask_, updatingTaskError] =
-    useThunk(updateTasksByForm);
+  const [getFormData, handleFormChange] = useFormData();
   const [doCreateTask, isCreatingTask, createTaskError] = useThunk(createTasks);
+  const [doUpdateTask, isUpdatingTask, updatingTaskError] =
+    useThunk(updateTasksByForm);
+
+  const formData = getFormData();
   const [title, btnText] = createOrNot
     ? ["Add New Task", "Create Task"]
     : ["Edit Task", "Save Changes"];
@@ -37,24 +36,20 @@ function NewOrEditTaskModal({ createOrNot, detailObj }) {
     );
   };
 
-  const handleSubmit = (formData) => {
+  const handleSubmit = (formDataRef) => {
     return (e) => {
-      const form = formData().current;
+      const form = formDataRef().current;
       e.preventDefault();
       setCheckInvalid(true);
 
       if (form.title && form.description) {
         showLoadingModal();
 
-        if (!createOrNot) {
-          if (form.subtasks.length !== subtasksData.length)
-            console.log(form.subtasks, subtasksData);
-
-          // TODO: if there are some existing subtasks are deleted, we should also send a request to delete these subtasks when task is updating
-          // 目前是考慮在送出表單時標記那些在本次修改中被刪除的既有任務，在thunck中再把他們挑出來進行刪除
-          // doUpdateTask({ taskId: detailObj.id, ...form });
+        if (createOrNot) {
+          doCreateTask({ ...form });
+        } else {
+          doUpdateTask({ taskId: detailObj.id, ...form });
         }
-        if (createOrNot) doCreateTask({ ...form });
       }
     };
   };
@@ -98,9 +93,10 @@ function NewOrEditTaskModal({ createOrNot, detailObj }) {
                   placeholder: "e.g. Drink coffee & smile",
                 },
               ]
-            : subtasksData
+            : subtasksData.filter((s) => s.taskId === detailObj.id)
         }
         handleFormChange={handleFormChange(formData, "subtasks")}
+        handleFormDelete={handleFormChange(formData, "deletedSubtasks")}
       />
 
       <Dropdown
@@ -114,7 +110,12 @@ function NewOrEditTaskModal({ createOrNot, detailObj }) {
         handleFormChange={handleFormChange(formData, "columnId")}
       />
 
-      <button className="btn-medium btn-medium--primary">{btnText}</button>
+      <button
+        className="btn-medium btn-medium--primary"
+        disabled={isUpdatingTask || isCreatingTask}
+      >
+        {btnText}
+      </button>
     </form>
   );
 }

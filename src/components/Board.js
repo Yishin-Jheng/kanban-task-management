@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useThunk } from "../hooks/useThunk";
 import { fetchColumns, resetTasks } from "../store";
 import { Column, LoadingColumn, NewColumn } from "./Column";
+import EmptyColumn from "./EmptyColumn";
 
 function Board() {
   const dispatch = useDispatch();
@@ -27,7 +28,7 @@ function Board() {
     );
   }
 
-  return (
+  return columnsData.length > 0 ? (
     <div className="column__container">
       {columnsData.map((status) => {
         return (
@@ -41,6 +42,8 @@ function Board() {
       })}
       <NewColumn />
     </div>
+  ) : (
+    <EmptyColumn />
   );
 }
 

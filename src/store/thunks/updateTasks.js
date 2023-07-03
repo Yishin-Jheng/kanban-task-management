@@ -35,7 +35,18 @@ const updateTasksSubNum = createAsyncThunk(
 const updateTasksByForm = createAsyncThunk(
   "tasks/update/byForm",
   async (arg) => {
-    const { taskId, title, description, columnId, subtasks } = arg;
+    const { taskId, title, description, columnId, subtasks, deletedSubtasks } =
+      arg;
+    const updatedSubtasks = subtasks.filter((s) => s.isUpdated);
+    const createdSubtasks = subtasks.filter((s) => !s.isUpdated && !s.taskId);
+    const deleteFinishedSubtasks = deletedSubtasks.filter((s) => s.checkOrNot);
+
+    // Task part
+    const { data: currentSubNum, error } = await supabase
+      .from("tasks")
+      .select("finishedSubNum")
+      .eq("id", taskId);
+
     await supabase
       .from("tasks")
       .update({
@@ -43,41 +54,40 @@ const updateTasksByForm = createAsyncThunk(
         description: description,
         columnId: columnId,
         totalSubNum: subtasks.length,
+        finishedSubNum:
+          currentSubNum[0].finishedSubNum - deleteFinishedSubtasks.length,
       })
       .eq("id", taskId);
 
-    const oldSubtasks = subtasks.filter((s) => s.taskId);
-    const newSubtasks = subtasks.filter((s) => !oldSubtasks.includes(s));
+    // Subtask part
+    deletedSubtasks.map(async (s) => {
+      await supabase.from("subtasks").delete().eq("id", s.id);
+    });
 
-    const { data: oldSubtasksData, error: oldSubtaskserror } = await supabase
-      .from("subtasks")
-      .upsert(
-        oldSubtasks.map((subtask) => {
+    if (updatedSubtasks.length > 0) {
+      await supabase.from("subtasks").upsert([
+        ...updatedSubtasks.map((subtask) => {
           return {
             id: subtask.id,
             description: subtask.description,
           };
-        })
-      )
-      .select();
+        }),
+      ]);
+    }
 
-    const { data: newSubtasksData, error: newSubtasksError } = await supabase
-      .from("subtasks")
-      .insert(
-        newSubtasks.map((subtask) => {
+    if (createdSubtasks.length > 0) {
+      await supabase.from("subtasks").insert([
+        ...createdSubtasks.map((subtask) => {
           return {
             description: subtask.description,
             checkOrNot: false,
             taskId: taskId,
           };
-        })
-      )
-      .select();
+        }),
+      ]);
+    }
 
-    return {
-      task: arg,
-      subtask: { old: oldSubtasksData, new: newSubtasksData },
-    };
+    return { ...arg, deleteFinishedSubtasks };
   }
 );
 
