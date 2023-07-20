@@ -5,6 +5,7 @@ import { deleteTasks } from "../thunks/deleteTasks";
 import { createBoards } from "../thunks/createBoards";
 import { updateBoards } from "../thunks/updateBoards";
 import { deleteBoards } from "../thunks/deleteBoards";
+import { userLogin } from "../thunks/userLogin";
 
 const modalSlice = createSlice({
   name: "modal",
@@ -15,6 +16,7 @@ const modalSlice = createSlice({
     deleteBoardOrTask: "",
     detailObj: {},
     isLoading: true,
+    errorMsg: null,
   },
   reducers: {
     setModal(state, action) {
@@ -25,6 +27,19 @@ const modalSlice = createSlice({
     },
   },
   extraReducers(builder) {
+    // users/login
+    builder.addCase(userLogin.fulfilled, (state, action) => {
+      return {
+        ...state,
+        isOpen: action.payload.session === null ? true : false,
+        whichOpen: "errorMessageModal",
+        errorMsg:
+          action.payload.session === null
+            ? "Email or password is incorrect. Please try again."
+            : null,
+      };
+    });
+
     // boards/create & boards/update & boards/delete
     // tasks/create & tasks/update/byForm & tasks/delete
     builder.addMatcher(

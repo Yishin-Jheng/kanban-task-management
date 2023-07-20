@@ -1,6 +1,13 @@
 import { useState, useEffect } from "react";
 
-function Input({ checkInvalid, label, value, placeholder, handleFormChange }) {
+function Input({
+  checkInvalid,
+  label,
+  type,
+  value,
+  placeholder,
+  handleFormChange,
+}) {
   const [input, setInput] = useState(value);
   const [clicked, setClicked] = useState(false);
   const isInvalid = (clicked && !input) || (checkInvalid && !input);
@@ -22,7 +29,7 @@ function Input({ checkInvalid, label, value, placeholder, handleFormChange }) {
       <input
         id={label}
         className={isInvalid ? "warning" : ""}
-        type="text"
+        type={type}
         value={input}
         placeholder={placeholder}
         onBlur={() => {

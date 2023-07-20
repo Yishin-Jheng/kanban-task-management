@@ -1,18 +1,21 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setModal } from "../store";
+import { SidebarContext } from "../App";
 import BoardsList from "./BoardsList";
 import logoLight from "../assets/logo-dark.svg";
 import logoDark from "../assets/logo-light.svg";
 
-function Sidebar({ isMobile, sidebarHidden, handleHidden }) {
+function Sidebar({ isMobile }) {
   const dispatch = useDispatch();
+  const { sidebarHidden, handleHidden } = useContext(SidebarContext);
   const [theme, setTheme] = useState("light");
   const logo = theme === "light" ? logoLight : logoDark;
   let themeRoot = document.querySelector("#theme-root");
   themeRoot.dataset.theme = theme;
 
   const modalAddBoard = () => {
+    if (isMobile) handleHidden();
     dispatch(
       setModal({
         isOpen: true,

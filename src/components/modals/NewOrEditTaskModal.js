@@ -63,6 +63,7 @@ function NewOrEditTaskModal({ createOrNot, detailObj }) {
       <Input
         checkInvalid={checkInvalid}
         label="Title"
+        type="text"
         value={createOrNot ? "" : detailObj.title}
         placeholder="e.g. Take coffee break"
         handleFormChange={handleFormChange(formData, "title")}

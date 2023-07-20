@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useThunk } from "../hooks/useThunk";
 import { fetchColumns, resetTasks } from "../store";
+import { SidebarContext } from "../App";
 import { Column, LoadingColumn, NewColumn } from "./Column";
 import EmptyColumn from "./EmptyColumn";
 

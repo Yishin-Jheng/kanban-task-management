@@ -1,14 +1,18 @@
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
+import { useMediaQuery } from "react-responsive";
 import { useSelector, useDispatch } from "react-redux";
 import { useThunk } from "../hooks/useThunk";
 import { fetchBoards, setActiveBoard } from "../store";
+import { SidebarContext } from "../App";
 import Skeleton from "./small-components/Skeleton";
 
 function BoardsList() {
   const dispatch = useDispatch();
-  const { data: boardsData, activeBoardId } = useSelector((state) => {
-    return state.boards;
-  });
+  const isMobile = useMediaQuery({ query: `(max-width: 670px)` });
+  const { handleHidden } = useContext(SidebarContext);
+  const { data: boardsData, activeBoardId } = useSelector(
+    (state) => state.boards
+  );
   const [doFetchBoards, isLoadingBoards, loadingBoardsError] =
     useThunk(fetchBoards);
 
@@ -37,6 +41,7 @@ function BoardsList() {
                 activeBoardId === board.id ? "boards__list__item--active" : ""
               }`}
               onClick={() => {
+                if (isMobile) handleHidden();
                 dispatch(setActiveBoard(board.id));
               }}
             >

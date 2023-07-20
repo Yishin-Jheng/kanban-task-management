@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { closeModal } from "../store";
 import DeleteModal from "./modals/DeleteModal";
 import LoadingModal from "./modals/LoadingModal";
+import ErrorMessageModal from "./modals/ErrorMessageModal";
 import NewOrEditBoardModal from "./modals/NewOrEditBoardModal";
 import NewOrEditTaskModal from "./modals/NewOrEditTaskModal";
 import TaskDetailModal from "./modals/TaskDetailModal";
@@ -15,6 +16,7 @@ function Modal() {
     deleteBoardOrTask,
     detailObj,
     isLoading,
+    errorMsg,
   } = useSelector((state) => {
     return state.modal;
   });
@@ -68,6 +70,15 @@ function Modal() {
       <>
         <LoadingModal isLoading={isLoading} />
         <ModalBackground disable={true} />
+      </>
+    );
+  }
+
+  if (whichOpen === "errorMessageModal") {
+    return (
+      <>
+        <ErrorMessageModal errorMsg={errorMsg} />
+        <ModalBackground />
       </>
     );
   }

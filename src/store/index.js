@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/dist/query";
+import { usersReducer } from "./slices/usersSlice";
 import { boardsReducer, setActiveBoard } from "./slices/boardsSlice";
 import { columnsReducer } from "./slices/columnsSlice";
 import { tasksReducer, resetTasks } from "./slices/tasksSlice";
@@ -15,6 +16,7 @@ import {
 
 const store = configureStore({
   reducer: {
+    users: usersReducer,
     boards: boardsReducer,
     columns: columnsReducer,
     tasks: tasksReducer,
@@ -25,6 +27,8 @@ const store = configureStore({
 });
 
 setupListeners(store.dispatch);
+
+export * from "./thunks/userLogin";
 
 export * from "./thunks/fetchBoards";
 export * from "./thunks/fetchColumns";

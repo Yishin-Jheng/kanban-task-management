@@ -1,17 +1,21 @@
+import { useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setModal } from "../store";
+import { SidebarContext } from "../App";
 import DotMenu from "./small-components/DotMenu";
 import Skeleton from "./small-components/Skeleton";
 import logoMin from "../assets/logo-mobile.svg";
 
-function Header({ isMobile, sidebarHidden, handleHidden }) {
+function Header({ isMobile }) {
   const dispatch = useDispatch();
+  const { sidebarHidden, handleHidden } = useContext(SidebarContext);
   const [boardsData, activeBoardId, statusData] = useSelector((state) => {
     const boardsData = state.boards.data;
     const activeBoardId = state.boards.activeBoardId;
     const statusData = state.columns.data;
     return [boardsData, activeBoardId, statusData];
   });
+
   const modalAddTask = () => {
     dispatch(
       setModal({
@@ -22,7 +26,6 @@ function Header({ isMobile, sidebarHidden, handleHidden }) {
     );
   };
 
-  const showHiddenMenu = isMobile && !sidebarHidden;
   const downIcon = (
     <svg width="10" height="7" xmlns="http://www.w3.org/2000/svg">
       <path stroke="#635FC7" strokeWidth="2" fill="none" d="m1 1 4 4 4-4" />
@@ -54,7 +57,7 @@ function Header({ isMobile, sidebarHidden, handleHidden }) {
       {isMobile ? <img src={logoMin} alt="mobile version logo" /> : null}
 
       {boardsData.length ? (
-        <span className="header__title">
+        <span className="header__title" onClick={handleHidden}>
           {
             boardsData.filter((board) => board.id === activeBoardId)[0]
               .boardName
@@ -71,9 +74,9 @@ function Header({ isMobile, sidebarHidden, handleHidden }) {
       ) : null}
 
       <button
-        disabled={showHiddenMenu || !statusData[0]}
+        disabled={!statusData[0]}
         className={`btn ${isMobile ? "btn--mobile" : ""} ${
-          showHiddenMenu || !statusData[0] ? "btn--disable" : ""
+          !statusData[0] ? "btn--disable" : ""
         } header__create`}
         onClick={modalAddTask}
       >

@@ -63,6 +63,7 @@ function NewOrEditBoardModal({ createOrNot }) {
       <Input
         checkInvalid={checkInvalid}
         label="Board Name"
+        type="text"
         value={
           createOrNot
             ? ""

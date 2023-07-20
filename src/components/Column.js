@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useThunk } from "../hooks/useThunk";
-import { fetchTasks } from "../store";
-import { setModal } from "../store";
+import { setModal, fetchTasks } from "../store";
 import Skeleton from "./small-components/Skeleton";
 
 function Column({ statusName, decorationColor, columnId }) {

@@ -1,4 +1,8 @@
-function HiddenSwitch({ sidebarHidden, handleHidden }) {
+import { useContext } from "react";
+import { SidebarContext } from "../../App";
+
+function HiddenSwitch() {
+  const { handleHidden } = useContext(SidebarContext);
   return (
     <div className="hidden-switch--hidden" onClick={handleHidden}>
       <svg width="16" height="11" xmlns="http://www.w3.org/2000/svg">

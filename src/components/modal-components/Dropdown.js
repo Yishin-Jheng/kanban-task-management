@@ -28,8 +28,8 @@ function Dropdown({ label, value, options, handleFormChange }) {
   };
 
   useEffect(() => {
-    const minId = Math.min(...options.map((col) => col.id));
-    handleFormChange(minId);
+    const currentId = options.find((col) => col.statusName === value).id;
+    handleFormChange(currentId);
   }, []);
 
   return (
