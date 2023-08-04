@@ -16,10 +16,8 @@ function NewOrEditBoardModal({ createOrNot }) {
   });
   const [checkInvalid, setCheckInvalid] = useState(false);
   const [getFormData, handleFormChange] = useFormData();
-  const [doCreateBoard, isCreatingBoard, createBoardError] =
-    useThunk(createBoards);
-  const [doUpdateBoard, isUpdatingBoard, updatingBoardError] =
-    useThunk(updateBoards);
+  const [doCreateBoard, isCreatingBoard] = useThunk(createBoards);
+  const [doUpdateBoard, isUpdatingBoard] = useThunk(updateBoards);
 
   const formData = getFormData();
   const [title, btnText] = createOrNot
@@ -96,7 +94,12 @@ function NewOrEditBoardModal({ createOrNot }) {
         handleFormDelete={handleFormChange(formData, "deletedColumns")}
       />
 
-      <button className="btn-medium btn-medium--primary">{btnText}</button>
+      <button
+        className="btn-medium btn-medium--primary"
+        disabled={isUpdatingBoard || isCreatingBoard}
+      >
+        {btnText}
+      </button>
     </form>
   );
 }

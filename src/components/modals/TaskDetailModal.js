@@ -17,8 +17,7 @@ function TaskDetailModal({ detailObj }) {
     const statusData = state.columns.data;
     return [subtasksData, finishedNum, statusData];
   });
-  const [doFetchSubtasks, isLoadingSubtasks, loadingSubtasksError] =
-    useThunk(fetchSubtasks);
+  const [doFetchSubtasks, isLoadingSubtasks] = useThunk(fetchSubtasks);
 
   const modalEditTask = () => {
     dispatch(

@@ -1,10 +1,22 @@
 import { createSlice, isAnyOf } from "@reduxjs/toolkit";
-import { updateTasksByForm } from "../thunks/updateTasks";
-import { createTasks } from "../thunks/createTasks";
-import { deleteTasks } from "../thunks/deleteTasks";
+import { fetchBoards } from "../thunks/fetchBoards";
+import { fetchColumns } from "../thunks/fetchColumns";
+import { fetchTasks } from "../thunks/fetchTasks";
+import { fetchSubtasks } from "../thunks/fetchSubtasks";
+
 import { createBoards } from "../thunks/createBoards";
+import { createTasks } from "../thunks/createTasks";
+
 import { updateBoards } from "../thunks/updateBoards";
+import {
+  updateTasksStatus,
+  updateTasksSubNum,
+  updateTasksByForm,
+} from "../thunks/updateTasks";
+import { updateSubtasks } from "../thunks/updateSubtasks";
+
 import { deleteBoards } from "../thunks/deleteBoards";
+import { deleteTasks } from "../thunks/deleteTasks";
 import { userLogin } from "../thunks/userLogin";
 
 const modalSlice = createSlice({
@@ -28,20 +40,35 @@ const modalSlice = createSlice({
   },
   extraReducers(builder) {
     // users/login
-    builder.addCase(userLogin.fulfilled, (state, action) => {
+    builder.addCase(userLogin.rejected, (state, action) => {
       return {
         ...state,
-        isOpen: action.payload.session === null ? true : false,
+        isOpen: true,
         whichOpen: "errorMessageModal",
-        errorMsg:
-          action.payload.session === null
-            ? "Email or password is incorrect. Please try again."
-            : null,
+        errorMsg: "Email or password is incorrect. Please try again.",
       };
     });
 
-    // boards/create & boards/update & boards/delete
-    // tasks/create & tasks/update/byForm & tasks/delete
+    // boards/fetch & columns/fetch & tasks/fetch & subtasks/fetch
+    builder.addMatcher(
+      isAnyOf(
+        fetchBoards.rejected,
+        fetchColumns.rejected,
+        fetchTasks.rejected,
+        fetchSubtasks.rejected
+      ),
+      (state, action) => {
+        return {
+          ...state,
+          isOpen: true,
+          whichOpen: "errorMessageModal",
+          errorMsg:
+            "Fetching data failed. Please check your internet and try again.",
+        };
+      }
+    );
+
+    // others
     builder.addMatcher(
       isAnyOf(
         createBoards.fulfilled,
@@ -57,6 +84,29 @@ const modalSlice = createSlice({
           isOpen: true,
           whichOpen: "loadingModal",
           isLoading: false,
+        };
+      }
+    );
+    builder.addMatcher(
+      isAnyOf(
+        createBoards.rejected,
+        createTasks.rejected,
+        updateBoards.rejected,
+        updateTasksStatus.rejected,
+        updateTasksSubNum.rejected,
+        updateTasksByForm.rejected,
+        updateSubtasks.rejected,
+        deleteBoards.rejected,
+        deleteTasks.rejected
+      ),
+      (state, action) => {
+        console.error(action.payload);
+        return {
+          ...state,
+          isOpen: true,
+          whichOpen: "errorMessageModal",
+          errorMsg:
+            "Change is invalid. Guest has no permission to modify board or column. If you are not guest, please check your internet and try again.",
         };
       }
     );

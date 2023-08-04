@@ -13,11 +13,11 @@ function DeletableInput({
   const [deletedItems, setDeletedItems] = useState([]);
 
   const handleAddInput = () => {
-    const maxNum = Math.max(...items.map((item) => item.id));
+    const maxIdNum = Math.max(...items.map((item) => item.id));
     setItems([
       ...items,
       {
-        id: maxNum >= 0 ? maxNum + 1 : 1,
+        id: maxIdNum >= 0 ? maxIdNum + 1 : 1,
         [valueKey]: "",
       },
     ]);
@@ -140,6 +140,7 @@ function InputBlock({
         className={isInvalid ? "warning" : ""}
         type="text"
         value={input}
+        maxLength="120"
         placeholder={placeholder}
         onBlur={() => {
           setClicked(true);

@@ -14,8 +14,7 @@ export const SidebarContext = createContext();
 
 function App() {
   const [sidebarHidden, setSidebarHidden] = useState(false);
-  const [doCheckSession, isChecking, checkSessionError] =
-    useThunk(retrieveSession);
+  const [doCheckSession, isChecking] = useThunk(retrieveSession);
   const session = useSelector((state) => state.users.data.session);
   const isMobile = useMediaQuery({ query: `(max-width: 670px)` });
   const showSidebarBackround = isMobile && !sidebarHidden;

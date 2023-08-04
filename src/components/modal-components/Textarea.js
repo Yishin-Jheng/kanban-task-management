@@ -30,6 +30,7 @@ function Textarea({
         className={isInvalid ? "warning" : ""}
         type="text"
         rows="5"
+        maxLength="300"
         value={input}
         placeholder={placeholder}
         onBlur={() => {

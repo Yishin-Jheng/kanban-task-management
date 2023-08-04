@@ -9,7 +9,7 @@ import Input from "./modal-components/Input";
 function Login() {
   const [checkInvalid, setCheckInvalid] = useState(false);
   const [getFormData, handleFormChange] = useFormData();
-  const [doLogin, isLoading, loginError] = useThunk(userLogin);
+  const [doLogin, isLoading] = useThunk(userLogin);
 
   const formData = getFormData();
 
@@ -35,7 +35,7 @@ function Login() {
         </IconContext.Provider>
 
         <div className="login__info">
-          <p>Here is the email and password provided for guest</p>
+          <p>Here is the email and password provided for guest 👏</p>
           <br />
           <p>
             Email: <strong>guest@kanban.com</strong>
@@ -43,6 +43,8 @@ function Login() {
           <p>
             Password: <strong>kanban_guest</strong>
           </p>
+          <br />
+          <p>⛔ Guest can't do any change on the board or column.</p>
         </div>
       </div>
 

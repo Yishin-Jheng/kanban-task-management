@@ -15,6 +15,9 @@ function Header({ isMobile }) {
     const statusData = state.columns.data;
     return [boardsData, activeBoardId, statusData];
   });
+  const activeColumns = statusData
+    ? statusData.filter((col) => col.boardId === activeBoardId)
+    : [];
 
   const modalAddTask = () => {
     dispatch(
@@ -56,7 +59,7 @@ function Header({ isMobile }) {
     <header className="header">
       {isMobile ? <img src={logoMin} alt="mobile version logo" /> : null}
 
-      {boardsData.length ? (
+      {boardsData && boardsData.length ? (
         <span className="header__title" onClick={handleHidden}>
           {
             boardsData.filter((board) => board.id === activeBoardId)[0]
@@ -74,9 +77,9 @@ function Header({ isMobile }) {
       ) : null}
 
       <button
-        disabled={!statusData[0]}
+        disabled={!activeColumns[0]}
         className={`btn ${isMobile ? "btn--mobile" : ""} ${
-          !statusData[0] ? "btn--disable" : ""
+          !activeColumns[0] ? "btn--disable" : ""
         } header__create`}
         onClick={modalAddTask}
       >

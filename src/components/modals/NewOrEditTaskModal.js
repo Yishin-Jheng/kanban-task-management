@@ -17,9 +17,8 @@ function NewOrEditTaskModal({ createOrNot, detailObj }) {
   });
   const [checkInvalid, setCheckInvalid] = useState(false);
   const [getFormData, handleFormChange] = useFormData();
-  const [doCreateTask, isCreatingTask, createTaskError] = useThunk(createTasks);
-  const [doUpdateTask, isUpdatingTask, updatingTaskError] =
-    useThunk(updateTasksByForm);
+  const [doCreateTask, isCreatingTask] = useThunk(createTasks);
+  const [doUpdateTask, isUpdatingTask] = useThunk(updateTasksByForm);
 
   const formData = getFormData();
   const [title, btnText] = createOrNot

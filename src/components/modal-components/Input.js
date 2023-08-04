@@ -31,6 +31,7 @@ function Input({
         className={isInvalid ? "warning" : ""}
         type={type}
         value={input}
+        maxLength="120"
         placeholder={placeholder}
         onBlur={() => {
           setClicked(true);

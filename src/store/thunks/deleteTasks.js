@@ -1,11 +1,22 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import supabase from "../supabase";
 
-const deleteTasks = createAsyncThunk("tasks/delete", async (arg) => {
-  const { taskId } = arg;
-  await supabase.from("tasks").delete().eq("id", taskId);
+const deleteTasks = createAsyncThunk(
+  "tasks/delete",
+  async (arg, { rejectWithValue }) => {
+    const { taskId } = arg;
+    const { error: deleteTaskError } = await supabase
+      .from("tasks")
+      .delete()
+      .eq("id", taskId)
+      .single();
 
-  return taskId;
-});
+    if (deleteTaskError) {
+      return rejectWithValue("Delete task error");
+    } else {
+      return taskId;
+    }
+  }
+);
 
 export { deleteTasks };

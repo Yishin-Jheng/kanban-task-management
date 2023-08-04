@@ -13,14 +13,13 @@ function BoardsList() {
   const { data: boardsData, activeBoardId } = useSelector(
     (state) => state.boards
   );
-  const [doFetchBoards, isLoadingBoards, loadingBoardsError] =
-    useThunk(fetchBoards);
+  const [doFetchBoards, isLoadingBoards] = useThunk(fetchBoards);
 
   useEffect(() => {
     doFetchBoards();
   }, [doFetchBoards]);
 
-  if (isLoadingBoards) {
+  if (isLoadingBoards || !boardsData) {
     return (
       <>
         <span className="boards__title">All Borads (-)</span>

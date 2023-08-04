@@ -4,20 +4,26 @@ import supabase from "../supabase";
 const retrieveSession = createAsyncThunk(
   "users/retrieveSession",
   async (arg) => {
-    const { data: sessionData, error: sessionError } =
-      await supabase.auth.getSession();
+    const { data: sessionData } = await supabase.auth.getSession();
 
     return sessionData;
   }
 );
 
-const userLogin = createAsyncThunk("users/login", async (arg) => {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: arg.email,
-    password: arg.password,
-  });
+const userLogin = createAsyncThunk(
+  "users/login",
+  async (arg, { rejectWithValue }) => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: arg.email,
+      password: arg.password,
+    });
 
-  return data;
-});
+    if (error) {
+      return rejectWithValue(error.message);
+    } else {
+      return data;
+    }
+  }
+);
 
 export { retrieveSession, userLogin };

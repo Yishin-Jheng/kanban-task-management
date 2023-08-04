@@ -8,6 +8,11 @@ const columnsSlice = createSlice({
     data: [],
     error: null,
   },
+  reducers: {
+    resetColumns(state, action) {
+      state.data = [];
+    },
+  },
   extraReducers(builder) {
     // columns/fetch
     builder.addCase(fetchColumns.fulfilled, (state, action) => {
@@ -45,4 +50,5 @@ const columnsSlice = createSlice({
   },
 });
 
+export const { resetColumns } = columnsSlice.actions;
 export const columnsReducer = columnsSlice.reducer;

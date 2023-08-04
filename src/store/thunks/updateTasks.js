@@ -3,51 +3,61 @@ import supabase from "../supabase";
 
 const updateTasksStatus = createAsyncThunk(
   "tasks/update/status",
-  async (arg) => {
+  async (arg, { rejectWithValue }) => {
     const { columnId, taskId } = arg;
-    await supabase
+    const { error: putTaskError } = await supabase
       .from("tasks")
       .update({ columnId: columnId })
-      .eq("id", taskId);
+      .eq("id", taskId)
+      .single();
 
-    return arg;
+    if (putTaskError) {
+      return rejectWithValue("Update columnId of task error");
+    } else {
+      return arg;
+    }
   }
 );
 
 const updateTasksSubNum = createAsyncThunk(
   "tasks/update/subNum",
-  async (arg) => {
+  async (arg, { rejectWithValue }) => {
     const { taskId, subNum } = arg;
-    const { data: currentSubNum, error } = await supabase
+    const { data: currentSubNum, error: getSubNumError } = await supabase
       .from("tasks")
       .select("finishedSubNum")
       .eq("id", taskId);
 
-    await supabase
+    const { error: putTaskError } = await supabase
       .from("tasks")
       .update({ finishedSubNum: currentSubNum[0].finishedSubNum + subNum })
-      .eq("id", taskId);
+      .eq("id", taskId)
+      .single();
 
-    return arg;
+    if (getSubNumError || putTaskError) {
+      return rejectWithValue("Update finished subtask number of task error");
+    } else {
+      return arg;
+    }
   }
 );
 
 const updateTasksByForm = createAsyncThunk(
   "tasks/update/byForm",
-  async (arg) => {
+  async (arg, { rejectWithValue }) => {
     const { taskId, title, description, columnId, subtasks, deletedSubtasks } =
       arg;
     const updatedSubtasks = subtasks.filter((s) => s.isUpdated);
     const createdSubtasks = subtasks.filter((s) => !s.isUpdated && !s.taskId);
     const deleteFinishedSubtasks = deletedSubtasks.filter((s) => s.checkOrNot);
 
-    // Task part
-    const { data: currentSubNum, error } = await supabase
+    // Task part - Update
+    const { data: currentSubNum, error: getSubNumError } = await supabase
       .from("tasks")
       .select("finishedSubNum")
       .eq("id", taskId);
 
-    await supabase
+    const { error: putTaskError } = await supabase
       .from("tasks")
       .update({
         title: title,
@@ -57,15 +67,31 @@ const updateTasksByForm = createAsyncThunk(
         finishedSubNum:
           currentSubNum[0].finishedSubNum - deleteFinishedSubtasks.length,
       })
-      .eq("id", taskId);
+      .eq("id", taskId)
+      .single();
 
-    // Subtask part
-    deletedSubtasks.map(async (s) => {
-      await supabase.from("subtasks").delete().eq("id", s.id);
-    });
+    // Subtask part - Delete
+    try {
+      await Promise.all(
+        deletedSubtasks.map(async (sub) => {
+          const { error: deleteSubError } = await supabase
+            .from("subtasks")
+            .delete()
+            .eq("id", sub.id)
+            .single();
 
+          if (deleteSubError) {
+            throw new Error(deleteSubError);
+          }
+        })
+      );
+    } catch (error) {
+      return rejectWithValue("Delete subtask error");
+    }
+
+    // Subtask part - Update
     if (updatedSubtasks.length > 0) {
-      await supabase.from("subtasks").upsert([
+      const { error: putSubError } = await supabase.from("subtasks").upsert([
         ...updatedSubtasks.map((subtask) => {
           return {
             id: subtask.id,
@@ -73,10 +99,15 @@ const updateTasksByForm = createAsyncThunk(
           };
         }),
       ]);
+
+      if (putSubError) {
+        return rejectWithValue("Update subtask error");
+      }
     }
 
+    // Subtask part - Create
     if (createdSubtasks.length > 0) {
-      await supabase.from("subtasks").insert([
+      const { error: postSubError } = await supabase.from("subtasks").insert([
         ...createdSubtasks.map((subtask) => {
           return {
             description: subtask.description,
@@ -85,9 +116,17 @@ const updateTasksByForm = createAsyncThunk(
           };
         }),
       ]);
+
+      if (postSubError) {
+        return rejectWithValue("Create subtask error");
+      }
     }
 
-    return { ...arg, deleteFinishedSubtasks };
+    if (getSubNumError || putTaskError) {
+      return rejectWithValue("update task error");
+    } else {
+      return { ...arg, deleteFinishedSubtasks };
+    }
   }
 );
 

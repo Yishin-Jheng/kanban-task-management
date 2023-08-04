@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/dist/query";
 import { usersReducer } from "./slices/usersSlice";
 import { boardsReducer, setActiveBoard } from "./slices/boardsSlice";
-import { columnsReducer } from "./slices/columnsSlice";
+import { columnsReducer, resetColumns } from "./slices/columnsSlice";
 import { tasksReducer, resetTasks } from "./slices/tasksSlice";
 import { subtasksReducer } from "./slices/subtasksSlice";
 import { modalReducer, setModal, closeModal } from "./slices/modalSlice";
@@ -47,6 +47,7 @@ export * from "./thunks/deleteBoards";
 export {
   store,
   setActiveBoard,
+  resetColumns,
   resetTasks,
   setModal,
   closeModal,

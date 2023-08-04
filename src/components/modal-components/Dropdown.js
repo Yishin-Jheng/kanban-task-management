@@ -15,7 +15,6 @@ const upIcon = (
     <path stroke="#635FC7" strokeWidth="2" fill="none" d="M9 6 5 2 1 6" />
   </svg>
 );
-
 const formatter = (string) => string[0].toUpperCase() + string.slice(1);
 
 function Dropdown({ label, value, options, handleFormChange }) {
@@ -74,12 +73,12 @@ function Dropdown({ label, value, options, handleFormChange }) {
 function DropdownRequestVer({ label, value, options, taskId }) {
   const [isOpen, setIsOpen] = useState(false);
   const [currentStatus, setCurrentStatus] = useState(value);
-  const [doUpdateTasks, isLoadingTasks, loadingTasksError] =
+  const [doUpdateTasks, isUpdatingTasks, updatingTasksError] =
     useThunk(updateTasksStatus);
   const isMobileTwo = useMediaQuery({ query: `(max-width: 515px)` });
 
   const handleOpen = function () {
-    if (!isLoadingTasks) setIsOpen(!isOpen);
+    if (!isUpdatingTasks) setIsOpen(!isOpen);
   };
 
   return (
@@ -94,7 +93,7 @@ function DropdownRequestVer({ label, value, options, taskId }) {
         >
           <span>{formatter(currentStatus)}</span>
 
-          {isLoadingTasks ? (
+          {isUpdatingTasks ? (
             <IconContext.Provider value={{ size: "16px", color: "#635fc7" }}>
               <TbLoader className="loading-icon" />
             </IconContext.Provider>

@@ -15,10 +15,8 @@ function DeleteModal({ boardOrTask, detailObj }) {
   const boardTitle = boardsData.find(
     (board) => board.id === activeBoardId
   ).boardName;
-  const [doDeleteTasks, isDeletingTasks, deletingTasksError] =
-    useThunk(deleteTasks);
-  const [doDeleteBoards, isDeletingBoards, deletingBoardsError] =
-    useThunk(deleteBoards);
+  const [doDeleteTasks, isDeletingTasks] = useThunk(deleteTasks);
+  const [doDeleteBoards, isDeletingBoards] = useThunk(deleteBoards);
 
   const handleDelete =
     boardOrTask === "task"
