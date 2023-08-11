@@ -24,6 +24,11 @@
 }
 
 .modal {
+  @extend %scrollbar;
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
   z-index: 99999;
   position: fixed;
   top: 50%;
@@ -36,7 +41,9 @@
   align-items: stretch;
 
   width: 45rem;
+  max-height: 100vh;
   padding: 3.2rem;
+  overflow-y: scroll;
 
   background-color: var(--color-basic);
   border-radius: 5px;

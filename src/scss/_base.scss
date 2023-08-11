@@ -38,6 +38,7 @@
 
 %scrollbar {
   &::-webkit-scrollbar-track {
+    border-radius: 99px;
     background: var(--color-background);
   }
 
