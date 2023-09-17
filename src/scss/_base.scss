@@ -119,6 +119,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  grid-column: 1 / -1;
   cursor: pointer;
   border: none;
   border-radius: 999px;
@@ -214,7 +215,7 @@ body {
   }
 
   100% {
-    background-position: 250px;
+    background-position: 400px;
   }
 }
 

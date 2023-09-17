@@ -1,4 +1,6 @@
+import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useWindowHeight } from "../hooks/useWindowHeight";
 import { closeModal } from "../store";
 import DeleteModal from "./modals/DeleteModal";
 import LoadingModal from "./modals/LoadingModal";
@@ -8,7 +10,6 @@ import NewOrEditTaskModal from "./modals/NewOrEditTaskModal";
 import TaskDetailModal from "./modals/TaskDetailModal";
 
 function Modal() {
-  const dispatch = useDispatch();
   const {
     isOpen,
     whichOpen,
@@ -20,74 +21,80 @@ function Modal() {
   } = useSelector((state) => {
     return state.modal;
   });
+  const [formHeight, setFormHeight] = useState(0);
+  const windowHeight = useWindowHeight();
+  const formRef = useRef("");
 
-  function ModalBackground({ disable }) {
-    return (
-      <div
-        className="modal__background"
-        onClick={() => {
-          if (!disable) {
-            dispatch(closeModal());
-          }
-        }}
-      ></div>
-    );
-  }
+  useEffect(() => {
+    if (formRef.current) {
+      // NOTE:
+      // 有些 task 抓到的高度比實際高度還要矮上不少(>100px)，而且每次抓到的數字都會有點浮動。
+      // 暫時還是沒辦法讓他抓得很準確，但目前有讓dropdown可以視情況變更展開方向，理論上針對不同視窗高度應該都是可以適應的。
+      setFormHeight(formRef.current.clientHeight);
+    }
+  }, [whichOpen, detailObj]);
 
   if (!isOpen) {
     return;
   }
 
-  if (whichOpen === "boardModal") {
-    return (
-      <>
-        <NewOrEditBoardModal createOrNot={createOrNot} />
-        <ModalBackground />
-      </>
-    );
+  let modalContent;
+  if (whichOpen === "taskDetail") {
+    modalContent = <TaskDetailModal detailObj={detailObj} />;
   }
 
   if (whichOpen === "taskModal") {
-    return (
-      <>
-        <NewOrEditTaskModal createOrNot={createOrNot} detailObj={detailObj} />
-        <ModalBackground />
-      </>
+    modalContent = (
+      <NewOrEditTaskModal createOrNot={createOrNot} detailObj={detailObj} />
     );
   }
 
+  if (whichOpen === "boardModal") {
+    modalContent = <NewOrEditBoardModal createOrNot={createOrNot} />;
+  }
+
   if (whichOpen === "deleteModal") {
-    return (
-      <>
-        <DeleteModal boardOrTask={deleteBoardOrTask} detailObj={detailObj} />
-        <ModalBackground />
-      </>
+    modalContent = (
+      <DeleteModal boardOrTask={deleteBoardOrTask} detailObj={detailObj} />
     );
   }
 
   if (whichOpen === "loadingModal") {
-    return (
-      <>
-        <LoadingModal isLoading={isLoading} />
-        <ModalBackground disable={true} />
-      </>
-    );
+    modalContent = <LoadingModal isLoading={isLoading} />;
   }
 
   if (whichOpen === "errorMessageModal") {
-    return (
-      <>
-        <ErrorMessageModal errorMsg={errorMsg} />
-        <ModalBackground />
-      </>
-    );
+    modalContent = <ErrorMessageModal errorMsg={errorMsg} />;
   }
 
   return (
     <>
-      <TaskDetailModal detailObj={detailObj} />
-      <ModalBackground />
+      <form
+        ref={formRef}
+        className={`modal ${
+          windowHeight - formHeight < 180
+            ? "modal--horizontal"
+            : "modal--vertical"
+        }`}
+      >
+        {modalContent}
+      </form>
+      <ModalBackground disable={whichOpen === "loadingModal"} />
     </>
+  );
+}
+
+function ModalBackground({ disable }) {
+  const dispatch = useDispatch();
+  return (
+    <div
+      className="modal__background"
+      onClick={() => {
+        if (!disable) {
+          dispatch(closeModal());
+        }
+      }}
+    ></div>
   );
 }
 

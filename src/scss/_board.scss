@@ -104,7 +104,8 @@ main {
   border-radius: 5px;
   background-color: var(--color-basic);
   box-shadow: 0 5px 5px rgba($color-black, 0.05);
-  transition: all 0.5s;
+  transition: all 0.3s;
+  transition-delay: 0.5s;
   cursor: pointer;
 
   &:hover > &__description {

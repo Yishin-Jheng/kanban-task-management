@@ -35,18 +35,39 @@
   left: 50%;
   transform: translate(-50%, -50%);
 
-  display: flex;
-  gap: 2rem;
-  flex-direction: column;
-  align-items: stretch;
-
-  width: 45rem;
   max-height: 100vh;
   padding: 3.2rem;
-  overflow-y: scroll;
 
   background-color: var(--color-basic);
   border-radius: 5px;
+
+  &--vertical {
+    width: 45rem;
+    display: flex;
+    gap: 2rem;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  &--horizontal {
+    width: 65rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 3.2rem;
+    row-gap: 1.5rem;
+
+    .modal__scrollbox {
+      max-height: 9.5rem;
+    }
+
+    .modal__delete__btns {
+      flex-direction: column;
+    }
+
+    .warning__text--description {
+      bottom: 4rem;
+    }
+  }
 
   &__background {
     z-index: 99998;
@@ -71,6 +92,7 @@
     gap: 2.4rem;
     justify-content: space-between;
     align-items: center;
+    grid-column: 1 / -1;
   }
 
   &__subtitle {
@@ -89,7 +111,7 @@
       background: transparent;
     }
 
-    padding: 1px;
+    padding: 3px 1px;
     max-height: 14rem;
     margin-bottom: 1rem;
 
@@ -112,6 +134,8 @@
 }
 
 .subtask {
+  grid-column: 1 / -1;
+
   &__box {
     position: relative;
     padding: 1.2rem;
@@ -212,6 +236,9 @@
 }
 
 .status {
+  grid-row: 2 / 3;
+  grid-column: 2 / -1;
+
   &__icon {
     display: flex;
     align-items: center;
@@ -263,14 +290,17 @@
 
     list-style: none;
     border-radius: 5px;
+    opacity: 0;
     color: $color-grey-light-1;
     background-color: var(--color-dropdown);
+    box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.15);
     transition: all 0.3s;
 
     overflow-y: scroll;
 
     &--open {
       display: block !important;
+      opacity: 1;
     }
 
     &--mobile {
@@ -454,9 +484,15 @@
   }
 }
 
+@media only screen and (max-width: $size-tablet-2) {
+  .modal--horizontal {
+    width: calc(100% - 2rem);
+  }
+}
+
 @media only screen and (max-width: $size-mobile-2) {
   .modal {
-    width: calc(100% - 3.3rem);
+    width: calc(100% - 2rem);
     padding: 2.4rem;
     gap: 1.4rem;
 

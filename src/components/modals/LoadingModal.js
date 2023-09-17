@@ -7,7 +7,7 @@ function LoadingModal({ isLoading }) {
   const dispatch = useDispatch();
 
   return (
-    <form className="modal">
+    <>
       <div className="modal__title">
         <span>
           {isLoading ? "Is Saving Your Change Now..." : "Saved Successfully !"}
@@ -37,7 +37,7 @@ function LoadingModal({ isLoading }) {
           )}
         </div>
       </div>
-    </form>
+    </>
   );
 }
 

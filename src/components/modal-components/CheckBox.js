@@ -4,18 +4,18 @@ import { IconContext } from "react-icons";
 import { TbLoader } from "react-icons/tb";
 
 function CheckBox({ itemObj }) {
-  const [doUpdateSubtasks, isLoadingSubtasks, loadingSubtasksError] =
-    useThunk(updateSubtasks);
-  const [doUpdateTasks, isLoadingTasks, loadingTasksError] =
-    useThunk(updateTasksSubNum);
+  const [doUpdateSubtasks, isLoadingSubtasks] = useThunk(updateSubtasks);
+  const [doUpdateTasks, isLoadingTasks] = useThunk(updateTasksSubNum);
 
   return (
     <div className="subtask__box">
       <label
         className="subtask__checkbox"
-        htmlFor={isLoadingSubtasks ? "" : `subtask-${itemObj.id}`}
+        htmlFor={
+          isLoadingSubtasks || isLoadingTasks ? "" : `subtask-${itemObj.id}`
+        }
       >
-        {isLoadingSubtasks ? (
+        {isLoadingSubtasks || isLoadingTasks ? (
           <IconContext.Provider value={{ size: "16px", color: "#635fc7" }}>
             <TbLoader className="loading-icon" />
           </IconContext.Provider>

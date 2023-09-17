@@ -13,9 +13,9 @@ function Login() {
 
   const formData = getFormData();
 
-  const handleSubmit = (formDataRef) => {
+  const handleSubmit = (formData) => {
     return (e) => {
-      const form = formDataRef().current;
+      const form = formData().current;
       e.preventDefault();
       setCheckInvalid(true);
 

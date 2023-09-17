@@ -5,7 +5,7 @@ function ErrorMessageModal({ errorMsg }) {
   const dispatch = useDispatch();
 
   return (
-    <form className="modal">
+    <>
       <div className="modal__title">
         <span>Something is wrong...</span>
       </div>
@@ -22,7 +22,7 @@ function ErrorMessageModal({ errorMsg }) {
           Close
         </div>
       </div>
-    </form>
+    </>
   );
 }
 

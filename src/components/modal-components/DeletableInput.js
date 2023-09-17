@@ -22,6 +22,7 @@ function DeletableInput({
       },
     ]);
   };
+
   const handleRemoveInput = (removedItem) => {
     if (removedItem.taskId) {
       setDeletedItems([
@@ -33,6 +34,7 @@ function DeletableInput({
         },
       ]);
     }
+
     if (removedItem.boardId) {
       setDeletedItems([
         ...deletedItems,
@@ -42,8 +44,10 @@ function DeletableInput({
         },
       ]);
     }
+
     setItems(items.filter((item) => item.id !== removedItem.id));
   };
+
   const handleInputChange = (id, value) => {
     setItems(
       items.map((item) => {
@@ -65,6 +69,7 @@ function DeletableInput({
       valueKey === "description"
         ? items.filter((item) => item.description)
         : items.filter((item) => item.statusName);
+
     handleFormChange(validItems);
     handleFormDelete(deletedItems);
   }, [items]);

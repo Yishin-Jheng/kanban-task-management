@@ -53,7 +53,7 @@ function NewOrEditBoardModal({ createOrNot }) {
   };
 
   return (
-    <form className="modal" onSubmit={handleSubmit(getFormData)}>
+    <>
       <div className="modal__title">
         <span>{title}</span>
       </div>
@@ -97,10 +97,11 @@ function NewOrEditBoardModal({ createOrNot }) {
       <button
         className="btn-medium btn-medium--primary"
         disabled={isUpdatingBoard || isCreatingBoard}
+        onClick={handleSubmit(getFormData)}
       >
         {btnText}
       </button>
-    </form>
+    </>
   );
 }
 

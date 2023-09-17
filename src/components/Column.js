@@ -16,16 +16,18 @@ function Column({ statusName, decorationColor, columnId, isUpdatingTasks }) {
     dispatch(
       setModal({
         isOpen: true,
+        whichOpen: "taskDetail",
         detailObj: taskObj,
       })
     );
   };
+
   const loadingTask = (times) => {
     return Array(times)
       .fill(0)
       .map((_, i) => {
         return (
-          <li key={i} className="task" onClick={modalTaskDetail}>
+          <li key={i} className="task">
             <Skeleton times={1} className="skeleton__outer--task" />
             <Skeleton times={1} className="skeleton__outer--subtask" />
           </li>

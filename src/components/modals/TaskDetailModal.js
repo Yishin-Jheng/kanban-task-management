@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useThunk } from "../../hooks/useThunk";
 import { fetchSubtasks, setModal } from "../../store";
@@ -57,7 +57,7 @@ function TaskDetailModal({ detailObj }) {
   }, [doFetchSubtasks]);
 
   return (
-    <form className="modal">
+    <>
       <div className="modal__title">
         <span>{detailObj.title}</span>
         <DotMenu position="modal" detailObj={detailObj} />
@@ -67,10 +67,12 @@ function TaskDetailModal({ detailObj }) {
 
       <div className="subtask">
         <span className="modal__subtitle">
-          Subtasks ({finishedNum} of {detailObj.totalSubNum})
+          Subtasks ({finishedNum === undefined ? "-" : finishedNum} of{" "}
+          {detailObj.totalSubNum})
         </span>
-
+        {/* NOTE: for DEV */}
         {subtaskContent}
+        {/* <Skeleton times={2} className="skeleton__outer--modal" /> */}
       </div>
 
       <DropdownRequestVer
@@ -81,7 +83,7 @@ function TaskDetailModal({ detailObj }) {
         options={statusData}
         taskId={detailObj.id}
       />
-    </form>
+    </>
   );
 }
 

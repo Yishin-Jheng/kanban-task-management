@@ -54,7 +54,7 @@ function NewOrEditTaskModal({ createOrNot, detailObj }) {
   };
 
   return (
-    <form className="modal" onSubmit={handleSubmit(getFormData)}>
+    <>
       <div className="modal__title">
         <span>{title}</span>
       </div>
@@ -113,10 +113,11 @@ function NewOrEditTaskModal({ createOrNot, detailObj }) {
       <button
         className="btn-medium btn-medium--primary"
         disabled={isUpdatingTask || isCreatingTask}
+        onClick={handleSubmit(getFormData)}
       >
         {btnText}
       </button>
-    </form>
+    </>
   );
 }
 

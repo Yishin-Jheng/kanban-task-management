@@ -24,7 +24,7 @@ function DeleteModal({ boardOrTask, detailObj }) {
       : () => doDeleteBoards({ boardId: activeBoardId });
 
   return (
-    <form className="modal">
+    <>
       <div className="modal__title modal__delete">
         <span>{`Delete this ${boardOrTask}?`}</span>
       </div>
@@ -56,7 +56,7 @@ function DeleteModal({ boardOrTask, detailObj }) {
           Cancel
         </div>
       </div>
-    </form>
+    </>
   );
 }
 
