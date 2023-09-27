@@ -17,6 +17,16 @@ const upIcon = (
 );
 const formatter = (string) => string[0].toUpperCase() + string.slice(1);
 
+const handleOverViewport = function (dropdownRef, setOverViewport) {
+  const statusBottom = dropdownRef.current.getBoundingClientRect().bottom;
+
+  if (window.innerHeight - statusBottom < 120) {
+    setOverViewport(true);
+  } else {
+    setOverViewport(false);
+  }
+};
+
 function Dropdown({ label, value, options, handleFormChange }) {
   const [isOpen, setIsOpen] = useState(false);
   const [overViewport, setOverViewport] = useState(false);
@@ -26,28 +36,24 @@ function Dropdown({ label, value, options, handleFormChange }) {
 
   const handleOpen = function () {
     setIsOpen(!isOpen);
+    handleOverViewport(dropdownRef, setOverViewport);
   };
 
+  handleFormChange(options.find((col) => col.statusName === currentStatus).id);
+
   useEffect(() => {
-    setOverViewport(false);
-    const currentId = options.find((col) => col.statusName === value).id;
-    const statusBottom = dropdownRef.current.getBoundingClientRect().bottom;
     const handleClickOutside = function (e) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setIsOpen(false);
       }
     };
 
-    handleFormChange(currentId);
     document.addEventListener("click", handleClickOutside);
-    if (window.innerHeight - statusBottom < 120) {
-      setOverViewport(true);
-    }
 
     return () => {
       document.removeEventListener("click", handleClickOutside);
     };
-  }, [isOpen]);
+  }, []);
 
   return (
     <div className="status">
@@ -65,7 +71,7 @@ function Dropdown({ label, value, options, handleFormChange }) {
 
         <ul
           className={`status__options ${
-            isOpen ? "status__options--open" : ""
+            isOpen ? "status__options--open" : "status__options--close"
           } ${isMobileTwo || overViewport ? "status__options--mobile" : ""}`}
           onClick={handleOpen}
         >
@@ -75,7 +81,6 @@ function Dropdown({ label, value, options, handleFormChange }) {
                 key={option.id}
                 onClick={() => {
                   setCurrentStatus(option.statusName);
-                  handleFormChange(option.id);
                 }}
               >
                 {formatter(option.statusName)}
@@ -97,12 +102,13 @@ function DropdownRequestVer({ label, value, options, taskId }) {
   const dropdownRef = useRef(null);
 
   const handleOpen = function () {
-    if (!isUpdatingTasks) setIsOpen(!isOpen);
+    if (!isUpdatingTasks) {
+      setIsOpen(!isOpen);
+      handleOverViewport(dropdownRef, setOverViewport);
+    }
   };
 
   useEffect(() => {
-    setOverViewport(false);
-    const statusBottom = dropdownRef.current.getBoundingClientRect().bottom;
     const handleClickOutside = function (e) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setIsOpen(false);
@@ -110,14 +116,11 @@ function DropdownRequestVer({ label, value, options, taskId }) {
     };
 
     document.addEventListener("click", handleClickOutside);
-    if (window.innerHeight - statusBottom < 120) {
-      setOverViewport(true);
-    }
 
     return () => {
       document.removeEventListener("click", handleClickOutside);
     };
-  }, [isOpen]);
+  }, []);
 
   return (
     <div className="status">
@@ -144,7 +147,7 @@ function DropdownRequestVer({ label, value, options, taskId }) {
 
         <ul
           className={`status__options ${
-            isOpen ? "status__options--open" : ""
+            isOpen ? "status__options--open" : "status__options--close"
           } ${isMobileTwo || overViewport ? "status__options--mobile" : ""}`}
           onClick={handleOpen}
         >

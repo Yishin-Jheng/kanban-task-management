@@ -2,7 +2,12 @@ import { useEffect, useContext } from "react";
 import { useMediaQuery } from "react-responsive";
 import { useSelector, useDispatch } from "react-redux";
 import { useThunk } from "../hooks/useThunk";
-import { fetchBoards, setActiveBoard } from "../store";
+import {
+  fetchBoards,
+  setActiveBoard,
+  resetColumns,
+  resetTasks,
+} from "../store";
 import { SidebarContext } from "../App";
 import Skeleton from "./small-components/Skeleton";
 
@@ -22,8 +27,10 @@ function BoardsList() {
   const [doFetchBoards, isLoadingBoards] = useThunk(fetchBoards);
 
   useEffect(() => {
-    doFetchBoards();
-  }, [doFetchBoards]);
+    if (boardsData.length < 1) {
+      doFetchBoards();
+    }
+  }, [doFetchBoards, boardsData]);
 
   if (isLoadingBoards || !boardsData) {
     return (
@@ -48,6 +55,8 @@ function BoardsList() {
               onClick={() => {
                 if (isMobile) handleHidden();
                 dispatch(setActiveBoard(board.id));
+                dispatch(resetColumns());
+                dispatch(resetTasks());
               }}
             >
               {boardIcon}

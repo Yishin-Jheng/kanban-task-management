@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 function Input({
   checkInvalid,
@@ -11,12 +11,6 @@ function Input({
   const [input, setInput] = useState(value);
   const [clicked, setClicked] = useState(false);
   const isInvalid = (clicked && !input) || (checkInvalid && !input);
-
-  useEffect(() => {
-    if (input) {
-      handleFormChange(input);
-    }
-  }, [input]);
 
   return (
     <div className="input-box">

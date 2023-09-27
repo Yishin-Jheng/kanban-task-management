@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useThunk } from "../../hooks/useThunk";
 import { fetchSubtasks, setModal } from "../../store";

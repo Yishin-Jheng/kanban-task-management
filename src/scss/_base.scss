@@ -211,7 +211,7 @@ body {
 
 @keyframes shimmer {
   0% {
-    background-position: -200px;
+    background-position: -150px;
   }
 
   100% {
@@ -266,7 +266,7 @@ body {
       var(--color-skeleton-2) 40px,
       var(--color-skeleton-1) 80px
     );
-    animation: shimmer 1.6s infinite linear;
+    animation: shimmer 1.2s infinite linear;
   }
 }
 

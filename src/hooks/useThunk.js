@@ -6,7 +6,7 @@ export function useThunk(thunk) {
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
 
-  // when runThunk is called in the useEffect, useCallback can prevent infinite re-render
+  // when runThunk is called (as dependency) in the useEffect , useCallback can prevent infinite re-render
   const runThunk = useCallback(
     (arg) => {
       setIsLoading(true);

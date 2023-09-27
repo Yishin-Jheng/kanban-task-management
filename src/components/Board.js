@@ -5,14 +5,13 @@ import { DragDropContext } from "react-beautiful-dnd";
 import {
   fetchColumns,
   updateTasksStatus,
-  resetColumns,
-  resetTasks,
+  // resetColumns,
+  // resetTasks,
 } from "../store";
 import { Column, LoadingColumn, NewColumn } from "./Column";
 import EmptyColumn from "./EmptyColumn";
 
 function Board() {
-  const dispatch = useDispatch();
   const [columnsData, activeBoardId] = useSelector((state) => {
     const columnsData = state.columns.data;
     const activeBoardId = state.boards.activeBoardId;
@@ -35,10 +34,9 @@ function Board() {
   };
 
   useEffect(() => {
-    dispatch(resetColumns());
-    dispatch(resetTasks());
-
-    if (activeBoardId !== 0) doFetchColumns({ boardId: activeBoardId });
+    if (activeBoardId !== 0) {
+      doFetchColumns({ boardId: activeBoardId });
+    }
   }, [doFetchColumns, activeBoardId]);
 
   if (isLoadingColumns || activeBoardId === 0) {

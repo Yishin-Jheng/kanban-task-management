@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useFormData } from "../../hooks/useFormData";
 import { useThunk } from "../../hooks/useThunk";
 import { createBoards, updateBoards, setModal } from "../../store";
-import Input from "../modal-components/Input";
 import { DeletableInput } from "../modal-components/DeletableInput";
+import Input from "../modal-components/Input";
 
 function NewOrEditBoardModal({ createOrNot }) {
   const dispatch = useDispatch();

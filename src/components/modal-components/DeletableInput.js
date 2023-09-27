@@ -11,6 +11,10 @@ function DeletableInput({
 }) {
   const [items, setItems] = useState(values);
   const [deletedItems, setDeletedItems] = useState([]);
+  const validItems =
+    valueKey === "description"
+      ? items.filter((item) => item.description)
+      : items.filter((item) => item.statusName);
 
   const handleAddInput = () => {
     const maxIdNum = Math.max(...items.map((item) => item.id));
@@ -64,15 +68,11 @@ function DeletableInput({
     );
   };
 
-  useEffect(() => {
-    const validItems =
-      valueKey === "description"
-        ? items.filter((item) => item.description)
-        : items.filter((item) => item.statusName);
+  handleFormChange(validItems);
 
-    handleFormChange(validItems);
+  useEffect(() => {
     handleFormDelete(deletedItems);
-  }, [items]);
+  }, [deletedItems, handleFormDelete]);
 
   const listItems = items.map((obj) => {
     return (

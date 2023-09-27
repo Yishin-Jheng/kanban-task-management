@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 function Textarea({
   checkInvalid,
@@ -11,11 +11,9 @@ function Textarea({
   const [clicked, setClicked] = useState(false);
   const isInvalid = (clicked && !input) || (checkInvalid && !input);
 
-  useEffect(() => {
-    if (input) {
-      handleFormChange(input);
-    }
-  }, [input]);
+  if (input) {
+    handleFormChange(input);
+  }
 
   return (
     <div className="input-box">

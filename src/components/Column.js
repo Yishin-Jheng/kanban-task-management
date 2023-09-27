@@ -11,6 +11,9 @@ function Column({ statusName, decorationColor, columnId, isUpdatingTasks }) {
     return state.tasks;
   });
   const [doFetchTasks, isLoadingTasks] = useThunk(fetchTasks);
+  const tasksDataOfThisColumn = tasksData.filter(
+    (task) => task.columnId === columnId
+  );
 
   const modalTaskDetail = (taskObj) => {
     dispatch(
@@ -36,7 +39,9 @@ function Column({ statusName, decorationColor, columnId, isUpdatingTasks }) {
   };
 
   useEffect(() => {
-    doFetchTasks({ columnId });
+    if (tasksDataOfThisColumn.length < 1) {
+      doFetchTasks({ columnId });
+    }
   }, [doFetchTasks]);
 
   return (
@@ -49,7 +54,8 @@ function Column({ statusName, decorationColor, columnId, isUpdatingTasks }) {
           &nbsp;
         </div>
         <p className="column__status__title">{`${statusName} (${
-          tasksData.filter((task) => task.columnId === columnId).length
+          // tasksData.filter((task) => task.columnId === columnId).length
+          tasksDataOfThisColumn.length
         })`}</p>
       </div>
 
@@ -65,33 +71,31 @@ function Column({ statusName, decorationColor, columnId, isUpdatingTasks }) {
           >
             {isLoadingTasks
               ? loadingTask(3)
-              : tasksData
-                  .filter((task) => task.columnId === columnId)
-                  .map((task, index) => (
-                    <Draggable
-                      key={task.id}
-                      index={index}
-                      draggableId={task.id.toString()}
-                      isDragDisabled={isUpdatingTasks}
-                    >
-                      {(provided, snapshot) => (
-                        <li
-                          ref={provided.innerRef}
-                          className="task"
-                          onClick={() => {
-                            modalTaskDetail(task);
-                          }}
-                          {...provided.dragHandleProps}
-                          {...provided.draggableProps}
-                        >
-                          <p className="task__description">{task.title}</p>
-                          <p className="task__subtasks">
-                            {task.finishedSubNum} of {task.totalSubNum} subtasks
-                          </p>
-                        </li>
-                      )}
-                    </Draggable>
-                  ))}
+              : tasksDataOfThisColumn.map((task, index) => (
+                  <Draggable
+                    key={task.id}
+                    index={index}
+                    draggableId={task.id.toString()}
+                    isDragDisabled={isUpdatingTasks}
+                  >
+                    {(provided, snapshot) => (
+                      <li
+                        ref={provided.innerRef}
+                        className="task"
+                        onClick={() => {
+                          modalTaskDetail(task);
+                        }}
+                        {...provided.dragHandleProps}
+                        {...provided.draggableProps}
+                      >
+                        <p className="task__description">{task.title}</p>
+                        <p className="task__subtasks">
+                          {task.finishedSubNum} of {task.totalSubNum} subtasks
+                        </p>
+                      </li>
+                    )}
+                  </Draggable>
+                ))}
             {provided.placeholder}
           </ul>
         )}

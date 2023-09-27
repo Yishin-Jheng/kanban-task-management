@@ -23,13 +23,21 @@ function App() {
     setSidebarHidden(!sidebarHidden);
   };
 
+  // NOTE: 雖然 React 建議不要透過捕捉一個state的變化去改變另一個state，
+  // 但在isMobile維持true的情況下，sidebarHidden第一次被更新之後又會在觸發一次re-render，
+  // 下一次的渲染中sidebarHidden又被更新，就又會在進行一次re-render，最終變成無限循環。
+  // 這個狀況似乎還是要使用Effect去控制state更新會比較恰當。
   useEffect(() => {
-    doCheckSession();
-
     if (isMobile) {
       setSidebarHidden(true);
     }
-  }, [isMobile, doCheckSession]);
+  }, [isMobile]);
+
+  useEffect(() => {
+    if (!session) {
+      doCheckSession();
+    }
+  }, [session, doCheckSession]);
 
   let content;
   if (isChecking) {
