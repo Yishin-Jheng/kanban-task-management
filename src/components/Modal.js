@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useMediaQuery } from "react-responsive";
 import { useWindowHeight } from "../hooks/useWindowHeight";
 import { closeModal } from "../store";
 import DeleteModal from "./modals/DeleteModal";
@@ -23,6 +24,7 @@ function Modal() {
   });
   const [formHeight, setFormHeight] = useState(0);
   const windowHeight = useWindowHeight();
+  const isMobile2 = useMediaQuery({ query: `(max-width: 515px)` });
   const formRef = useRef("");
 
   useEffect(() => {
@@ -72,7 +74,7 @@ function Modal() {
       <form
         ref={formRef}
         className={`modal ${
-          windowHeight - formHeight < 180
+          windowHeight - formHeight < 180 && !isMobile2
             ? "modal--horizontal"
             : "modal--vertical"
         }`}
