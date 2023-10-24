@@ -70,9 +70,7 @@ function TaskDetailModal({ detailObj }) {
           Subtasks ({finishedNum === undefined ? "-" : finishedNum} of{" "}
           {detailObj.totalSubNum})
         </span>
-        {/* NOTE: for DEV */}
         {subtaskContent}
-        {/* <Skeleton times={2} className="skeleton__outer--modal" /> */}
       </div>
 
       <DropdownRequestVer

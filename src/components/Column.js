@@ -53,10 +53,7 @@ function Column({ statusName, decorationColor, columnId, isUpdatingTasks }) {
         >
           &nbsp;
         </div>
-        <p className="column__status__title">{`${statusName} (${
-          // tasksData.filter((task) => task.columnId === columnId).length
-          tasksDataOfThisColumn.length
-        })`}</p>
+        <p className="column__status__title">{`${statusName} (${tasksDataOfThisColumn.length})`}</p>
       </div>
 
       <Droppable
