@@ -433,11 +433,17 @@
   border-radius: 5px;
 
   &__icon {
-    animation: blinker 2s linear infinite;
-  }
+    @extend %body-m;
+    display: flex;
+    gap: 5px;
+    align-items: center;
 
-  &__icon:hover {
-    cursor: help;
+    color: $color-primary;
+    text-decoration: underline;
+
+    &:hover {
+      cursor: help;
+    }
   }
 
   &__icon:hover ~ &__info {

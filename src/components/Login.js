@@ -3,7 +3,8 @@ import { useFormData } from "../hooks/useFormData";
 import { useThunk } from "../hooks/useThunk";
 import { userLogin } from "../store";
 import { IconContext } from "react-icons";
-import { TbBulb, TbLoader } from "react-icons/tb";
+import { TbLoader } from "react-icons/tb";
+import { BsFillQuestionSquareFill } from "react-icons/bs";
 import Input from "./modal-components/Input";
 
 function Login() {
@@ -30,9 +31,12 @@ function Login() {
       <div className="modal__title">
         <span>Account Login</span>
 
-        <IconContext.Provider value={{ size: "2rem", color: "#635fc7" }}>
-          <TbBulb className="login__icon" />
-        </IconContext.Provider>
+        <div className="login__icon">
+          <IconContext.Provider value={{ size: "1.5rem", color: "#635fc7" }}>
+            <BsFillQuestionSquareFill />
+          </IconContext.Provider>
+          <span>Don't have an account?</span>
+        </div>
 
         <div className="login__info">
           <p>Here is the email and password provided for guest 👏</p>
