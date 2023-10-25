@@ -42,8 +42,8 @@ Users should be able to:
 
 ### Links
 
-- Live Site URL: [Live site on Netlify](https://your-live-site-url.com)
-- Solution URL: [Solution page on Frontend Mentor](https://your-solution-url.com)
+- Live Site URL: [Live site on Netlify](https://kanban-task-management-yishin.netlify.app/)
+- Solution URL: <del>[Solution page on Frontend Mentor](https://your-solution-url.com)</del> Unfinished
 
 ## My process
 

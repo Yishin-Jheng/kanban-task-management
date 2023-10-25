@@ -28,7 +28,7 @@ function Login() {
 
   return (
     <form className="login" onSubmit={handleSubmit(getFormData)}>
-      <div className="modal__title">
+      <div className="modal__title login__title">
         <span>Account Login</span>
 
         <div className="login__icon">
