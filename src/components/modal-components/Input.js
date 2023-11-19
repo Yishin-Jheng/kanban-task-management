@@ -12,6 +12,10 @@ function Input({
   const [clicked, setClicked] = useState(false);
   const isInvalid = (clicked && !input) || (checkInvalid && !input);
 
+  if (input) {
+    handleFormChange(input);
+  }
+
   return (
     <div className="input-box">
       <span className="modal__subtitle">{label}</span>

@@ -106,7 +106,7 @@ const modalSlice = createSlice({
           isOpen: true,
           whichOpen: "errorMessageModal",
           errorMsg:
-            "Change is invalid. Guest has no permission to modify board or column. If you are not guest, please check your internet and try again.",
+            "Change is invalid. Guest has no permission to modify board or column. If you did not sign in as guest, please check your internet and try again.",
         };
       }
     );
