@@ -1,13 +1,8 @@
 import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useThunk } from "../hooks/useThunk";
 import { DragDropContext } from "react-beautiful-dnd";
-import {
-  fetchColumns,
-  updateTasksStatus,
-  // resetColumns,
-  // resetTasks,
-} from "../store";
+import { fetchColumns, updateTasksStatus } from "../store";
 import { Column, LoadingColumn, NewColumn } from "./Column";
 import EmptyColumn from "./EmptyColumn";
 
@@ -47,25 +42,29 @@ function Board() {
     );
   }
 
-  return columnsData && columnsData.length > 0 ? (
-    <DragDropContext onDragEnd={handleDragAndDrop}>
-      <div className="column__container">
-        {columnsData.map((status) => {
-          return (
-            <Column
-              key={status.id}
-              statusName={status.statusName}
-              decorationColor={status.decorationColor}
-              columnId={status.id}
-              isUpdatingTasks={isUpdatingTasks}
-            />
-          );
-        })}
-        <NewColumn />
-      </div>
-    </DragDropContext>
-  ) : (
-    <EmptyColumn />
+  return (
+    <div className="board">
+      {columnsData && columnsData.length > 0 ? (
+        <DragDropContext onDragEnd={handleDragAndDrop}>
+          <div className="column__container">
+            {columnsData.map((status) => {
+              return (
+                <Column
+                  key={status.id}
+                  statusName={status.statusName}
+                  decorationColor={status.decorationColor}
+                  columnId={status.id}
+                  isUpdatingTasks={isUpdatingTasks}
+                />
+              );
+            })}
+            <NewColumn />
+          </div>
+        </DragDropContext>
+      ) : (
+        <EmptyColumn />
+      )}
+    </div>
   );
 }
 
