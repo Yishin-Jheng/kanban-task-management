@@ -36,9 +36,9 @@ Users should be able to:
 
 ### Screenshot
 
-![](./screenshot-light.png)
+![](./design/screenshot-light.png)
 
-![](./screenshot-dark.png)
+![](./design/screenshot-dark.png)
 
 ### Links
 
@@ -60,16 +60,16 @@ Users should be able to:
 
 ### Wireframe
 
-<img src="./responsive-web-design-1.png">
-<img src="./responsive-web-design-2.png" width="600px">
+<img src="./design/responsive-web-design-1.png">
+<img src="./design/responsive-web-design-2.png" width="600px">
 
 ### Components structure
 
-![](./components-structure.png)
+![](./design/components-structure.png)
 
 ### Events list
 
-<img src="./events-list.png" width="600px">
+<img src="./design/events-list.png" width="600px">
 
 ### What I learned
 
@@ -147,7 +147,7 @@ Users should be able to:
       } else {
         return data;
       }
-    }
+    },
   );
   ```
 
