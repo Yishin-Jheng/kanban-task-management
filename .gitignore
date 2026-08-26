@@ -15,5 +15,7 @@
 .env
 .DS_Store
 .prettierignore
+.agents
+.claude
 node_modules
 build
