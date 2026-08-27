@@ -1,15 +1,11 @@
 import { useEffect, useContext } from "react";
 import { useMediaQuery } from "react-responsive";
 import { useSelector, useDispatch } from "react-redux";
-import { useThunk } from "../hooks/useThunk";
-import {
-  fetchBoards,
-  setActiveBoard,
-  resetColumns,
-  resetTasks,
-} from "../store";
-import { SidebarContext } from "../App";
-import Skeleton from "./small-components/Skeleton";
+import { SidebarContext } from "@/App";
+import { useThunk } from "@/hooks/useThunk";
+import { fetchBoards, setActiveBoard, resetColumns, resetTasks } from "@/store";
+import Skeleton from "@/components/small-components/Skeleton";
+import styles from "./Sidebar.module.scss";
 
 const boardIcon = (
   <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">
@@ -22,7 +18,7 @@ function BoardsList() {
   const isMobile = useMediaQuery({ query: `(max-width: 670px)` });
   const { handleHidden } = useContext(SidebarContext);
   const { data: boardsData, activeBoardId } = useSelector(
-    (state) => state.boards
+    (state) => state.boards,
   );
   const [doFetchBoards, isLoadingBoards] = useThunk(fetchBoards);
 
@@ -35,7 +31,7 @@ function BoardsList() {
   if (isLoadingBoards || !boardsData) {
     return (
       <>
-        <span className="boards__title">All Borads (-)</span>
+        <span className={styles.boardTitle}>All Borads (-)</span>
         <Skeleton times={3} className="skeleton__outer--board" />;
       </>
     );
@@ -43,15 +39,16 @@ function BoardsList() {
 
   return (
     <>
-      <span className="boards__title">All Borads ({boardsData.length})</span>
-      <ul className="boards__list">
+      <span className={styles.boardTitle}>
+        All Borads ({boardsData.length})
+      </span>
+      <ul className={styles.boardsList}>
         {boardsData.map((board) => {
           return (
             <li
               key={board.id}
-              className={`boards__list__item ${
-                activeBoardId === board.id ? "boards__list__item--active" : ""
-              }`}
+              className={styles.boardItem}
+              data-active={activeBoardId === board.id ? "active" : ""}
               onClick={() => {
                 if (isMobile) handleHidden();
                 dispatch(setActiveBoard(board.id));

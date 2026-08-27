@@ -1,0 +1,27 @@
+@use "tokens" as *;
+@use "mixins" as *;
+
+.hiddenSwitch {
+  z-index: 999;
+  position: fixed;
+  left: 0;
+  bottom: 3.4rem;
+  padding: 1.35rem 2rem 1.35rem 1.5rem;
+
+  cursor: pointer;
+  border-radius: 0 100px 100px 0;
+  background-color: $color-primary;
+  transition: all 0.3s;
+
+  &:hover {
+    background-color: $color-primary-light-1;
+  }
+
+  svg {
+    fill: $color-white;
+  }
+
+  @include respond-to(mobile-1) {
+    display: none;
+  }
+}

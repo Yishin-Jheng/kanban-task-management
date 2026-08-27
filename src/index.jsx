@@ -1,5 +1,4 @@
-import "./scss/index.scss";
-import React from "react";
+import "./scss/global.scss";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { store } from "./store";
@@ -11,5 +10,5 @@ const root = createRoot(element);
 root.render(
   <Provider store={store}>
     <App />
-  </Provider>
+  </Provider>,
 );

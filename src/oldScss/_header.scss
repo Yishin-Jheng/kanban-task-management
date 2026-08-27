@@ -10,7 +10,7 @@
   transition: all 0.3s;
 
   &__title {
-    @extend %heading-xl;
+    @include heading-xl;
 
     color: var(--color-text);
     display: block;

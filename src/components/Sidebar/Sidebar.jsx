@@ -1,10 +1,11 @@
 import { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
-import { setModal } from "../store";
-import { SidebarContext } from "../App";
-import BoardsList from "./BoardsList";
-import logoLight from "../assets/logo-dark.svg";
-import logoDark from "../assets/logo-light.svg";
+import { SidebarContext } from "@/App";
+import { setModal } from "@/store";
+import BoardsList from "@/components/Sidebar/BoardsList";
+import logoLight from "@/assets/logo-dark.svg";
+import logoDark from "@/assets/logo-light.svg";
+import styles from "./Sidebar.module.scss";
 
 const boardIcon = (
   <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">
@@ -42,7 +43,7 @@ function Sidebar({ isMobile }) {
         isOpen: true,
         whichOpen: "boardModal",
         createOrNot: true,
-      })
+      }),
     );
   };
 
@@ -56,48 +57,43 @@ function Sidebar({ isMobile }) {
 
   if (sidebarHidden && !isMobile) {
     return (
-      <figure className="logo-img--min">
+      <figure className={styles.logoImgMin}>
         <img src={logo} alt="logo" />
       </figure>
     );
   }
+  if (sidebarHidden) return null;
 
   return (
-    <aside className={sidebarHidden ? "min-sidebar__aside" : ""}>
-      <figure className="logo-img">
+    <aside className={styles.sideBar}>
+      <figure className={styles.logoImg}>
         <img src={logo} alt="logo" />
       </figure>
 
-      <div className="boards">
+      <div className={styles.boardWrapper}>
         <BoardsList />
-
-        <div
-          className="boards__list__item boards__list__create"
-          onClick={modalAddBoard}
-        >
+        <div className={styles.boardItemButton} onClick={modalAddBoard}>
           {boardIcon}
           <span>+ Create New Board</span>
         </div>
       </div>
 
-      <div className="theme-switch">
+      <div className={styles.themeSwitch}>
         <label>
           {lightThemeIcon}
-
-          <div className="theme-switch__toggle">
+          <div className={styles.themeSwitchToggle}>
             <input
               type="checkbox"
-              name="theme-switch"
+              name="themeSwitch"
               onClick={handleThemeSwitch}
             />
             <span></span>
           </div>
-
           {darkThemeIcon}
         </label>
       </div>
 
-      <div className="hidden-switch boards__list__item" onClick={handleHidden}>
+      <div className={styles.hiddenSwitch} onClick={handleHidden}>
         {hideSidebarIcon}
         <span>Hide Sidebar</span>
       </div>

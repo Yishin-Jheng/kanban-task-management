@@ -1,0 +1,45 @@
+@use "tokens" as *;
+
+@mixin respond-to($bp) {
+  @if $bp == tablet-1 {
+    @media (max-width: $size-tablet-1) {
+      @content;
+    }
+  } @else if $bp == tablet-2 {
+    @media (max-width: $size-tablet-2) {
+      @content;
+    }
+  } @else if $bp == mobile-1 {
+    @media (max-width: $size-mobile-1) {
+      @content;
+    }
+  } @else if $bp == mobile-2 {
+    @media (max-width: $size-mobile-2) {
+      @content;
+    }
+  } @else {
+    @error "Unknown breakpoint: #{$bp}";
+  }
+}
+
+@mixin light-icon {
+  svg {
+    fill: $color-grey-light-1;
+  }
+}
+
+@mixin scrollbar {
+  &::-webkit-scrollbar-track {
+    border-radius: 99px;
+    background: var(--color-background);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 99px;
+    background: var(--color-column);
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: $color-grey-light-1;
+  }
+}

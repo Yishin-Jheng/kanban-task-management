@@ -1,55 +1,30 @@
-%heading-xl {
-  font-weight: 700;
-  font-size: 24px;
-  line-height: 30px;
+@use "tokens" as *;
+@use "typography" as *;
+@use "mixins" as *;
+
+// THEME SWITCHER
+:root[data-theme="light"] {
+  --color-basic: #{$color-white};
+  --color-background: #{$color-primary-light-2};
+  --color-text: #{$color-black};
+  --color-dropdown: #{$color-white};
+  --color-skeleton-1: #{$color-grey-light-2};
+  --color-skeleton-2: #{$color-primary-light-2};
+  --color-column: #ecf2fb;
+  --color-btn: #efeff9;
+  --color-checkbox: #dbd7f1;
 }
 
-%heading-l {
-  font-weight: 700;
-  font-size: 18px;
-  line-height: 23px;
-}
-
-%heading-m {
-  font-weight: 700;
-  font-size: 15px;
-  line-height: 19px;
-}
-
-%heading-s {
-  color: $color-grey-light-1;
-  font-weight: 700;
-  font-size: 12px;
-  line-height: 15px;
-  letter-spacing: 2.4px;
-}
-
-%body-l {
-  font-weight: 500;
-  font-size: 13px;
-  line-height: 23px;
-}
-
-%body-m {
-  font-weight: 700;
-  font-size: 12px;
-  line-height: 15px;
-}
-
-%scrollbar {
-  &::-webkit-scrollbar-track {
-    border-radius: 99px;
-    background: var(--color-background);
-  }
-
-  &::-webkit-scrollbar-thumb {
-    border-radius: 99px;
-    background: var(--color-column);
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: $color-grey-light-1;
-  }
+:root[data-theme="dark"] {
+  --color-basic: #{$color-grey-dark-2};
+  --color-background: #{$color-grey-dark-1};
+  --color-text: #{$color-white};
+  --color-btn: #{$color-white};
+  --color-dropdown: #{$color-grey-dark-1};
+  --color-skeleton-1: #{$color-grey-dark-3};
+  --color-column: #22242e;
+  --color-checkbox: #39395b;
+  --color-skeleton-2: #474856;
 }
 
 *,
@@ -72,6 +47,17 @@ body {
   line-height: 1.6;
 }
 
+@keyframes shimmer {
+  0% {
+    background-position: -150px;
+  }
+
+  100% {
+    background-position: 400px;
+  }
+}
+
+//XXX: 尚需整理
 .container {
   height: 100vh;
   display: grid;
@@ -80,7 +66,7 @@ body {
 }
 
 .btn {
-  @extend %heading-m;
+  @include heading-m;
   font-family: $font-primary;
 
   padding: 14px 24px;
@@ -110,7 +96,7 @@ body {
 }
 
 .btn-medium {
-  @extend %body-l;
+  @include body-l;
   width: 100%;
   padding: 0.8rem;
   font-weight: 700;
@@ -151,8 +137,8 @@ body {
 }
 
 .dots-menu {
-  @extend %light-theme;
-  @extend %body-l;
+  @include light-icon;
+  @include body-l;
   cursor: pointer;
   position: relative;
   height: 20px;
@@ -202,72 +188,6 @@ body {
     grid-row: 2 / 3;
     grid-column: 1 / -1;
   }
-
-  &__aside {
-    display: none;
-    visibility: hidden;
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -150px;
-  }
-
-  100% {
-    background-position: 400px;
-  }
-}
-
-.skeleton {
-  &__outer {
-    position: relative;
-    overflow: hidden;
-    border-radius: 5px;
-    background-color: var(--color-skeleton-1);
-
-    &--board,
-    &--modal {
-      width: 100%;
-      height: 4rem;
-      margin-bottom: 0.8rem;
-    }
-
-    &--title {
-      width: 25rem;
-      height: 3rem;
-      margin-right: auto;
-    }
-
-    &--status {
-      width: 50%;
-      height: 1.5rem;
-      margin-bottom: 2.4rem;
-    }
-
-    &--task {
-      width: 100%;
-      height: 2rem;
-      margin-bottom: 0.8rem;
-    }
-
-    &--subtask {
-      width: 50%;
-      height: 1.5rem;
-    }
-  }
-
-  &__inner {
-    height: 100%;
-    background-size: 600px;
-    background-image: linear-gradient(
-      90deg,
-      var(--color-skeleton-1) 0px,
-      var(--color-skeleton-2) 40px,
-      var(--color-skeleton-1) 80px
-    );
-    animation: shimmer 1.2s infinite linear;
-  }
 }
 
 @media only screen and (max-width: $size-tablet-1) {
@@ -291,10 +211,6 @@ body {
 }
 
 @media only screen and (max-width: $size-tablet-2) {
-  %heading-xl {
-    font-size: 22px;
-  }
-
   .min-sidebar {
     &__container {
       grid-template-columns: 202px 1fr;
@@ -315,10 +231,6 @@ body {
     position: relative;
     grid-template-columns: 1fr;
     grid-template-rows: 64px 1fr;
-  }
-
-  %heading-xl {
-    font-size: 18px;
   }
 
   .skeleton {

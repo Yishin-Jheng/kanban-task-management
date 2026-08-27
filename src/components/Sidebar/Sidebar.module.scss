@@ -1,0 +1,244 @@
+@use "tokens" as *;
+@use "typography" as *;
+@use "mixins" as *;
+
+@keyframes moveInAbove {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -2rem);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.sideBar {
+  grid-row: 1 / -1;
+  grid-column: 1 / 2;
+  color: $color-primary;
+  background-color: var(--color-basic);
+  border-right: 2px solid var(--color-background);
+
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s;
+
+  @include respond-to(mobile-1) {
+    z-index: 9999;
+    position: absolute;
+    top: 8rem;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 10px;
+    animation: moveInAbove 0.3s ease-out;
+  }
+}
+
+.logoImg,
+.logoImgMin {
+  margin: 3.3rem 3.4rem;
+
+  @include respond-to(tablet-1) {
+    margin: 3.3rem 2.4rem;
+  }
+  @include respond-to(tablet-2) {
+    margin: 3.3rem 1.8rem;
+  }
+  @include respond-to(mobile-1) {
+    display: none;
+  }
+}
+
+.logoImgMin {
+  grid-row: 1 / 2;
+  grid-column: 1 / 2;
+  padding: 3.3rem 2.4rem;
+  margin-right: -2px;
+  background-color: var(--color-basic);
+  border-right: 2px solid var(--color-background);
+
+  @include respond-to(tablet-2) {
+    padding: 3.3rem 1.8rem;
+  }
+}
+
+.boardWrapper {
+  margin-bottom: auto;
+  padding: 1.5rem 2.4rem 1.5rem 0;
+
+  @include respond-to(tablet-1) {
+    padding: 1.5rem 2rem 1.5rem 0;
+  }
+  @include respond-to(tablet-2) {
+    padding: 1.5rem 1.4rem 1.5rem 0;
+  }
+  @include respond-to(mobile-1) {
+    padding: 1.5rem 2rem 1.5rem 0;
+  }
+}
+
+.boardTitle {
+  @include heading-s;
+  display: inline-block;
+  text-transform: uppercase;
+  margin-left: 3.4rem;
+  margin-bottom: 19px;
+
+  @include respond-to(tablet-1) {
+    margin-left: 2.4rem;
+  }
+  @include respond-to(tablet-2) {
+    margin-left: 1.8rem;
+  }
+  @include respond-to(mobile-1) {
+    margin-left: 2.4rem;
+  }
+}
+
+.boardList {
+  @include respond-to(mobile-1) {
+    width: 226px;
+  }
+}
+
+.boardItem,
+.boardItemButton,
+.hiddenSwitch {
+  @include heading-m;
+  @include light-icon;
+
+  display: flex;
+  gap: 17px;
+  align-items: center;
+
+  padding: 1.5rem 0;
+  padding-left: 3.4rem;
+  color: $color-grey-light-1;
+  border-radius: 0 100px 100px 0;
+  transition: all 0.3s;
+
+  &[data-active="active"] {
+    color: $color-white !important;
+    background-color: $color-primary;
+
+    svg {
+      fill: $color-white !important;
+    }
+  }
+
+  &:not([data-active="active"]) {
+    cursor: pointer;
+  }
+
+  &:hover:not([data-active="active"]) {
+    background-color: $color-primary-light-2;
+
+    span {
+      color: $color-primary;
+    }
+
+    svg {
+      fill: $color-primary;
+    }
+  }
+
+  @include respond-to(tablet-1) {
+    padding-left: 2.4rem;
+  }
+  @include respond-to(tablet-2) {
+    gap: 12px;
+    padding-left: 1.8rem;
+  }
+  @include respond-to(mobile-1) {
+    width: 100%;
+    padding-left: 2.4rem;
+  }
+}
+
+.boardItemButton {
+  color: $color-primary;
+
+  svg {
+    fill: $color-primary;
+  }
+}
+
+.themeSwitch {
+  @include light-icon;
+
+  margin: 0 2.4rem;
+  padding: 1.4rem 0;
+  border-radius: 5px;
+  background-color: var(--color-background);
+  transition: all 0.3s;
+
+  label {
+    display: flex;
+    gap: 2.2rem;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  @include respond-to(tablet-1) {
+    margin: 0 1.4rem;
+  }
+  @include respond-to(mobile-1) {
+    margin: 0 1.4rem;
+    margin-bottom: 1.6rem;
+  }
+}
+
+.themeSwitchToggle {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  input:hover + span {
+    background-color: $color-primary-light-1;
+  }
+
+  input:checked + span::before {
+    transform: translateX(20.5px);
+  }
+
+  span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: $color-primary;
+    border-radius: 999px;
+    transition: all 0.3s;
+  }
+
+  span::before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    top: 2.7px;
+    left: 2.5px;
+    border-radius: 999px;
+    background-color: white;
+    transition: 0.3s;
+  }
+}
+
+.hiddenSwitch {
+  margin: 0.7rem 2.4rem 3.4rem 0;
+
+  @include respond-to(mobile-1) {
+    display: none;
+  }
+}

@@ -33,7 +33,7 @@
 }
 
 .modal {
-  @extend %scrollbar;
+  @include scrollbar;
   &::-webkit-scrollbar {
     width: 5px;
   }
@@ -112,7 +112,7 @@
   }
 
   &__scrollbox {
-    @extend %scrollbar;
+    @include scrollbar;
     &::-webkit-scrollbar {
       width: 4px;
     }
@@ -281,7 +281,7 @@
   }
 
   &__options {
-    @extend %scrollbar;
+    @include scrollbar;
     &::-webkit-scrollbar {
       width: 4px;
     }

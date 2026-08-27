@@ -1,0 +1,47 @@
+@use "tokens" as *;
+
+@mixin heading-xl {
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 30px;
+
+  @media only screen and (max-width: $size-tablet-2) {
+    font-size: 22px;
+  }
+
+  @media only screen and (max-width: $size-mobile-1) {
+    font-size: 18px;
+  }
+}
+
+@mixin heading-l {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 23px;
+}
+
+@mixin heading-m {
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 19px;
+}
+
+@mixin heading-s {
+  color: $color-grey-light-1;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 15px;
+  letter-spacing: 2.4px;
+}
+
+@mixin body-l {
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 23px;
+}
+
+@mixin body-m {
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 15px;
+}

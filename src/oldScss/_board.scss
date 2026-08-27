@@ -1,5 +1,5 @@
 main {
-  @extend %scrollbar;
+  @include scrollbar;
   &::-webkit-scrollbar {
     height: 8px;
   }
@@ -66,7 +66,7 @@ main {
   }
 
   &__block {
-    @extend %scrollbar;
+    @include scrollbar;
     &::-webkit-scrollbar {
       width: 4px;
     }
@@ -78,7 +78,7 @@ main {
   }
 
   &__create {
-    @extend %heading-xl;
+    @include heading-xl;
 
     width: 300px;
     height: calc(100% - 39px);
