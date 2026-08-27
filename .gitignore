@@ -19,3 +19,4 @@
 .claude
 node_modules
 build
+dist
