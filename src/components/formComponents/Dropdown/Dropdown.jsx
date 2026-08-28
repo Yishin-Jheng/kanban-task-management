@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { IconContext } from "react-icons";
 import { TbLoader } from "react-icons/tb";
-import { updateTasksStatus } from "../../store";
-import { useThunk } from "../../hooks/useThunk";
+import { updateTasksStatus } from "@/store";
+import { useThunk } from "@/hooks/useThunk";
+import styles from "./Dropdown.module.scss";
 
 const downIcon = (
   <svg width="10" height="7" xmlns="http://www.w3.org/2000/svg">
@@ -56,29 +57,28 @@ function Dropdown({ label, value, options, handleFormChange }) {
   }, []);
 
   return (
-    <div className="status">
-      <span className="modal__subtitle">{label}</span>
+    <div className={styles.dropdownContainer}>
+      <span className={styles.dropdownTitle}>{label}</span>
 
-      <div ref={dropdownRef} className="status__container" onClick={handleOpen}>
-        <div
-          className={`status__selected ${
-            isOpen ? "status__selected--open" : ""
-          }`}
-        >
+      <div ref={dropdownRef} className={styles.dropdown} onClick={handleOpen}>
+        <div className={styles.currentSelect} data-open={isOpen ? "open" : ""}>
           <span>{formatter(currentStatus)}</span>
-          <figure className="status__icon">{isOpen ? upIcon : downIcon}</figure>
+          <figure className={styles.selectIcon}>
+            {isOpen ? upIcon : downIcon}
+          </figure>
         </div>
 
         <ul
-          className={`status__options ${
-            isOpen ? "status__options--open" : "status__options--close"
-          } ${isMobileTwo || overViewport ? "status__options--mobile" : ""}`}
+          className={styles.optionList}
+          data-open={isOpen ? "open" : "close"}
+          data-mobile={isMobileTwo || overViewport ? "mobile" : ""}
           onClick={handleOpen}
         >
           {options.map((option) => {
             return (
               <li
                 key={option.id}
+                className={styles.option}
                 onClick={() => {
                   setCurrentStatus(option.statusName);
                 }}
@@ -123,38 +123,36 @@ function DropdownRequestVer({ label, value, options, taskId }) {
   }, []);
 
   return (
-    <div className="status">
-      <span className="modal__subtitle">{label}</span>
+    <div className={styles.dropdownContainer}>
+      <span className={styles.dropdownTitle}>{label}</span>
 
-      <div ref={dropdownRef} className="status__container" onClick={handleOpen}>
-        <div
-          className={`status__selected ${
-            isOpen ? "status__selected--open" : ""
-          }`}
-        >
+      <div ref={dropdownRef} className={styles.dropdown} onClick={handleOpen}>
+        <div className={styles.currentSelect} data-open={isOpen ? "open" : ""}>
           <span>{formatter(currentStatus)}</span>
 
           {isUpdatingTasks ? (
             <IconContext.Provider value={{ size: "16px", color: "#635fc7" }}>
+              {/* XXX: loading-icon常常重複利用，之後再看看怎麼抽 */}
               <TbLoader className="loading-icon" />
             </IconContext.Provider>
           ) : (
-            <figure className="status__icon">
+            <figure className={styles.selectIcon}>
               {isOpen ? upIcon : downIcon}
             </figure>
           )}
         </div>
 
         <ul
-          className={`status__options ${
-            isOpen ? "status__options--open" : "status__options--close"
-          } ${isMobileTwo || overViewport ? "status__options--mobile" : ""}`}
+          className={styles.optionList}
+          data-open={isOpen ? "open" : "close"}
+          data-mobile={isMobileTwo || overViewport ? "mobile" : ""}
           onClick={handleOpen}
         >
           {options.map((option) => {
             return (
               <li
                 key={option.id}
+                className={styles.option}
                 onClick={() => {
                   if (option.statusName !== currentStatus) {
                     setCurrentStatus(option.statusName);

@@ -1,0 +1,47 @@
+@use "tokens" as *;
+@use "typography" as *;
+@use "mixins" as *;
+
+.textareaWrapper {
+  position: relative;
+}
+
+.textareaTitle {
+  @include body-m;
+  display: inline-block;
+  color: $color-grey-light-1;
+  margin-bottom: 1rem;
+}
+
+.textarea {
+  width: 100%;
+  height: 11rem;
+  resize: none;
+  padding: 1rem 1.5rem;
+  color: var(--color-text);
+  border-radius: 5px;
+  border: 1px solid rgba($color-grey-light-1, 0.3);
+  background-color: var(--color-basic);
+  font-family: $font-primary;
+
+  &:focus {
+    outline: 1px solid $color-primary;
+  }
+
+  &::placeholder {
+    @include body-l;
+    color: rgba($color-grey-light-1, 0.5);
+    font-family: $font-primary;
+  }
+}
+
+.invalidText {
+  color: $color-warning;
+  position: absolute;
+  bottom: 1.6rem;
+  right: 1.2rem;
+
+  &[data-invalid="invalid"] {
+    outline: 1px solid $color-warning;
+  }
+}

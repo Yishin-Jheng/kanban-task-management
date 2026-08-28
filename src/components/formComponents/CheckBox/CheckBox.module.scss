@@ -1,0 +1,80 @@
+@use "tokens" as *;
+@use "typography" as *;
+@use "mixins" as *;
+
+.checkboxWrapper {
+  position: relative;
+  padding: 1.2rem;
+  border-radius: 5px;
+  background-color: var(--color-background);
+  transition: all 0.3s;
+  pointer-events: none;
+
+  &:not(:last-child) {
+    margin-bottom: 8px;
+  }
+  &:hover {
+    background-color: var(--color-checkbox);
+  }
+}
+
+.checkboxLabel {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  pointer-events: auto;
+
+  p {
+    @include body-m;
+    color: var(--color-text);
+    transition: all 0.3s;
+  }
+
+  input {
+    position: absolute;
+    height: 0;
+    width: 0;
+    opacity: 0;
+  }
+
+  input:checked ~ p {
+    color: #7a7488;
+    text-decoration: line-through;
+  }
+
+  input:checked + .checkmark {
+    border: none;
+    background: $color-primary;
+  }
+
+  input:checked + .checkmark::after {
+    display: block;
+  }
+}
+
+.checkmark {
+  display: inline-block;
+  position: relative;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  background-color: $color-white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+
+  &::after {
+    content: "";
+    display: none;
+    position: absolute;
+
+    top: 2.5px;
+    left: 5.5px;
+    width: 5px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+}

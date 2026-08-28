@@ -1,0 +1,46 @@
+@use "tokens" as *;
+@use "typography" as *;
+@use "mixins" as *;
+
+.inputWrapper {
+  position: relative;
+}
+
+.input {
+  width: 100%;
+  display: block;
+  padding: 1rem 1.5rem;
+  text-align: left;
+  color: var(--color-text);
+  border-radius: 5px;
+  border: 1px solid rgba($color-grey-light-1, 0.3);
+  background-color: var(--color-basic);
+  font-family: $font-primary;
+
+  &:focus {
+    outline: 1px solid $color-primary;
+  }
+
+  &::placeholder {
+    @include body-l;
+    color: rgba($color-grey-light-1, 0.5);
+  }
+}
+
+.invalidWrapper {
+  outline: 1px solid $color-warning;
+}
+
+.inputTitle {
+  @include body-m;
+  display: inline-block;
+  color: $color-grey-light-1;
+  margin-bottom: 1rem;
+}
+
+.invalidText {
+  color: $color-warning;
+  position: absolute;
+  top: 3.6rem;
+  right: 1.2rem;
+}

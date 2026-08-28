@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import styles from "./DeletableInput.module.scss";
+import clsx from "clsx";
 
 function DeletableInput({
   checkInvalid,
@@ -64,7 +66,7 @@ function DeletableInput({
         } else {
           return item;
         }
-      })
+      }),
     );
   };
 
@@ -74,48 +76,47 @@ function DeletableInput({
     handleFormDelete(deletedItems);
   }, [deletedItems, handleFormDelete]);
 
-  const listItems = items.map((obj) => {
-    return (
-      <div key={obj.id} className="input-box__container">
-        {valueKey === "description" ? (
-          <InputBlock
-            checkInvalid={checkInvalid}
-            id={obj.id}
-            value={obj.description ? obj.description : ""}
-            placeholder={obj.placeholder ? obj.placeholder : ""}
-            handleInputChange={handleInputChange}
-          />
-        ) : (
-          <InputBlock
-            checkInvalid={checkInvalid}
-            id={obj.id}
-            value={obj.statusName ? obj.statusName : ""}
-            placeholder={obj.placeholder ? obj.placeholder : ""}
-            handleInputChange={handleInputChange}
-          />
-        )}
-
-        <svg
-          width="16"
-          height="15"
-          xmlns="http://www.w3.org/2000/svg"
-          onClick={() => handleRemoveInput(obj)}
-        >
-          <g fillRule="evenodd">
-            <path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z" />
-            <path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z" />
-          </g>
-        </svg>
-      </div>
-    );
-  });
-
   return (
-    <div className="input-box">
-      <span className="modal__subtitle">{label}</span>
+    <div className={styles.inputBox}>
+      <span className={styles.inputTitle}>{label}</span>
+      <div className={styles.inputScrollbox}>
+        {items.map((obj) => {
+          return (
+            <div key={obj.id} className={styles.inputGroup}>
+              {valueKey === "description" ? (
+                <InputBlock
+                  checkInvalid={checkInvalid}
+                  id={obj.id}
+                  value={obj.description ? obj.description : ""}
+                  placeholder={obj.placeholder ? obj.placeholder : ""}
+                  handleInputChange={handleInputChange}
+                />
+              ) : (
+                <InputBlock
+                  checkInvalid={checkInvalid}
+                  id={obj.id}
+                  value={obj.statusName ? obj.statusName : ""}
+                  placeholder={obj.placeholder ? obj.placeholder : ""}
+                  handleInputChange={handleInputChange}
+                />
+              )}
 
-      <div className="modal__scrollbox">{listItems}</div>
-
+              <svg
+                width="16"
+                height="15"
+                xmlns="http://www.w3.org/2000/svg"
+                onClick={() => handleRemoveInput(obj)}
+              >
+                <g fillRule="evenodd">
+                  <path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z" />
+                  <path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z" />
+                </g>
+              </svg>
+            </div>
+          );
+        })}
+      </div>
+      {/* XXX: 待抽元件 */}
       <div className="btn-medium" onClick={handleAddInput}>
         {btnLabel}
       </div>
@@ -137,12 +138,11 @@ function InputBlock({
   return (
     <>
       {isInvalid ? (
-        <span className="warning__text--subtask">Can't be empty</span>
+        <span className={styles.invalidText}>Can't be empty</span>
       ) : null}
-
       <input
         id={id}
-        className={isInvalid ? "warning" : ""}
+        className={clsx(styles.input, isInvalid ? styles.invalidWrapper : "")}
         type="text"
         value={input}
         maxLength="120"

@@ -1,4 +1,6 @@
 import { useState } from "react";
+import styles from "./Input.module.scss";
+import clsx from "clsx";
 
 function Input({
   checkInvalid,
@@ -17,16 +19,14 @@ function Input({
   }
 
   return (
-    <div className="input-box">
-      <span className="modal__subtitle">{label}</span>
-
+    <div className={styles.inputWrapper}>
+      <span className={styles.inputTitle}>{label}</span>
       {isInvalid ? (
-        <span className="warning__text--title">Can't be empty</span>
+        <span className={styles.invalidText}>Can't be empty</span>
       ) : null}
-
       <input
         id={label}
-        className={isInvalid ? "warning" : ""}
+        className={clsx(styles.input, isInvalid ? styles.invalidWrapper : "")}
         type={type}
         value={input}
         maxLength="120"

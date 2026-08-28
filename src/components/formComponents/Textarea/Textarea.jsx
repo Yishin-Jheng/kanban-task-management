@@ -1,4 +1,5 @@
 import { useState } from "react";
+import styles from "./Textarea.module.scss";
 
 function Textarea({
   checkInvalid,
@@ -16,16 +17,13 @@ function Textarea({
   }
 
   return (
-    <div className="input-box">
-      <span className="modal__subtitle">{label}</span>
-
-      {isInvalid ? (
-        <span className="warning__text--description">Can't be empty</span>
-      ) : null}
-
+    <div className={styles.textareaWrapper}>
+      <span className={styles.textareaTitle}>{label}</span>
+      {isInvalid && <span className={styles.invalidText}>Can't be empty</span>}
       <textarea
         id={label}
-        className={isInvalid ? "warning" : ""}
+        className={styles.textarea}
+        data-invalid={isInvalid ? "invalid" : ""}
         type="text"
         rows="5"
         maxLength="300"
