@@ -1,14 +1,16 @@
+import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useMediaQuery } from "react-responsive";
-import { useWindowHeight } from "../hooks/useWindowHeight";
-import { closeModal } from "../store";
-import DeleteModal from "./modals/DeleteModal";
-import LoadingModal from "./modals/LoadingModal";
-import ErrorMessageModal from "./modals/ErrorMessageModal";
-import NewOrEditBoardModal from "./modals/NewOrEditBoardModal";
-import NewOrEditTaskModal from "./modals/NewOrEditTaskModal";
-import TaskDetailModal from "./modals/TaskDetailModal";
+import { closeModal } from "@/store";
+import { useWindowHeight } from "@/hooks/useWindowHeight";
+import DeleteModal from "@/components/Modal/modalContent/DeleteModal";
+import LoadingModal from "@/components/Modal/modalContent/LoadingModal";
+import ErrorMessageModal from "@/components/Modal/modalContent/ErrorMessageModal";
+import NewOrEditBoardModal from "@/components/Modal/modalContent/NewOrEditBoardModal";
+import NewOrEditTaskModal from "@/components/Modal/modalContent/NewOrEditTaskModal";
+import TaskDetailModal from "@/components/Modal/modalContent/TaskDetailModal";
+import styles from "./Modal.module.scss";
 
 function Modal() {
   const {
@@ -30,7 +32,7 @@ function Modal() {
   useEffect(() => {
     if (formRef.current) {
       // NOTE:
-      // 有些 task 抓到的高度比實際高度還要矮上不少(>100px)，而且每次抓到的數字都會有點浮動。
+      // 有些 task 抓到的高度比實際高度還要矮上不少(>100px)，而且每次抓到的數字都會有點浮動
       // 暫時還是沒辦法讓他抓得很準確，但目前有讓dropdown可以視情況變更展開方向，理論上針對不同視窗高度應該都是可以適應的。
       setFormHeight(formRef.current.clientHeight);
     }
@@ -73,11 +75,12 @@ function Modal() {
     <>
       <form
         ref={formRef}
-        className={`modal ${
+        className={clsx(
+          styles.modal,
           windowHeight - formHeight < 180 && !isMobile2
-            ? "modal--horizontal"
-            : "modal--vertical"
-        }`}
+            ? styles.horizontalModal
+            : styles.verticalModal,
+        )}
       >
         {modalContent}
       </form>
@@ -90,7 +93,7 @@ function ModalBackground({ disable }) {
   const dispatch = useDispatch();
   return (
     <div
-      className="modal__background"
+      className={styles.modalBackground}
       onClick={() => {
         if (!disable) {
           dispatch(closeModal());

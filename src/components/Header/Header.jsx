@@ -1,10 +1,12 @@
 import { useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setModal } from "../store";
-import { SidebarContext } from "../App";
-import DotMenu from "./small-components/DotMenu";
-import Skeleton from "./small-components/Skeleton";
-import logoMin from "../assets/logo-mobile.svg";
+import clsx from "clsx";
+import { SidebarContext } from "@/App";
+import { setModal } from "@/store";
+import logoMin from "@/assets/logo-mobile.svg";
+import DotMenu from "@/components/smallComponents/DotMenu";
+import Skeleton from "@/components/smallComponents/Skeleton";
+import styles from "./Header.module.scss";
 
 function Header({ isMobile }) {
   const dispatch = useDispatch();
@@ -25,7 +27,7 @@ function Header({ isMobile }) {
         isOpen: true,
         whichOpen: "taskModal",
         createOrNot: true,
-      })
+      }),
     );
   };
 
@@ -56,31 +58,36 @@ function Header({ isMobile }) {
   }
 
   return (
-    <header className="header">
+    <header className={styles.header}>
       {isMobile ? <img src={logoMin} alt="mobile version logo" /> : null}
 
       {boardsData && boardsData.length ? (
-        <span className="header__title" onClick={handleHidden}>
+        <span className={styles.headerTitle} onClick={handleHidden}>
           {
             boardsData.filter((board) => board.id === activeBoardId)[0]
               .boardName
           }
         </span>
       ) : (
+        // XXX: 待抽共用元件
         <Skeleton times={1} className="skeleton__outer--title" />
       )}
 
       {isMobile ? (
-        <div className="header__sidebar-btn" onClick={handleHidden}>
+        <div className={styles.sidebarHiddenBtn} onClick={handleHidden}>
           {arrowIcon}
         </div>
       ) : null}
 
+      {/* XXX: 待抽共用元件 */}
       <button
         disabled={!activeColumns[0]}
-        className={`btn ${isMobile ? "btn--mobile" : ""} ${
-          !activeColumns[0] ? "btn--disable" : ""
-        } header__create`}
+        className={clsx(
+          styles.createTaskBtn,
+          `btn ${isMobile ? "btn--mobile" : ""} ${
+            !activeColumns[0] ? "btn--disable" : ""
+          }`,
+        )}
         onClick={modalAddTask}
       >
         {btnContent}

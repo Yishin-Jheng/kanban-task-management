@@ -1,0 +1,166 @@
+@use "tokens" as *;
+@use "typography" as *;
+@use "mixins" as *;
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes unfold {
+  from {
+    height: 0;
+  }
+  to {
+    height: 10rem;
+  }
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.modal {
+  @include scrollbar;
+  z-index: 99999;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  max-height: 100vh;
+  padding: 3.2rem;
+
+  background-color: var(--color-basic);
+  border-radius: 5px;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  @include respond-to(mobile-2) {
+    width: calc(100% - 2rem);
+    padding: 2.4rem;
+    gap: 1.4rem;
+  }
+}
+
+.modalTitle,
+.modalDeleteTitle {
+  @include heading-l;
+
+  color: var(--color-text);
+  display: flex;
+  gap: 2.4rem;
+  justify-content: space-between;
+  align-items: center;
+  grid-column: 1 / -1;
+}
+
+.modalSubtitle {
+  @include body-m;
+  display: inline-block;
+  color: $color-grey-light-1;
+  margin-bottom: 1rem;
+}
+
+.modalDeleteTitle {
+  color: $color-warning;
+}
+
+.modalDeleteBtns {
+  display: flex;
+  gap: 1.6rem;
+
+  @include respond-to(mobile-2) {
+    flex-direction: column;
+  }
+}
+
+.modalContent {
+  @include body-l;
+  color: $color-grey-light-1;
+}
+
+.modalBackground {
+  z-index: 99998;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(#000, 0.5);
+}
+
+.verticalModal {
+  width: 45rem;
+  display: flex;
+  gap: 2rem;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.horizontalModal {
+  width: 65rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 3.2rem;
+  row-gap: 1.5rem;
+
+  .modalDeleteBtns {
+    flex-direction: column;
+  }
+
+  .invalidText {
+    bottom: 4rem;
+  }
+
+  @include respond-to(tablet-2) {
+    width: calc(100% - 2rem);
+  }
+}
+
+.subtaskMessage {
+  @include body-l;
+  margin: 0.8rem 0;
+  text-align: center;
+  color: $color-grey-light-1;
+}
+
+.subtask {
+  grid-column: 1 / -1;
+
+  &__box {
+    position: relative;
+    padding: 1.2rem;
+
+    border-radius: 5px;
+    background-color: var(--color-background);
+    transition: all 0.3s;
+    pointer-events: none;
+
+    &:not(:last-child) {
+      margin-bottom: 8px;
+    }
+
+    &:hover {
+      background-color: var(--color-checkbox);
+    }
+  }
+}

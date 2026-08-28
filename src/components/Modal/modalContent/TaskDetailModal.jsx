@@ -1,18 +1,19 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useThunk } from "../../hooks/useThunk";
-import { fetchSubtasks, setModal } from "../../store";
-import DotMenu from "../small-components/DotMenu";
-import CheckBox from "../modal-components/CheckBox";
-import Skeleton from "../small-components/Skeleton";
-import { DropdownRequestVer } from "../modal-components/Dropdown";
+import { fetchSubtasks, setModal } from "@/store";
+import { useThunk } from "@/hooks/useThunk";
+import DotMenu from "@/components/smallComponents/DotMenu";
+import CheckBox from "@/components/formComponents/CheckBox/CheckBox";
+import Skeleton from "@/components/smallComponents/Skeleton";
+import { DropdownRequestVer } from "@/components/formComponents/Dropdown/Dropdown";
+import styles from "../Modal.module.scss";
 
 function TaskDetailModal({ detailObj }) {
   const dispatch = useDispatch();
   const [subtasksData, finishedNum, statusData] = useSelector((state) => {
     const subtasksData = state.subtasks.data;
     const finishedNum = state.tasks.data.find(
-      (task) => task.id === detailObj.id
+      (task) => task.id === detailObj.id,
     ).finishedSubNum;
     const statusData = state.columns.data;
     return [subtasksData, finishedNum, statusData];
@@ -26,7 +27,7 @@ function TaskDetailModal({ detailObj }) {
         whichOpen: "taskModal",
         createOrNot: false,
         detailObj: detailObj,
-      })
+      }),
     );
   };
 
@@ -39,9 +40,10 @@ function TaskDetailModal({ detailObj }) {
     } else {
       subtaskContent = (
         <>
-          <div className="subtask__message">
+          <div className={styles.subtaskMessage}>
             No subtask yet. Try to add a new one.
           </div>
+          {/* XXX: 待抽元件 */}
           <div className="btn-medium" onClick={modalEditTask}>
             + New Subtask
           </div>
@@ -49,6 +51,9 @@ function TaskDetailModal({ detailObj }) {
       );
     }
   } else {
+    {
+      /* XXX: 待抽元件 */
+    }
     subtaskContent = <Skeleton times={3} className="skeleton__outer--modal" />;
   }
 
@@ -58,17 +63,16 @@ function TaskDetailModal({ detailObj }) {
 
   return (
     <>
-      <div className="modal__title">
+      <div className={styles.modalTitle}>
         <span>{detailObj.title}</span>
         <DotMenu position="modal" detailObj={detailObj} />
       </div>
 
-      <p className="modal__content">{detailObj.description}</p>
+      <p className={styles.modalContent}>{detailObj.description}</p>
 
-      <div className="subtask">
-        <span className="modal__subtitle">
-          Subtasks ({finishedNum === undefined ? "-" : finishedNum} of{" "}
-          {detailObj.totalSubNum})
+      <div className={styles.subtask}>
+        <span className={styles.modalSubtitle}>
+          {`Subtasks (${finishedNum === undefined ? "-" : finishedNum} of ${detailObj.totalSubNum})`}
         </span>
         {subtaskContent}
       </div>

@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useFormData } from "../hooks/useFormData";
-import { useThunk } from "../hooks/useThunk";
-import { userLogin } from "../store";
 import { IconContext } from "react-icons";
 import { TbLoader } from "react-icons/tb";
-import { BsFillQuestionSquareFill } from "react-icons/bs";
-import Input from "./modal-components/Input";
+import { IoMdPersonAdd } from "react-icons/io";
+import { useFormData } from "@/hooks/useFormData";
+import { useThunk } from "@/hooks/useThunk";
+import { userLogin } from "@/store";
+import Input from "@/components/formComponents/Input/Input";
+import styles from "./Login.module.scss";
 
 function Login() {
   const [checkInvalid, setCheckInvalid] = useState(false);
@@ -27,18 +28,20 @@ function Login() {
   };
 
   return (
-    <form className="login" onSubmit={handleSubmit(getFormData)}>
-      <div className="modal__title login__title">
+    <form className={styles.login} onSubmit={handleSubmit(getFormData)}>
+      <div className={styles.loginTitle}>
         <span>Account Login</span>
 
-        <div className="login__icon">
+        {/* XXX: 這邊先改了wording */}
+        <div className={styles.loginIcon}>
           <IconContext.Provider value={{ size: "1.5rem", color: "#635fc7" }}>
-            <BsFillQuestionSquareFill />
+            <IoMdPersonAdd />
           </IconContext.Provider>
-          <span>Don't have an account?</span>
+          <span>Login as guest</span>
         </div>
 
-        <div className="login__info">
+        {/* XXX: 感覺改成按按鈕直接帶入訪客帳密會更方便登入測試 */}
+        <div className={styles.guestInfo}>
           <p>Here is the email and password provided for guest 👏</p>
           <br />
           <p>
@@ -68,6 +71,7 @@ function Login() {
         handleFormChange={handleFormChange(formData, "password")}
       />
 
+      {/* XXX: 之後應該要抽共用元件 */}
       <button className="btn-medium btn-medium--primary">
         {isLoading ? (
           <IconContext.Provider value={{ size: "2rem" }}>

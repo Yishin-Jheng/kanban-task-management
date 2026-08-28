@@ -1,0 +1,83 @@
+@use "tokens" as *;
+@use "typography" as *;
+@use "mixins" as *;
+
+.login {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  display: flex;
+  gap: 2rem;
+  flex-direction: column;
+  align-items: stretch;
+
+  width: 45rem;
+  padding: 3.2rem;
+
+  background-color: var(--color-basic);
+  border-radius: 5px;
+
+  @include respond-to(mobile-2) {
+    width: 35rem;
+  }
+}
+
+.loginTitle {
+  @include heading-l;
+  color: var(--color-text);
+  display: flex;
+  gap: 2.4rem;
+  justify-content: space-between;
+  align-items: center;
+  grid-column: 1 / -1;
+
+  @include respond-to(mobile-2) {
+    gap: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+  }
+}
+
+.loginIcon {
+  @include body-m;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+
+  color: $color-primary;
+  text-decoration: underline;
+
+  &:hover {
+    cursor: help;
+  }
+}
+
+.guestInfo {
+  @include body-m;
+  opacity: 1;
+  position: absolute;
+  top: -1rem;
+  left: 50%;
+  width: 80%;
+  padding: 1.2rem;
+  border-radius: 10px;
+  text-align: center;
+  background-color: var(--color-background);
+  transform: translate(-50%, -8.3rem);
+  transition: all 0.3s;
+
+  p {
+    color: $color-grey-light-1;
+  }
+
+  strong {
+    color: $color-primary;
+  }
+
+  @include respond-to(mobile-2) {
+    top: -3rem;
+  }
+}

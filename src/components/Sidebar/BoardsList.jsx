@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { SidebarContext } from "@/App";
 import { useThunk } from "@/hooks/useThunk";
 import { fetchBoards, setActiveBoard, resetColumns, resetTasks } from "@/store";
-import Skeleton from "@/components/small-components/Skeleton";
+import Skeleton from "@/components/smallComponents/Skeleton";
 import styles from "./Sidebar.module.scss";
 
 const boardIcon = (

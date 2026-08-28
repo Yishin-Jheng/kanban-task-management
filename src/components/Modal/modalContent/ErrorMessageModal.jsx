@@ -1,18 +1,20 @@
 import { useDispatch } from "react-redux";
-import { closeModal } from "../../store/slices/modalSlice";
+import { closeModal } from "@/store/slices/modalSlice";
+import styles from "../Modal.module.scss";
 
 function ErrorMessageModal({ errorMsg }) {
   const dispatch = useDispatch();
 
   return (
     <>
-      <div className="modal__title">
+      <div className={styles.modalTitle}>
         <span>Something is wrong...</span>
       </div>
 
-      <p className="modal__content">{errorMsg}</p>
+      <p className={styles.modalContent}>{errorMsg}</p>
 
-      <div className="modal__btns">
+      <div>
+        {/* XXX: 待抽元件 */}
         <div
           className="btn-medium"
           onClick={() => {

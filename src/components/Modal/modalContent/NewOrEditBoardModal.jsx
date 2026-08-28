@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useFormData } from "../../hooks/useFormData";
-import { useThunk } from "../../hooks/useThunk";
-import { createBoards, updateBoards, setModal } from "../../store";
-import { DeletableInput } from "../modal-components/DeletableInput";
-import Input from "../modal-components/Input";
+import { useFormData } from "@/hooks/useFormData";
+import { useThunk } from "@/hooks/useThunk";
+import { createBoards, updateBoards, setModal } from "@/store";
+import { DeletableInput } from "@/components/formComponents/DeletableInput/DeletableInput";
+import Input from "@/components/formComponents/Input/Input";
+import styles from "../Modal.module.scss";
 
 function NewOrEditBoardModal({ createOrNot }) {
   const dispatch = useDispatch();
@@ -30,7 +31,7 @@ function NewOrEditBoardModal({ createOrNot }) {
         isOpen: true,
         whichOpen: "loadingModal",
         isLoading: true,
-      })
+      }),
     );
   };
 
@@ -54,7 +55,7 @@ function NewOrEditBoardModal({ createOrNot }) {
 
   return (
     <>
-      <div className="modal__title">
+      <div className={styles.modalTitle}>
         <span>{title}</span>
       </div>
 
@@ -94,6 +95,7 @@ function NewOrEditBoardModal({ createOrNot }) {
         handleFormDelete={handleFormChange(formData, "deletedColumns")}
       />
 
+      {/* XXX: 待抽元件 */}
       <button
         className="btn-medium btn-medium--primary"
         disabled={isUpdatingBoard || isCreatingBoard}

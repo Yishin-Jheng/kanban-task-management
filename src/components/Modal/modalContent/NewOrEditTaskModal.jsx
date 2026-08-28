@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useFormData } from "../../hooks/useFormData";
-import { useThunk } from "../../hooks/useThunk";
-import { updateTasksByForm, createTasks, setModal } from "../../store";
-import Input from "../modal-components/Input";
-import Textarea from "../modal-components/Textarea";
-import { Dropdown } from "../modal-components/Dropdown";
-import { DeletableInput } from "../modal-components/DeletableInput";
+import { useFormData } from "@/hooks/useFormData";
+import { useThunk } from "@/hooks/useThunk";
+import { updateTasksByForm, createTasks, setModal } from "@/store";
+import Input from "@/components/formComponents/Input/Input";
+import Textarea from "@/components/formComponents/Textarea/Textarea";
+import { Dropdown } from "@/components/formComponents/Dropdown/Dropdown";
+import { DeletableInput } from "@/components/formComponents/DeletableInput/DeletableInput";
+import styles from "../Modal.module.scss";
 
 function NewOrEditTaskModal({ createOrNot, detailObj }) {
   const dispatch = useDispatch();
@@ -31,7 +32,7 @@ function NewOrEditTaskModal({ createOrNot, detailObj }) {
         isOpen: true,
         whichOpen: "loadingModal",
         isLoading: true,
-      })
+      }),
     );
   };
 
@@ -55,7 +56,7 @@ function NewOrEditTaskModal({ createOrNot, detailObj }) {
 
   return (
     <>
-      <div className="modal__title">
+      <div className={styles.modalTitle}>
         <span>{title}</span>
       </div>
 
@@ -110,6 +111,7 @@ function NewOrEditTaskModal({ createOrNot, detailObj }) {
         handleFormChange={handleFormChange(formData, "columnId")}
       />
 
+      {/* XXX: 待抽元件 */}
       <button
         className="btn-medium btn-medium--primary"
         disabled={isUpdatingTask || isCreatingTask}
