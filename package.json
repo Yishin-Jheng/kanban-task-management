@@ -20,13 +20,15 @@
     "eslint": "^10.9.1",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.4",
+    "eslint-plugin-simple-import-sort": "^14.0.0",
     "globals": "^17.11.0",
     "sass": "^1.103.1",
     "vite": "^8.2.2"
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "lint": "eslint src"
   },
   "browserslist": {
     "production": [
