@@ -1,10 +1,10 @@
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { SidebarContext } from "@/App";
-import { setModal } from "@/store";
-import BoardsList from "@/components/Sidebar/BoardsList";
 import logoLight from "@/assets/logo-dark.svg";
 import logoDark from "@/assets/logo-light.svg";
+import BoardsList from "@/components/Sidebar/BoardsList";
+import { setModal } from "@/store";
 import styles from "./Sidebar.module.scss";
 
 const boardIcon = (

@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
+import { useClickOutside } from "@/hooks/useClickOutside";
 import { useThunk } from "@/hooks/useThunk";
 import { updateTasksStatus } from "@/store";
 import styles from "./Dropdown.module.scss";
@@ -41,19 +42,9 @@ function Dropdown({ label, value, options, handleFormChange }) {
 
   handleFormChange(options.find((col) => col.statusName === currentStatus).id);
 
-  useEffect(() => {
-    const handleClickOutside = function (e) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("click", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, []);
+  useClickOutside(dropdownRef, () => {
+    setIsOpen(false);
+  });
 
   return (
     <div className={styles.dropdownContainer}>
@@ -107,19 +98,9 @@ function DropdownRequestVer({ label, value, options, taskId }) {
     }
   };
 
-  useEffect(() => {
-    const handleClickOutside = function (e) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("click", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, []);
+  useClickOutside(dropdownRef, () => {
+    setIsOpen(false);
+  });
 
   return (
     <div className={styles.dropdownContainer}>

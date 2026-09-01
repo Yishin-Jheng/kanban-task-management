@@ -37,6 +37,7 @@
   &::-webkit-scrollbar-thumb {
     border-radius: 99px;
     background: var(--color-column);
+    cursor: pointer;
   }
 
   &::-webkit-scrollbar-thumb:hover {
