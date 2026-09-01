@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { IconContext } from "react-icons";
-import { IoMdPersonAdd } from "react-icons/io";
+import { FaUserSecret } from "react-icons/fa";
 import Button from "@/components/Button/Button";
 import Input from "@/components/formComponents/Input/Input";
 import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
@@ -34,9 +33,7 @@ function Login() {
 
         {/* XXX: 這邊先改了wording */}
         <div className={styles.loginIcon}>
-          <IconContext.Provider value={{ size: "1.5rem", color: "#635fc7" }}>
-            <IoMdPersonAdd />
-          </IconContext.Provider>
+          <FaUserSecret size="1.5rem" color="#635fc7" />
           <span>Login as guest</span>
         </div>
 
