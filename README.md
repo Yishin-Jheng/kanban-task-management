@@ -67,10 +67,6 @@ Users should be able to:
 
 ![](./design/components-structure.png)
 
-### Events list
-
-<img src="./design/events-list.png" width="600px">
-
 ### What I learned
 
 - Using CSS variables and HTML dataset property to manage the theme switching
