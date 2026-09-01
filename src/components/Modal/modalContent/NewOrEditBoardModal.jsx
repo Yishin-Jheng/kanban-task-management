@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useFormData } from "@/hooks/useFormData";
-import { useThunk } from "@/hooks/useThunk";
-import { createBoards, updateBoards, setModal } from "@/store";
+import Button from "@/components/Button/Button";
 import { DeletableInput } from "@/components/formComponents/DeletableInput/DeletableInput";
 import Input from "@/components/formComponents/Input/Input";
+import { useFormData } from "@/hooks/useFormData";
+import { useThunk } from "@/hooks/useThunk";
+import { createBoards, setModal, updateBoards } from "@/store";
 import styles from "../Modal.module.scss";
 
 function NewOrEditBoardModal({ createOrNot }) {
@@ -36,9 +37,8 @@ function NewOrEditBoardModal({ createOrNot }) {
   };
 
   const handleSubmit = (formData) => {
-    return (e) => {
+    return () => {
       const form = formData().current;
-      e.preventDefault();
       setCheckInvalid(true);
 
       if (form.boardName) {
@@ -58,7 +58,6 @@ function NewOrEditBoardModal({ createOrNot }) {
       <div className={styles.modalTitle}>
         <span>{title}</span>
       </div>
-
       <Input
         checkInvalid={checkInvalid}
         label="Board Name"
@@ -71,7 +70,6 @@ function NewOrEditBoardModal({ createOrNot }) {
         placeholder="e.g. Web Design"
         handleFormChange={handleFormChange(formData, "boardName")}
       />
-
       <DeletableInput
         checkInvalid={checkInvalid}
         label="Board Columns"
@@ -94,15 +92,12 @@ function NewOrEditBoardModal({ createOrNot }) {
         handleFormChange={handleFormChange(formData, "columns")}
         handleFormDelete={handleFormChange(formData, "deletedColumns")}
       />
-
-      {/* XXX: 待抽元件 */}
-      <button
-        className="btn-medium btn-medium--primary"
-        disabled={isUpdatingBoard || isCreatingBoard}
+      <Button
+        type="formPrimary"
+        text={btnText}
+        isDisabled={isUpdatingBoard || isCreatingBoard}
         onClick={handleSubmit(getFormData)}
-      >
-        {btnText}
-      </button>
+      />
     </>
   );
 }

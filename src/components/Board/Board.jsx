@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
 import { DragDropContext } from "react-beautiful-dnd";
-import { fetchColumns, updateTasksStatus } from "@/store";
-import { useThunk } from "@/hooks/useThunk";
+import { useSelector } from "react-redux";
 import { Column, LoadingColumn, NewColumn } from "@/components/Column/Column";
 import EmptyColumn from "@/components/Column/EmptyColumn";
+import { useThunk } from "@/hooks/useThunk";
+import { fetchColumns, updateTasksStatus } from "@/store";
 import styles from "./Board.module.scss";
 
 function Board() {
@@ -41,18 +41,19 @@ function Board() {
     }
   }, [doFetchColumns, activeBoardId]);
 
-  if (isLoadingColumns || activeBoardId === 0) {
-    return (
-      <div className={styles.columnContainer}>
-        <LoadingColumn times={3} />
-      </div>
-    );
-  }
-
   return (
     <div className={styles.board}>
       {/* XXX: 到現在都還記得以前 andy 說過 jsx 裡面不要再去用三元，確實看起來醜醜的 */}
-      {columnsData && columnsData.length > 0 ? (
+      {(isLoadingColumns || activeBoardId === 0) && (
+        <div className={styles.columnContainer}>
+          <LoadingColumn numbers={3} />
+        </div>
+      )}
+      {!isLoadingColumns &&
+        activeBoardId !== 0 &&
+        columnsData &&
+        columnsData.length === 0 && <EmptyColumn />}
+      {columnsData && columnsData.length > 0 && (
         <DragDropContext onDragEnd={handleDragAndDrop}>
           <div className={styles.columnContainer}>
             {columnsData.map((status) => {
@@ -69,8 +70,6 @@ function Board() {
             <NewColumn />
           </div>
         </DragDropContext>
-      ) : (
-        <EmptyColumn />
       )}
     </div>
   );

@@ -1,8 +1,8 @@
-import { useSelector, useDispatch } from "react-redux";
-import { IconContext } from "react-icons";
-import { TbLoader } from "react-icons/tb";
-import { deleteTasks, deleteBoards } from "@/store";
+import { useDispatch, useSelector } from "react-redux";
+import Button from "@/components/Button/Button";
+import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import { useThunk } from "@/hooks/useThunk";
+import { deleteBoards, deleteTasks } from "@/store";
 import { closeModal } from "@/store/slices/modalSlice";
 import styles from "../Modal.module.scss";
 
@@ -38,27 +38,18 @@ function DeleteModal({ boardOrTask, detailObj }) {
       </p>
 
       <div className={styles.modalDeleteBtns}>
-        {/* XXX: 待抽元件 */}
-        <div className="btn-medium btn-medium--warning" onClick={handleDelete}>
+        <Button type="formWarning" text="Delete" onClick={handleDelete}>
           {isDeletingTasks || isDeletingBoards ? (
-            <IconContext.Provider value={{ size: "16px", color: "#fff" }}>
-              {/* XXX: 待抽元件 */}
-              <TbLoader className="loading-icon" />
-            </IconContext.Provider>
+            <LoadingIcon color="#fff" />
           ) : (
             "Delete"
           )}
-        </div>
-
-        {/* XXX: 待抽元件 */}
-        <div
-          className="btn-medium"
-          onClick={() => {
-            dispatch(closeModal());
-          }}
-        >
-          Cancel
-        </div>
+        </Button>
+        <Button
+          type="form"
+          text="Cancel"
+          onClick={() => dispatch(closeModal())}
+        />
       </div>
     </>
   );

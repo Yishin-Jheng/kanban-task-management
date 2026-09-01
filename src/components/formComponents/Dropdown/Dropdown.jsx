@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
-import { IconContext } from "react-icons";
-import { TbLoader } from "react-icons/tb";
-import { updateTasksStatus } from "@/store";
+import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import { useThunk } from "@/hooks/useThunk";
+import { updateTasksStatus } from "@/store";
 import styles from "./Dropdown.module.scss";
 
 const downIcon = (
@@ -131,10 +130,7 @@ function DropdownRequestVer({ label, value, options, taskId }) {
           <span>{formatter(currentStatus)}</span>
 
           {isUpdatingTasks ? (
-            <IconContext.Provider value={{ size: "16px", color: "#635fc7" }}>
-              {/* XXX: loading-icon常常重複利用，之後再看看怎麼抽 */}
-              <TbLoader className="loading-icon" />
-            </IconContext.Provider>
+            <LoadingIcon />
           ) : (
             <figure className={styles.selectIcon}>
               {isOpen ? upIcon : downIcon}

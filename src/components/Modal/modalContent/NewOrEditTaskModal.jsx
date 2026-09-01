@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useFormData } from "@/hooks/useFormData";
-import { useThunk } from "@/hooks/useThunk";
-import { updateTasksByForm, createTasks, setModal } from "@/store";
+import Button from "@/components/Button/Button";
+import { DeletableInput } from "@/components/formComponents/DeletableInput/DeletableInput";
+import { Dropdown } from "@/components/formComponents/Dropdown/Dropdown";
 import Input from "@/components/formComponents/Input/Input";
 import Textarea from "@/components/formComponents/Textarea/Textarea";
-import { Dropdown } from "@/components/formComponents/Dropdown/Dropdown";
-import { DeletableInput } from "@/components/formComponents/DeletableInput/DeletableInput";
+import { useFormData } from "@/hooks/useFormData";
+import { useThunk } from "@/hooks/useThunk";
+import { createTasks, setModal, updateTasksByForm } from "@/store";
 import styles from "../Modal.module.scss";
 
 function NewOrEditTaskModal({ createOrNot, detailObj }) {
@@ -36,10 +37,10 @@ function NewOrEditTaskModal({ createOrNot, detailObj }) {
     );
   };
 
+  // BUG: 任務狀態沒有正常變更
   const handleSubmit = (formDataRef) => {
-    return (e) => {
+    return () => {
       const form = formDataRef().current;
-      e.preventDefault();
       setCheckInvalid(true);
 
       if (form.title && form.description) {
@@ -59,7 +60,6 @@ function NewOrEditTaskModal({ createOrNot, detailObj }) {
       <div className={styles.modalTitle}>
         <span>{title}</span>
       </div>
-
       <Input
         checkInvalid={checkInvalid}
         label="Title"
@@ -68,7 +68,6 @@ function NewOrEditTaskModal({ createOrNot, detailObj }) {
         placeholder="e.g. Take coffee break"
         handleFormChange={handleFormChange(formData, "title")}
       />
-
       <Textarea
         checkInvalid={checkInvalid}
         label="Description"
@@ -76,7 +75,6 @@ function NewOrEditTaskModal({ createOrNot, detailObj }) {
         placeholder="e.g. It’s always good to take a break. This 15 minute break will recharge the batteries a little."
         handleFormChange={handleFormChange(formData, "description")}
       />
-
       <DeletableInput
         checkInvalid={checkInvalid}
         label="Subtasks"
@@ -99,7 +97,6 @@ function NewOrEditTaskModal({ createOrNot, detailObj }) {
         handleFormChange={handleFormChange(formData, "subtasks")}
         handleFormDelete={handleFormChange(formData, "deletedSubtasks")}
       />
-
       <Dropdown
         label="Status"
         value={
@@ -110,15 +107,12 @@ function NewOrEditTaskModal({ createOrNot, detailObj }) {
         options={statusData}
         handleFormChange={handleFormChange(formData, "columnId")}
       />
-
-      {/* XXX: 待抽元件 */}
-      <button
-        className="btn-medium btn-medium--primary"
-        disabled={isUpdatingTask || isCreatingTask}
+      <Button
+        type="formPrimary"
+        text={btnText}
+        isDisabled={isUpdatingTask || isCreatingTask}
         onClick={handleSubmit(getFormData)}
-      >
-        {btnText}
-      </button>
+      />
     </>
   );
 }

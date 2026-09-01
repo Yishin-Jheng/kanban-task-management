@@ -46,13 +46,9 @@
   display: flex;
   gap: 0.5rem;
   align-items: center;
-
   color: $color-primary;
   text-decoration: underline;
-
-  &:hover {
-    cursor: help;
-  }
+  cursor: pointer;
 }
 
 .guestInfo {

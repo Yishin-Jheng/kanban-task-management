@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import styles from "./DeletableInput.module.scss";
 import clsx from "clsx";
+import Button from "@/components/Button/Button";
+import styles from "./DeletableInput.module.scss";
 
 function DeletableInput({
   checkInvalid,
@@ -116,10 +117,9 @@ function DeletableInput({
           );
         })}
       </div>
-      {/* XXX: 待抽元件 */}
-      <div className="btn-medium" onClick={handleAddInput}>
+      <Button type="form" onClick={handleAddInput}>
         {btnLabel}
-      </div>
+      </Button>
     </div>
   );
 }

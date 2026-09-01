@@ -1,0 +1,50 @@
+@use "tokens" as *;
+@use "typography" as *;
+@use "mixins" as *;
+
+.container {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  grid-template-rows: 97px 1fr;
+
+  &[data-sidebar-hidden="sidebarHidden"] {
+    grid-template-columns: 208px 1fr;
+  }
+
+  @include respond-to(tablet-1) {
+    grid-template-columns: 1fr 2fr;
+  }
+  @include respond-to(tablet-2) {
+    &[data-sidebar-hidden="sidebarHidden"] {
+      grid-template-columns: 202px 1fr;
+    }
+  }
+  @include respond-to(mobile-1) {
+    position: relative;
+    grid-template-columns: 1fr;
+    grid-template-rows: 64px 1fr;
+  }
+}
+
+.main {
+  @include scrollbar;
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  width: 100%;
+  height: calc(100vh - 97px);
+  background-color: var(--color-background);
+  overflow-x: scroll;
+  transition: all 0.3s;
+
+  @include respond-to(mobile-1) {
+    height: calc(100vh - 64px);
+  }
+
+  &[data-sidebar-hidden="sidebarHidden"] {
+    grid-row: 2 / 3;
+    grid-column: 1 / -1;
+  }
+}

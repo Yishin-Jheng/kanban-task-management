@@ -1,4 +1,5 @@
 import { useDispatch } from "react-redux";
+import Button from "@/components/Button/Button";
 import { setModal } from "@/store";
 import styles from "./EmptyColumn.module.scss";
 
@@ -19,10 +20,7 @@ function EmptyColumn() {
       <p className={styles.emptyDescription}>
         This board is empty. Create a new column to get started.
       </p>
-      {/* XXX: 待抽元件 */}
-      <button className="btn" onClick={modalAddColumn}>
-        + Add New Column
-      </button>
+      <Button text="+ Add New Column" onClick={modalAddColumn} />
     </div>
   );
 }

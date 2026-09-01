@@ -1,10 +1,10 @@
-import { useEffect, useContext } from "react";
+import { useContext, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
-import { useSelector, useDispatch } from "react-redux";
 import { SidebarContext } from "@/App";
+import Skeleton from "@/components/Skeleton/Skeleton";
 import { useThunk } from "@/hooks/useThunk";
-import { fetchBoards, setActiveBoard, resetColumns, resetTasks } from "@/store";
-import Skeleton from "@/components/smallComponents/Skeleton";
+import { fetchBoards, resetColumns, resetTasks, setActiveBoard } from "@/store";
 import styles from "./Sidebar.module.scss";
 
 const boardIcon = (
@@ -32,7 +32,7 @@ function BoardsList() {
     return (
       <>
         <span className={styles.boardTitle}>All Borads (-)</span>
-        <Skeleton times={3} className="skeleton__outer--board" />;
+        <Skeleton numbers={3} styleType="board" />;
       </>
     );
   }

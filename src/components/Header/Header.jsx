@@ -1,11 +1,11 @@
 import { useContext } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import clsx from "clsx";
+import { useDispatch, useSelector } from "react-redux";
 import { SidebarContext } from "@/App";
-import { setModal } from "@/store";
 import logoMin from "@/assets/logo-mobile.svg";
-import DotMenu from "@/components/smallComponents/DotMenu";
-import Skeleton from "@/components/smallComponents/Skeleton";
+import Button from "@/components/Button/Button";
+import DotMenu from "@/components/DotMenu/DotMenu";
+import Skeleton from "@/components/Skeleton/Skeleton";
+import { setModal } from "@/store";
 import styles from "./Header.module.scss";
 
 function Header({ isMobile }) {
@@ -60,7 +60,6 @@ function Header({ isMobile }) {
   return (
     <header className={styles.header}>
       {isMobile ? <img src={logoMin} alt="mobile version logo" /> : null}
-
       {boardsData && boardsData.length ? (
         <span className={styles.headerTitle} onClick={handleHidden}>
           {
@@ -69,30 +68,21 @@ function Header({ isMobile }) {
           }
         </span>
       ) : (
-        // XXX: 待抽共用元件
-        <Skeleton times={1} className="skeleton__outer--title" />
+        <Skeleton styleType="title" />
       )}
-
       {isMobile ? (
         <div className={styles.sidebarHiddenBtn} onClick={handleHidden}>
           {arrowIcon}
         </div>
       ) : null}
-
-      {/* XXX: 待抽共用元件 */}
-      <button
-        disabled={!activeColumns[0]}
-        className={clsx(
-          styles.createTaskBtn,
-          `btn ${isMobile ? "btn--mobile" : ""} ${
-            !activeColumns[0] ? "btn--disable" : ""
-          }`,
-        )}
+      <Button
+        className={styles.createTaskBtn}
+        isMobile={isMobile}
+        isDisabled={!activeColumns[0]}
         onClick={modalAddTask}
       >
         {btnContent}
-      </button>
-
+      </Button>
       <DotMenu />
     </header>
   );

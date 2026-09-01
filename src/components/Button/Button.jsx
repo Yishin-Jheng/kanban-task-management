@@ -5,7 +5,7 @@ const buttonTypeMap = new Map([
   ["default", styles.button],
   ["form", styles.formButton],
   ["formPrimary", styles.formPrimaryButton],
-  ["formWarning", styles.formSecondaryButton],
+  ["formWarning", styles.formWarningButton],
 ]);
 
 /**

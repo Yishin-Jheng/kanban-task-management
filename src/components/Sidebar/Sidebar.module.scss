@@ -38,13 +38,13 @@
 
 .logoImg,
 .logoImgMin {
-  margin: 3.3rem 3.4rem;
+  padding: 3.3rem 3.4rem;
 
   @include respond-to(tablet-1) {
-    margin: 3.3rem 2.4rem;
+    padding: 3.3rem 2.4rem;
   }
   @include respond-to(tablet-2) {
-    margin: 3.3rem 1.8rem;
+    padding: 3.3rem 1.8rem;
   }
   @include respond-to(mobile-1) {
     display: none;
@@ -54,14 +54,9 @@
 .logoImgMin {
   grid-row: 1 / 2;
   grid-column: 1 / 2;
-  padding: 3.3rem 2.4rem;
   margin-right: -2px;
   background-color: var(--color-basic);
   border-right: 2px solid var(--color-background);
-
-  @include respond-to(tablet-2) {
-    padding: 3.3rem 1.8rem;
-  }
 }
 
 .boardWrapper {

@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { IconContext } from "react-icons";
-import { TbLoader } from "react-icons/tb";
 import { IoMdPersonAdd } from "react-icons/io";
+import Button from "@/components/Button/Button";
+import Input from "@/components/formComponents/Input/Input";
+import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import { useFormData } from "@/hooks/useFormData";
 import { useThunk } from "@/hooks/useThunk";
 import { userLogin } from "@/store";
-import Input from "@/components/formComponents/Input/Input";
 import styles from "./Login.module.scss";
 
 function Login() {
@@ -16,9 +17,8 @@ function Login() {
   const formData = getFormData();
 
   const handleSubmit = (formData) => {
-    return (e) => {
+    return () => {
       const form = formData().current;
-      e.preventDefault();
       setCheckInvalid(true);
 
       if (form.email && form.password) {
@@ -28,7 +28,7 @@ function Login() {
   };
 
   return (
-    <form className={styles.login} onSubmit={handleSubmit(getFormData)}>
+    <form className={styles.login}>
       <div className={styles.loginTitle}>
         <span>Account Login</span>
 
@@ -41,7 +41,7 @@ function Login() {
         </div>
 
         {/* XXX: 感覺改成按按鈕直接帶入訪客帳密會更方便登入測試 */}
-        <div className={styles.guestInfo}>
+        {/* <div className={styles.guestInfo}>
           <p>Here is the email and password provided for guest 👏</p>
           <br />
           <p>
@@ -52,7 +52,7 @@ function Login() {
           </p>
           <br />
           <p>⛔ Guest can't do any change on the board or column.</p>
-        </div>
+        </div> */}
       </div>
 
       <Input
@@ -71,16 +71,9 @@ function Login() {
         handleFormChange={handleFormChange(formData, "password")}
       />
 
-      {/* XXX: 之後應該要抽共用元件 */}
-      <button className="btn-medium btn-medium--primary">
-        {isLoading ? (
-          <IconContext.Provider value={{ size: "2rem" }}>
-            <TbLoader className="loading-icon" />
-          </IconContext.Provider>
-        ) : (
-          "Log In"
-        )}
-      </button>
+      <Button type="formPrimary" onClick={handleSubmit(getFormData)}>
+        {isLoading ? <LoadingIcon size="2rem" /> : "Log In"}
+      </Button>
     </form>
   );
 }

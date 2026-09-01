@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { Draggable, Droppable } from "react-beautiful-dnd";
-import { setModal, fetchTasks } from "@/store";
+import { useDispatch, useSelector } from "react-redux";
+import Skeleton from "@/components/Skeleton/Skeleton";
 import { useThunk } from "@/hooks/useThunk";
-import Skeleton from "@/components/smallComponents/Skeleton";
+import { fetchTasks, setModal } from "@/store";
 import styles from "./Column.module.scss";
 
 function Column({ statusName, decorationColor, columnId, isUpdatingTasks }) {
@@ -26,15 +26,14 @@ function Column({ statusName, decorationColor, columnId, isUpdatingTasks }) {
     );
   };
 
-  const loadingTask = (times) => {
-    return Array(times)
+  const loadingTask = (numbers) => {
+    return Array(numbers)
       .fill(0)
       .map((_, i) => {
         return (
           <li key={i} className={styles.task}>
-            {/* XXX: 待抽元件 */}
-            <Skeleton times={1} className="skeleton__outer--task" />
-            <Skeleton times={1} className="skeleton__outer--subtask" />
+            <Skeleton styleType="task" />
+            <Skeleton styleType="subtask" />
           </li>
         );
       });
@@ -123,7 +122,6 @@ function NewColumn() {
         <div className={styles.statusIcon}></div>
         <p className={styles.statusTitle}></p>
       </div>
-
       <div className={styles.newColumn} onClick={modalEditBoard}>
         + New Column
       </div>
@@ -131,27 +129,24 @@ function NewColumn() {
   );
 }
 
-function LoadingColumn({ times }) {
-  const columnContent = Array(times)
+function LoadingColumn({ numbers }) {
+  const columnContent = Array(numbers)
     .fill(0)
     .map((_, i) => {
       return (
         <div key={i} className={styles.column}>
-          <Skeleton times={1} className="skeleton__outer--status" />
-
+          <Skeleton styleType="status" />
           <ul className={styles.columnBlock}>
-            <li className={styles.task}>
-              <Skeleton times={1} className="skeleton__outer--task" />
-              <Skeleton times={1} className="skeleton__outer--subtask" />
-            </li>
-            <li className={styles.task}>
-              <Skeleton times={1} className="skeleton__outer--task" />
-              <Skeleton times={1} className="skeleton__outer--subtask" />
-            </li>
-            <li className={styles.task}>
-              <Skeleton times={1} className="skeleton__outer--task" />
-              <Skeleton times={1} className="skeleton__outer--subtask" />
-            </li>
+            {Array(3)
+              .fill(0)
+              .map((_, j) => {
+                return (
+                  <li key={j} className={styles.task}>
+                    <Skeleton styleType="task" />
+                    <Skeleton styleType="subtask" />
+                  </li>
+                );
+              })}
           </ul>
         </div>
       );
@@ -160,4 +155,4 @@ function LoadingColumn({ times }) {
   return columnContent;
 }
 
-export { Column, NewColumn, LoadingColumn };
+export { Column, LoadingColumn, NewColumn };

@@ -1,11 +1,12 @@
 import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchSubtasks, setModal } from "@/store";
-import { useThunk } from "@/hooks/useThunk";
-import DotMenu from "@/components/smallComponents/DotMenu";
+import { useDispatch, useSelector } from "react-redux";
+import Button from "@/components/Button/Button";
+import DotMenu from "@/components/DotMenu/DotMenu";
 import CheckBox from "@/components/formComponents/CheckBox/CheckBox";
-import Skeleton from "@/components/smallComponents/Skeleton";
 import { DropdownRequestVer } from "@/components/formComponents/Dropdown/Dropdown";
+import Skeleton from "@/components/Skeleton/Skeleton";
+import { useThunk } from "@/hooks/useThunk";
+import { fetchSubtasks, setModal } from "@/store";
 import styles from "../Modal.module.scss";
 
 function TaskDetailModal({ detailObj }) {
@@ -43,18 +44,12 @@ function TaskDetailModal({ detailObj }) {
           <div className={styles.subtaskMessage}>
             No subtask yet. Try to add a new one.
           </div>
-          {/* XXX: 待抽元件 */}
-          <div className="btn-medium" onClick={modalEditTask}>
-            + New Subtask
-          </div>
+          <Button type="form" text="+ New Subtask" onClick={modalEditTask} />
         </>
       );
     }
   } else {
-    {
-      /* XXX: 待抽元件 */
-    }
-    subtaskContent = <Skeleton times={3} className="skeleton__outer--modal" />;
+    subtaskContent = <Skeleton numbers={3} styleType="modal" />;
   }
 
   useEffect(() => {
@@ -74,7 +69,7 @@ function TaskDetailModal({ detailObj }) {
         <span className={styles.modalSubtitle}>
           {`Subtasks (${finishedNum === undefined ? "-" : finishedNum} of ${detailObj.totalSubNum})`}
         </span>
-        {subtaskContent}
+        <div className={styles.subtaskContent}>{subtaskContent}</div>
       </div>
 
       <DropdownRequestVer

@@ -1,7 +1,6 @@
-import { IconContext } from "react-icons";
-import { TbLoader } from "react-icons/tb";
-import { updateSubtasks, updateTasksSubNum } from "@/store";
+import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import { useThunk } from "@/hooks/useThunk";
+import { updateSubtasks, updateTasksSubNum } from "@/store";
 import styles from "./CheckBox.module.scss";
 
 function CheckBox({ itemObj }) {
@@ -17,10 +16,7 @@ function CheckBox({ itemObj }) {
         }
       >
         {isLoadingSubtasks || isLoadingTasks ? (
-          <IconContext.Provider value={{ size: "16px", color: "#635fc7" }}>
-            {/* XXX: loading-icon常常重複利用，之後再看看怎麼抽 */}
-            <TbLoader className="loading-icon" />
-          </IconContext.Provider>
+          <LoadingIcon />
         ) : (
           <>
             <input

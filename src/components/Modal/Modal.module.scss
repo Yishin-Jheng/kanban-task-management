@@ -2,40 +2,6 @@
 @use "typography" as *;
 @use "mixins" as *;
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes unfold {
-  from {
-    height: 0;
-  }
-  to {
-    height: 10rem;
-  }
-}
-
-@keyframes blinker {
-  50% {
-    opacity: 0.3;
-  }
-}
-
 .modal {
   @include scrollbar;
   z-index: 99999;
@@ -162,5 +128,19 @@
     &:hover {
       background-color: var(--color-checkbox);
     }
+  }
+}
+
+.subtaskContent {
+  @include scrollbar;
+  padding: 3px 1px;
+  max-height: 24.5rem;
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
   }
 }
