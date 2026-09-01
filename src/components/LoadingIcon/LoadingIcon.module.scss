@@ -1,0 +1,17 @@
+@use "tokens" as *;
+@use "typography" as *;
+@use "mixins" as *;
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loadingIcon {
+  flex-shrink: 0;
+  animation: rotate 2s linear infinite;
+}

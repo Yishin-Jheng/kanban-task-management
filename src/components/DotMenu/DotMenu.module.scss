@@ -1,0 +1,57 @@
+@use "tokens" as *;
+@use "typography" as *;
+@use "mixins" as *;
+
+.dotMenu {
+  @include light-icon;
+  @include body-l;
+  position: relative;
+  height: 20px;
+  cursor: pointer;
+
+  &:hover > svg {
+    opacity: 0.7;
+  }
+}
+
+.menuList {
+  position: absolute;
+  z-index: 999;
+  top: 40%;
+  right: 0;
+  opacity: 0;
+  visibility: hidden;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  width: 19.2rem;
+  padding: 1.6rem;
+  list-style: none;
+  text-align: left;
+  border-radius: 5px;
+  background-color: var(--color-basic);
+  box-shadow: 0 5px 5px rgba($color-black, 0.05);
+  transition: all 0.3s;
+
+  &[data-open="open"] {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(2rem);
+  }
+}
+
+.editBtn,
+.deleteBtn {
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.editBtn {
+  color: $color-grey-light-1;
+}
+
+.deleteBtn {
+  color: $color-warning;
+}
