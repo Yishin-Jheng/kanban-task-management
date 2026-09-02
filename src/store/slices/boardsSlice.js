@@ -1,8 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchBoards } from "../thunks/fetchBoards";
 import { createBoards } from "../thunks/createBoards";
-import { updateBoards } from "../thunks/updateBoards";
 import { deleteBoards } from "../thunks/deleteBoards";
+import { updateBoards } from "../thunks/updateBoards";
 
 const boardsSlice = createSlice({
   name: "boards",
@@ -17,17 +16,6 @@ const boardsSlice = createSlice({
     },
   },
   extraReducers(builder) {
-    // boards/fetch
-    builder.addCase(fetchBoards.fulfilled, (state, action) => {
-      state.data = action.payload;
-      if (!state.activeBoardId) {
-        state.activeBoardId = action.payload[0].id;
-      }
-    });
-    builder.addCase(fetchBoards.rejected, (state, action) => {
-      state.error = action.error; // NOT payload here
-    });
-
     // boards/create
     builder.addCase(createBoards.fulfilled, (state, action) => {
       state.data.push(action.payload);
@@ -39,7 +27,7 @@ const boardsSlice = createSlice({
     // boards/update
     builder.addCase(updateBoards.fulfilled, (state, action) => {
       const boardData = state.data.find(
-        (board) => board.id === action.payload.boardId
+        (board) => board.id === action.payload.boardId,
       );
       boardData.boardName = action.payload.boardName;
     });

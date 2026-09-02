@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
+import { getBoards } from "@/api/boards";
 import Button from "@/components/Button/Button";
 import { DeletableInput } from "@/components/formComponents/DeletableInput/DeletableInput";
 import Input from "@/components/formComponents/Input/Input";
@@ -10,11 +12,10 @@ import styles from "../Modal.module.scss";
 
 function NewOrEditBoardModal({ createOrNot }) {
   const dispatch = useDispatch();
-  const [boardsData, activeBoardId, statusData] = useSelector((state) => {
-    const boardsData = state.boards.data;
+  const [activeBoardId, statusData] = useSelector((state) => {
     const activeBoardId = state.boards.activeBoardId;
     const statusData = state.columns.data;
-    return [boardsData, activeBoardId, statusData];
+    return [activeBoardId, statusData];
   });
   const [checkInvalid, setCheckInvalid] = useState(false);
   const [getFormData, handleFormChange] = useFormData();
@@ -43,15 +44,23 @@ function NewOrEditBoardModal({ createOrNot }) {
 
       if (form.boardName) {
         showLoadingModal();
-
         if (createOrNot) {
           doCreateBoard({ ...form });
-        } else {
-          doUpdateBoard({ boardId: activeBoardId, ...form });
+          return;
         }
+        doUpdateBoard({ boardId: activeBoardId, ...form });
       }
     };
   };
+
+  const { data: boardName } = useQuery({
+    queryKey: ["boards"],
+    queryFn: getBoards,
+    select: (data) => {
+      const activeBoard = data.find((board) => board.id === activeBoardId);
+      return activeBoard?.boardName;
+    },
+  });
 
   return (
     <>
@@ -62,11 +71,7 @@ function NewOrEditBoardModal({ createOrNot }) {
         checkInvalid={checkInvalid}
         label="Board Name"
         type="text"
-        value={
-          createOrNot
-            ? ""
-            : boardsData.find((board) => board.id === activeBoardId).boardName
-        }
+        value={createOrNot ? "" : boardName}
         placeholder="e.g. Web Design"
         handleFormChange={handleFormChange(formData, "boardName")}
       />

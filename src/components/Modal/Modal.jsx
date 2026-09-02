@@ -1,15 +1,15 @@
-import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
-import { closeModal } from "@/store";
-import { useWindowHeight } from "@/hooks/useWindowHeight";
+import clsx from "clsx";
 import DeleteModal from "@/components/Modal/modalContent/DeleteModal";
-import LoadingModal from "@/components/Modal/modalContent/LoadingModal";
 import ErrorMessageModal from "@/components/Modal/modalContent/ErrorMessageModal";
+import LoadingModal from "@/components/Modal/modalContent/LoadingModal";
 import NewOrEditBoardModal from "@/components/Modal/modalContent/NewOrEditBoardModal";
 import NewOrEditTaskModal from "@/components/Modal/modalContent/NewOrEditTaskModal";
 import TaskDetailModal from "@/components/Modal/modalContent/TaskDetailModal";
+import { useWindowHeight } from "@/hooks/useWindowHeight";
+import { closeModal } from "@/store";
 import styles from "./Modal.module.scss";
 
 function Modal() {
@@ -59,7 +59,7 @@ function Modal() {
 
   if (whichOpen === "deleteModal") {
     modalContent = (
-      <DeleteModal boardOrTask={deleteBoardOrTask} detailObj={detailObj} />
+      <DeleteModal type={deleteBoardOrTask} detailObj={detailObj} />
     );
   }
 

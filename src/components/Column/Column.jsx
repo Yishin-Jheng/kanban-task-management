@@ -6,6 +6,19 @@ import { useThunk } from "@/hooks/useThunk";
 import { fetchTasks, setModal } from "@/store";
 import styles from "./Column.module.scss";
 
+const loadingTask = (numbers) => {
+  return Array(numbers)
+    .fill(0)
+    .map((_, i) => {
+      return (
+        <li key={i} className={styles.loadingTask}>
+          <Skeleton styleType="task" />
+          <Skeleton styleType="subtask" />
+        </li>
+      );
+    });
+};
+
 function Column({ statusName, decorationColor, columnId, isUpdatingTasks }) {
   const dispatch = useDispatch();
   const { data: tasksData } = useSelector((state) => {
@@ -24,19 +37,6 @@ function Column({ statusName, decorationColor, columnId, isUpdatingTasks }) {
         detailObj: taskObj,
       }),
     );
-  };
-
-  const loadingTask = (numbers) => {
-    return Array(numbers)
-      .fill(0)
-      .map((_, i) => {
-        return (
-          <li key={i} className={styles.task}>
-            <Skeleton styleType="task" />
-            <Skeleton styleType="subtask" />
-          </li>
-        );
-      });
   };
 
   useEffect(() => {
@@ -136,18 +136,7 @@ function LoadingColumn({ numbers }) {
       return (
         <div key={i} className={styles.column}>
           <Skeleton styleType="status" />
-          <ul className={styles.columnBlock}>
-            {Array(3)
-              .fill(0)
-              .map((_, j) => {
-                return (
-                  <li key={j} className={styles.task}>
-                    <Skeleton styleType="task" />
-                    <Skeleton styleType="subtask" />
-                  </li>
-                );
-              })}
-          </ul>
+          <ul className={styles.columnBlock}>{loadingTask(3)}</ul>
         </div>
       );
     });

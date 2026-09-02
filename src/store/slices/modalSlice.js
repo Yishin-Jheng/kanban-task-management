@@ -1,22 +1,18 @@
 import { createSlice, isAnyOf } from "@reduxjs/toolkit";
-import { fetchBoards } from "../thunks/fetchBoards";
-import { fetchColumns } from "../thunks/fetchColumns";
-import { fetchTasks } from "../thunks/fetchTasks";
-import { fetchSubtasks } from "../thunks/fetchSubtasks";
-
 import { createBoards } from "../thunks/createBoards";
 import { createTasks } from "../thunks/createTasks";
-
-import { updateBoards } from "../thunks/updateBoards";
-import {
-  updateTasksStatus,
-  updateTasksSubNum,
-  updateTasksByForm,
-} from "../thunks/updateTasks";
-import { updateSubtasks } from "../thunks/updateSubtasks";
-
 import { deleteBoards } from "../thunks/deleteBoards";
 import { deleteTasks } from "../thunks/deleteTasks";
+import { fetchColumns } from "../thunks/fetchColumns";
+import { fetchSubtasks } from "../thunks/fetchSubtasks";
+import { fetchTasks } from "../thunks/fetchTasks";
+import { updateBoards } from "../thunks/updateBoards";
+import { updateSubtasks } from "../thunks/updateSubtasks";
+import {
+  updateTasksByForm,
+  updateTasksStatus,
+  updateTasksSubNum,
+} from "../thunks/updateTasks";
 import { userLogin } from "../thunks/userLogin";
 
 const modalSlice = createSlice({
@@ -34,13 +30,13 @@ const modalSlice = createSlice({
     setModal(state, action) {
       return action.payload;
     },
-    closeModal(state, action) {
+    closeModal(state) {
       state.isOpen = false;
     },
   },
   extraReducers(builder) {
     // users/login
-    builder.addCase(userLogin.rejected, (state, action) => {
+    builder.addCase(userLogin.rejected, (state) => {
       return {
         ...state,
         isOpen: true,
@@ -49,15 +45,14 @@ const modalSlice = createSlice({
       };
     });
 
-    // boards/fetch & columns/fetch & tasks/fetch & subtasks/fetch
+    // columns/fetch & tasks/fetch & subtasks/fetch
     builder.addMatcher(
       isAnyOf(
-        fetchBoards.rejected,
         fetchColumns.rejected,
         fetchTasks.rejected,
-        fetchSubtasks.rejected
+        fetchSubtasks.rejected,
       ),
-      (state, action) => {
+      (state) => {
         return {
           ...state,
           isOpen: true,
@@ -65,7 +60,7 @@ const modalSlice = createSlice({
           errorMsg:
             "Fetching data failed. Please check your internet and try again.",
         };
-      }
+      },
     );
 
     // others
@@ -76,16 +71,16 @@ const modalSlice = createSlice({
         updateBoards.fulfilled,
         updateTasksByForm.fulfilled,
         deleteBoards.fulfilled,
-        deleteTasks.fulfilled
+        deleteTasks.fulfilled,
       ),
-      (state, action) => {
+      (state) => {
         return {
           ...state,
           isOpen: true,
           whichOpen: "loadingModal",
           isLoading: false,
         };
-      }
+      },
     );
     builder.addMatcher(
       isAnyOf(
@@ -97,7 +92,7 @@ const modalSlice = createSlice({
         updateTasksByForm.rejected,
         updateSubtasks.rejected,
         deleteBoards.rejected,
-        deleteTasks.rejected
+        deleteTasks.rejected,
       ),
       (state, action) => {
         console.error(action.payload);
@@ -108,7 +103,7 @@ const modalSlice = createSlice({
           errorMsg:
             "Change is invalid. Guest has no permission to modify board or column. If you did not sign in as guest, please check your internet and try again.",
         };
-      }
+      },
     );
   },
 });
