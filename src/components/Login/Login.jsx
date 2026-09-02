@@ -30,13 +30,11 @@ function Login() {
     <form className={styles.login}>
       <div className={styles.loginTitle}>
         <span>Account Login</span>
-
         {/* XXX: 這邊先改了wording */}
         <div className={styles.loginIcon}>
           <FaUserSecret size="1.5rem" color="#635fc7" />
           <span>Login as guest</span>
         </div>
-
         {/* XXX: 感覺改成按按鈕直接帶入訪客帳密會更方便登入測試 */}
         {/* <div className={styles.guestInfo}>
           <p>Here is the email and password provided for guest 👏</p>
@@ -51,7 +49,6 @@ function Login() {
           <p>⛔ Guest can't do any change on the board or column.</p>
         </div> */}
       </div>
-
       <Input
         checkInvalid={checkInvalid}
         label="Email Address"
@@ -59,7 +56,6 @@ function Login() {
         value={""}
         handleFormChange={handleFormChange(formData, "email")}
       />
-
       <Input
         checkInvalid={checkInvalid}
         label="Password"
@@ -67,7 +63,6 @@ function Login() {
         value={""}
         handleFormChange={handleFormChange(formData, "password")}
       />
-
       <Button type="formPrimary" onClick={handleSubmit(getFormData)}>
         {isLoading ? <LoadingIcon size="2rem" /> : "Log In"}
       </Button>
