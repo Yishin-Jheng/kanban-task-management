@@ -48,3 +48,13 @@
     grid-column: 1 / -1;
   }
 }
+
+.mobileSidebarBackground {
+  z-index: 9998;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(#000, 0.5);
+}

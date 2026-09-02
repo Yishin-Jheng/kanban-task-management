@@ -15,26 +15,17 @@ import styles from "./App.module.scss";
 export const SidebarContext = createContext();
 
 function App() {
-  const [sidebarHidden, setSidebarHidden] = useState(false);
+  const [sidebarHidden, setSidebarHidden] = useState(
+    () => window.matchMedia("(max-width: 670px)").matches,
+  );
   const [doCheckSession, isChecking] = useThunk(retrieveSession); // XXX: 這是在做什麼的？
   const session = useSelector((state) => state.users.data.session);
-  const isMobile = useMediaQuery({ query: `(max-width: 670px)` });
+  const isMobile = useMediaQuery({ query: "(max-width: 670px)" });
   const showSidebarBackround = isMobile && !sidebarHidden;
 
   const handleHidden = function () {
     setSidebarHidden(!sidebarHidden);
   };
-
-  // XXX: 雖然有解釋但看起來還是有點奇怪，是否還有更恰當的作法？
-  // NOTE: 雖然 React 建議不要透過捕捉一個 state 的變化去改變另一個 state，
-  // 但在 isMobile 維持 true 的情況下，sidebarHidden 第一次被更新之後又會在觸發一次 re-render，
-  // 下一次的渲染中 sidebarHidden 又被更新，就又會在進行一次 re-render，最終變成無限循環。
-  // 這個狀況似乎還是要使用 Effect 去控制 state 更新會比較恰當。
-  useEffect(() => {
-    if (isMobile) {
-      setSidebarHidden(true);
-    }
-  }, [isMobile]);
 
   useEffect(() => {
     if (!session) {
@@ -72,7 +63,7 @@ function App() {
         </main>
         {showSidebarBackround && (
           <div
-            className="modal__background modal__background--header"
+            className={styles.mobileSidebarBackground}
             onClick={handleHidden}
           />
         )}
