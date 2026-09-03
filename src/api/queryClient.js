@@ -2,7 +2,7 @@ import { QueryCache, QueryClient } from "@tanstack/react-query";
 import { setModal, store } from "@/store";
 
 export const queryClient = new QueryClient({
-  defaultOptions: { queries: { staleTime: 1000 * 60 * 10, retry: 1 } },
+  defaultOptions: { queries: { staleTime: 1000 * 60 * 30, retry: 1 } },
   queryCache: new QueryCache({
     onError: (error, query) => {
       if (query.state.data !== undefined) return;

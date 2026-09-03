@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 import Board from "@/components/Board/Board";
@@ -9,10 +9,9 @@ import Modal from "@/components/Modal/Modal";
 import PageLoading from "@/components/PageLoading/PageLoading";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import { useThunk } from "@/hooks/useThunk";
+import { SidebarContext } from "@/sidebarContext";
 import { retrieveSession } from "@/store";
 import styles from "./App.module.scss";
-
-export const SidebarContext = createContext();
 
 function App() {
   const [sidebarHidden, setSidebarHidden] = useState(
