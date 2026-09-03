@@ -13,12 +13,13 @@
   transition: all 0.3s;
   cursor: pointer;
 
-  &:hover {
+  &:hover:not([data-disabled="disabled"]) {
     background-color: $color-primary-light-1;
   }
 
   &[data-disabled="disabled"] {
     opacity: 0.3;
+    cursor: not-allowed;
   }
 
   &[data-mobile="mobile"] {
