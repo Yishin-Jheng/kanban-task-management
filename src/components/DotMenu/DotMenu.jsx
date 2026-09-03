@@ -1,8 +1,8 @@
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
+import { useClickOutside } from "@/hooks/useClickOutside";
 import { setModal } from "@/store";
 import styles from "./DotMenu.module.scss";
-import { useClickOutside } from "@/hooks/useClickOutside";
 
 function DotMenu({ position, detailObj }) {
   const dispatch = useDispatch();

@@ -28,7 +28,7 @@ const handleOverViewport = function (dropdownRef, setOverViewport) {
   }
 };
 
-function Dropdown({ label, value, options, handleFormChange }) {
+function Dropdown({ label = "", value = "", options = [], handleFormChange }) {
   const [isOpen, setIsOpen] = useState(false);
   const [overViewport, setOverViewport] = useState(false);
   const [currentStatus, setCurrentStatus] = useState(value);
@@ -83,7 +83,7 @@ function Dropdown({ label, value, options, handleFormChange }) {
   );
 }
 
-function DropdownRequestVer({ label, value, options, taskId }) {
+function DropdownRequestVer({ label = "", value = "", options = [], taskId }) {
   const [isOpen, setIsOpen] = useState(false);
   const [overViewport, setOverViewport] = useState(false);
   const [currentStatus, setCurrentStatus] = useState(value);

@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
+import { getColumns } from "@/api/columns";
 import Button from "@/components/Button/Button";
 import DotMenu from "@/components/DotMenu/DotMenu";
 import CheckBox from "@/components/formComponents/CheckBox/CheckBox";
@@ -11,15 +13,23 @@ import styles from "../Modal.module.scss";
 
 function TaskDetailModal({ detailObj }) {
   const dispatch = useDispatch();
-  const [subtasksData, finishedNum, statusData] = useSelector((state) => {
+  const activeBoardId = useSelector((state) => state.boards.activeBoardId);
+  const [subtasksData, finishedNum] = useSelector((state) => {
     const subtasksData = state.subtasks.data;
     const finishedNum = state.tasks.data.find(
       (task) => task.id === detailObj.id,
     ).finishedSubNum;
-    const statusData = state.columns.data;
-    return [subtasksData, finishedNum, statusData];
+    return [subtasksData, finishedNum];
   });
   const [doFetchSubtasks, isLoadingSubtasks] = useThunk(fetchSubtasks);
+
+  const { data: columns = [] } = useQuery({
+    queryKey: ["columns", activeBoardId],
+    queryFn: () => getColumns({ boardId: activeBoardId }),
+    enabled: !!activeBoardId,
+  });
+
+  const activeStatus = columns.find((col) => col.id === detailObj.columnId);
 
   const modalEditTask = () => {
     dispatch(
@@ -34,7 +44,7 @@ function TaskDetailModal({ detailObj }) {
 
   let subtaskContent;
   if (!isLoadingSubtasks) {
-    if (subtasksData && subtasksData.length > 0) {
+    if (subtasksData?.length > 0) {
       subtaskContent = subtasksData.map((subtask) => {
         return <CheckBox key={subtask.id} itemObj={subtask} />;
       });
@@ -62,22 +72,17 @@ function TaskDetailModal({ detailObj }) {
         <span>{detailObj.title}</span>
         <DotMenu position="modal" detailObj={detailObj} />
       </div>
-
       <p className={styles.modalContent}>{detailObj.description}</p>
-
       <div className={styles.subtask}>
         <span className={styles.modalSubtitle}>
-          {`Subtasks (${finishedNum === undefined ? "-" : finishedNum} of ${detailObj.totalSubNum})`}
+          {`Subtasks (${finishedNum ?? "-"} of ${detailObj.totalSubNum})`}
         </span>
         <div className={styles.subtaskContent}>{subtaskContent}</div>
       </div>
-
       <DropdownRequestVer
         label="Current Status"
-        value={
-          statusData.find((col) => col.id === detailObj.columnId).statusName
-        }
-        options={statusData}
+        value={activeStatus?.statusName}
+        options={columns}
         taskId={detailObj.id}
       />
     </>

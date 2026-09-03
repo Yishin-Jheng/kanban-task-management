@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchColumns } from "../thunks/fetchColumns";
 import { updateBoards } from "../thunks/updateBoards";
 
 const columnsSlice = createSlice({
@@ -9,19 +8,11 @@ const columnsSlice = createSlice({
     error: null,
   },
   reducers: {
-    resetColumns(state, action) {
+    resetColumns(state) {
       state.data = [];
     },
   },
   extraReducers(builder) {
-    // columns/fetch
-    builder.addCase(fetchColumns.fulfilled, (state, action) => {
-      state.data = action.payload;
-    });
-    builder.addCase(fetchColumns.rejected, (state, action) => {
-      state.error = action.error;
-    });
-
     // boards/update
     builder.addCase(updateBoards.fulfilled, (state, action) => {
       // Create
@@ -36,7 +27,7 @@ const columnsSlice = createSlice({
             col.statusName = updatedCol.statusName;
           }
           return updatedCol;
-        })
+        }),
       );
       // Delete
       action.payload.deletedColumns.map((deletedCol) => {

@@ -14,6 +14,7 @@ function DeleteModal({ type, detailObj }) {
     const activeBoardId = state.boards.activeBoardId;
     return [activeBoardId];
   });
+  // BUG: 現在刪除版塊後modal不會關閉
   const [doDeleteTasks, isDeletingTasks] = useThunk(deleteTasks);
   const [doDeleteBoards, isDeletingBoards] = useThunk(deleteBoards);
   const isDeleting = isDeletingTasks || isDeletingBoards;

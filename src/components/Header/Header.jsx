@@ -2,27 +2,20 @@ import { useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import { getBoards } from "@/api/boards";
-import { SidebarContext } from "@/App";
+import { getColumns } from "@/api/columns";
 import { addIcon, downIcon, upIcon } from "@/assets/icon";
 import logoMin from "@/assets/logo-mobile.svg";
 import Button from "@/components/Button/Button";
 import DotMenu from "@/components/DotMenu/DotMenu";
 import Skeleton from "@/components/Skeleton/Skeleton";
+import { SidebarContext } from "@/sidebarContext";
 import { setModal } from "@/store";
 import styles from "./Header.module.scss";
 
 function Header({ isMobile }) {
   const dispatch = useDispatch();
   const { sidebarHidden, handleHidden } = useContext(SidebarContext);
-  const [activeBoardId, statusData] = useSelector((state) => {
-    const activeBoardId = state.boards.activeBoardId;
-    const statusData = state.columns.data;
-    return [activeBoardId, statusData];
-  });
-  const activeColumns = statusData
-    ? statusData.filter((col) => col.boardId === activeBoardId)
-    : [];
-
+  const activeBoardId = useSelector((state) => state.boards.activeBoardId);
   const modalAddTask = () => {
     dispatch(
       setModal({
@@ -42,6 +35,15 @@ function Header({ isMobile }) {
     },
   });
 
+  const { data: isColumnsEmpty = true } = useQuery({
+    queryKey: ["columns", activeBoardId],
+    queryFn: () => getColumns({ boardId: activeBoardId }),
+    enabled: !!activeBoardId,
+    select: (data) => {
+      return data?.length === 0;
+    },
+  });
+
   const isShowSkeleton = isFetchingBoardName && !boardName;
 
   return (
@@ -49,7 +51,12 @@ function Header({ isMobile }) {
       {isMobile ? <img src={logoMin} alt="mobile version logo" /> : null}
       {isShowSkeleton && <Skeleton styleType="title" />}
       {!isShowSkeleton && (
-        <h1 className={styles.headerTitle} onClick={handleHidden}>
+        <h1
+          className={styles.headerTitle}
+          onClick={() => {
+            if (isMobile) handleHidden();
+          }}
+        >
           {boardName ?? ""}
         </h1>
       )}
@@ -61,7 +68,7 @@ function Header({ isMobile }) {
       <Button
         className={styles.createTaskBtn}
         isMobile={isMobile}
-        isDisabled={!activeColumns[0]}
+        isDisabled={isColumnsEmpty}
         onClick={modalAddTask}
       >
         {isMobile ? addIcon : <span>+ Add New Task</span>}

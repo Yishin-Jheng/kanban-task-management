@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { SidebarContext } from "@/App";
+import { SidebarContext } from "@/sidebarContext";
 import styles from "./HiddenSwitch.module.scss";
 
 function HiddenSwitch() {

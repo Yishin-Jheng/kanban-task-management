@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
+import { getColumns } from "@/api/columns";
 import Button from "@/components/Button/Button";
 import { DeletableInput } from "@/components/formComponents/DeletableInput/DeletableInput";
 import { Dropdown } from "@/components/formComponents/Dropdown/Dropdown";
@@ -10,22 +12,37 @@ import { useThunk } from "@/hooks/useThunk";
 import { createTasks, setModal, updateTasksByForm } from "@/store";
 import styles from "../Modal.module.scss";
 
+const exampleInputs = [
+  {
+    id: 1,
+    placeholder: "e.g. Make coffee",
+  },
+  {
+    id: 2,
+    placeholder: "e.g. Drink coffee & smile",
+  },
+];
+
 function NewOrEditTaskModal({ createOrNot, detailObj }) {
   const dispatch = useDispatch();
-  const [subtasksData, statusData] = useSelector((state) => {
-    const subtasksData = state.subtasks.data;
-    const statusData = state.columns.data;
-    return [subtasksData, statusData];
-  });
+  const activeBoardId = useSelector((state) => state.boards.activeBoardId);
+  const subtasksData = useSelector((state) => state.subtasks.data);
   const [checkInvalid, setCheckInvalid] = useState(false);
   const [getFormData, handleFormChange] = useFormData();
   const [doCreateTask, isCreatingTask] = useThunk(createTasks);
   const [doUpdateTask, isUpdatingTask] = useThunk(updateTasksByForm);
 
   const formData = getFormData();
-  const [title, btnText] = createOrNot
-    ? ["Add New Task", "Create Task"]
-    : ["Edit Task", "Save Changes"];
+
+  const { data: columns = [] } = useQuery({
+    queryKey: ["columns", activeBoardId],
+    queryFn: () => getColumns({ boardId: activeBoardId }),
+    enabled: !!activeBoardId,
+  });
+
+  const activeStatus = createOrNot
+    ? columns[0]
+    : columns.find((col) => col.id === detailObj.columnId);
 
   const showLoadingModal = () => {
     dispatch(
@@ -37,7 +54,6 @@ function NewOrEditTaskModal({ createOrNot, detailObj }) {
     );
   };
 
-  // BUG: 任務狀態沒有正常變更
   const handleSubmit = (formDataRef) => {
     return () => {
       const form = formDataRef().current;
@@ -58,7 +74,7 @@ function NewOrEditTaskModal({ createOrNot, detailObj }) {
   return (
     <>
       <div className={styles.modalTitle}>
-        <span>{title}</span>
+        <span>{createOrNot ? "Add New Task" : "Edit Task"}</span>
       </div>
       <Input
         checkInvalid={checkInvalid}
@@ -82,16 +98,7 @@ function NewOrEditTaskModal({ createOrNot, detailObj }) {
         valueKey="description"
         values={
           createOrNot
-            ? [
-                {
-                  id: 1,
-                  placeholder: "e.g. Make coffee",
-                },
-                {
-                  id: 2,
-                  placeholder: "e.g. Drink coffee & smile",
-                },
-              ]
+            ? exampleInputs
             : subtasksData.filter((s) => s.taskId === detailObj.id)
         }
         handleFormChange={handleFormChange(formData, "subtasks")}
@@ -99,17 +106,13 @@ function NewOrEditTaskModal({ createOrNot, detailObj }) {
       />
       <Dropdown
         label="Status"
-        value={
-          createOrNot
-            ? statusData[0].statusName
-            : statusData.find((col) => col.id === detailObj.columnId).statusName
-        }
-        options={statusData}
+        value={activeStatus?.statusName}
+        options={columns}
         handleFormChange={handleFormChange(formData, "columnId")}
       />
       <Button
         type="formPrimary"
-        text={btnText}
+        text={createOrNot ? "Create Task" : "Save Changes"}
         isDisabled={isUpdatingTask || isCreatingTask}
         onClick={handleSubmit(getFormData)}
       />

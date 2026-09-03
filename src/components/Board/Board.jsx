@@ -1,19 +1,16 @@
-import { useEffect } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { getBoards } from "@/api/boards";
+import { getColumns } from "@/api/columns";
 import { Column, LoadingColumn, NewColumn } from "@/components/Column/Column";
 import EmptyColumn from "@/components/Column/EmptyColumn";
 import { useThunk } from "@/hooks/useThunk";
-import { fetchColumns, updateTasksStatus } from "@/store";
+import { updateTasksStatus } from "@/store";
 import styles from "./Board.module.scss";
 
 function Board() {
-  const [columnsData, activeBoardId] = useSelector((state) => {
-    const columnsData = state.columns.data;
-    const activeBoardId = state.boards.activeBoardId;
-    return [columnsData, activeBoardId];
-  });
-  const [doFetchColumns, isLoadingColumns] = useThunk(fetchColumns);
+  const activeBoardId = useSelector((state) => state.boards.activeBoardId);
   const [doUpdateTasks, isUpdatingTasks] = useThunk(updateTasksStatus);
 
   const handleDragAndDrop = function (results) {
@@ -29,29 +26,49 @@ function Board() {
     });
   };
 
-  // TODO: 之後改成 useQuery配合enabled: activeBoardId !== 0
-  useEffect(() => {
-    if (activeBoardId !== 0) {
-      doFetchColumns({ boardId: activeBoardId });
-    }
-  }, [doFetchColumns, activeBoardId]);
+  const {
+    data: boards,
+    isFetching: isFetchingBoards,
+    isSuccess: isSuccessBoards,
+    isError: isErrorBoards,
+  } = useQuery({
+    queryKey: ["boards"],
+    queryFn: getBoards,
+  });
+
+  const {
+    data: columns,
+    isFetching: isFetchingColumns,
+    isError: isErrorColumns,
+  } = useQuery({
+    queryKey: ["columns", activeBoardId],
+    queryFn: () => getColumns({ boardId: activeBoardId }),
+    enabled: !!activeBoardId,
+    placeholderData: keepPreviousData,
+  });
+
+  const columnsLength = columns?.length;
+  const isFetching = isFetchingBoards || isFetchingColumns;
+  const isError = isErrorBoards || isErrorColumns;
+  const isShowSkeleton = isFetching && !isError && !columnsLength;
 
   return (
     <div className={styles.board}>
-      {/* TODO: 之後activeBoardId為0顯示loading的邏輯應該改成拿getBoards的狀態來判斷 */}
-      {(isLoadingColumns || activeBoardId === 0) && (
+      {isShowSkeleton && (
         <div className={styles.columnContainer}>
           <LoadingColumn numbers={3} />
         </div>
       )}
-      {!isLoadingColumns &&
-        activeBoardId !== 0 &&
-        columnsData &&
-        columnsData.length === 0 && <EmptyColumn />}
-      {columnsData && columnsData.length > 0 && (
+      {!isShowSkeleton && !columnsLength && (
+        <EmptyColumn
+          isError={isError}
+          isBoardsEmpty={isSuccessBoards && boards.length === 0}
+        />
+      )}
+      {columnsLength > 0 && (
         <DragDropContext onDragEnd={handleDragAndDrop}>
           <div className={styles.columnContainer}>
-            {columnsData.map((status) => {
+            {columns.map((status) => {
               return (
                 <Column
                   key={status.id}

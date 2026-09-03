@@ -3,7 +3,6 @@ import { createBoards } from "../thunks/createBoards";
 import { createTasks } from "../thunks/createTasks";
 import { deleteBoards } from "../thunks/deleteBoards";
 import { deleteTasks } from "../thunks/deleteTasks";
-import { fetchColumns } from "../thunks/fetchColumns";
 import { fetchSubtasks } from "../thunks/fetchSubtasks";
 import { fetchTasks } from "../thunks/fetchTasks";
 import { updateBoards } from "../thunks/updateBoards";
@@ -47,11 +46,7 @@ const modalSlice = createSlice({
 
     // columns/fetch & tasks/fetch & subtasks/fetch
     builder.addMatcher(
-      isAnyOf(
-        fetchColumns.rejected,
-        fetchTasks.rejected,
-        fetchSubtasks.rejected,
-      ),
+      isAnyOf(fetchTasks.rejected, fetchSubtasks.rejected),
       (state) => {
         return {
           ...state,

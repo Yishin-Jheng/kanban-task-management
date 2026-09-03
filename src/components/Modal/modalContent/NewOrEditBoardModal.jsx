@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import { getBoards } from "@/api/boards";
+import { getColumns } from "@/api/columns";
 import Button from "@/components/Button/Button";
 import { DeletableInput } from "@/components/formComponents/DeletableInput/DeletableInput";
 import Input from "@/components/formComponents/Input/Input";
@@ -12,11 +13,8 @@ import styles from "../Modal.module.scss";
 
 function NewOrEditBoardModal({ createOrNot }) {
   const dispatch = useDispatch();
-  const [activeBoardId, statusData] = useSelector((state) => {
-    const activeBoardId = state.boards.activeBoardId;
-    const statusData = state.columns.data;
-    return [activeBoardId, statusData];
-  });
+  const activeBoardId = useSelector((state) => state.boards.activeBoardId);
+
   const [checkInvalid, setCheckInvalid] = useState(false);
   const [getFormData, handleFormChange] = useFormData();
   const [doCreateBoard, isCreatingBoard] = useThunk(createBoards);
@@ -56,10 +54,17 @@ function NewOrEditBoardModal({ createOrNot }) {
   const { data: boardName } = useQuery({
     queryKey: ["boards"],
     queryFn: getBoards,
+    enabled: !createOrNot,
     select: (data) => {
       const activeBoard = data.find((board) => board.id === activeBoardId);
       return activeBoard?.boardName;
     },
+  });
+
+  const { data: columns = [] } = useQuery({
+    queryKey: ["columns", activeBoardId],
+    queryFn: () => getColumns({ boardId: activeBoardId }),
+    enabled: !!activeBoardId,
   });
 
   return (
@@ -92,7 +97,7 @@ function NewOrEditBoardModal({ createOrNot }) {
                   placeholder: "e.g. Doing",
                 },
               ]
-            : statusData.filter((col) => col.boardId === activeBoardId)
+            : columns.filter((col) => col.boardId === activeBoardId)
         }
         handleFormChange={handleFormChange(formData, "columns")}
         handleFormDelete={handleFormChange(formData, "deletedColumns")}

@@ -1,18 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/dist/query";
-import { usersReducer } from "./slices/usersSlice";
 import { boardsReducer, setActiveBoard } from "./slices/boardsSlice";
 import { columnsReducer, resetColumns } from "./slices/columnsSlice";
-import { tasksReducer, resetTasks } from "./slices/tasksSlice";
-import { subtasksReducer } from "./slices/subtasksSlice";
-import { modalReducer, setModal, closeModal } from "./slices/modalSlice";
 import {
+  addListArray,
   formReducer,
+  removeListArray,
   setForm,
   setListArray,
-  addListArray,
-  removeListArray,
 } from "./slices/formSlice";
+import { closeModal, modalReducer, setModal } from "./slices/modalSlice";
+import { subtasksReducer } from "./slices/subtasksSlice";
+import { resetTasks, tasksReducer } from "./slices/tasksSlice";
+import { usersReducer } from "./slices/usersSlice";
 
 const store = configureStore({
   reducer: {
@@ -28,31 +28,25 @@ const store = configureStore({
 
 setupListeners(store.dispatch);
 
-export * from "./thunks/userLogin";
-
-export * from "./thunks/fetchBoards";
-export * from "./thunks/fetchColumns";
-export * from "./thunks/fetchTasks";
-export * from "./thunks/fetchSubtasks";
-
-export * from "./thunks/updateBoards";
-export * from "./thunks/updateTasks";
-export * from "./thunks/updateSubtasks";
-
 export * from "./thunks/createBoards";
 export * from "./thunks/createTasks";
-
-export * from "./thunks/deleteTasks";
 export * from "./thunks/deleteBoards";
+export * from "./thunks/deleteTasks";
+export * from "./thunks/fetchSubtasks";
+export * from "./thunks/fetchTasks";
+export * from "./thunks/updateBoards";
+export * from "./thunks/updateSubtasks";
+export * from "./thunks/updateTasks";
+export * from "./thunks/userLogin";
 export {
-  store,
-  setActiveBoard,
+  addListArray,
+  closeModal,
+  removeListArray,
   resetColumns,
   resetTasks,
-  setModal,
-  closeModal,
+  setActiveBoard,
   setForm,
   setListArray,
-  addListArray,
-  removeListArray,
+  setModal,
+  store,
 };
