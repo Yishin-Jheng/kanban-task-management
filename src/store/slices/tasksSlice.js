@@ -1,12 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchTasks } from "../thunks/fetchTasks";
-import {
-  updateTasksStatus,
-  updateTasksSubNum,
-  updateTasksByForm,
-} from "../thunks/updateTasks";
 import { createTasks } from "../thunks/createTasks";
 import { deleteTasks } from "../thunks/deleteTasks";
+import {
+  updateTasksByForm,
+  updateTasksStatus,
+  updateTasksSubNum,
+} from "../thunks/updateTasks";
 
 const tasksSlice = createSlice({
   name: "tasks",
@@ -15,23 +14,15 @@ const tasksSlice = createSlice({
     error: null,
   },
   reducers: {
-    resetTasks(state, action) {
+    resetTasks(state) {
       state.data = [];
     },
   },
   extraReducers(builder) {
-    // tasks/fetch
-    builder.addCase(fetchTasks.fulfilled, (state, action) => {
-      state.data = [...state.data, ...action.payload];
-    });
-    builder.addCase(fetchTasks.rejected, (state, action) => {
-      state.error = action.error;
-    });
-
     // tasks/update/status
     builder.addCase(updateTasksStatus.fulfilled, (state, action) => {
       const taskData = state.data.find(
-        (tasks) => tasks.id === action.payload.taskId
+        (tasks) => tasks.id === action.payload.taskId,
       );
       taskData.columnId = action.payload.columnId;
     });
@@ -42,7 +33,7 @@ const tasksSlice = createSlice({
     // tasks/update/subNum
     builder.addCase(updateTasksSubNum.fulfilled, (state, action) => {
       const taskData = state.data.find(
-        (tasks) => tasks.id === action.payload.taskId
+        (tasks) => tasks.id === action.payload.taskId,
       );
       taskData.finishedSubNum += action.payload.subNum;
     });
@@ -53,7 +44,7 @@ const tasksSlice = createSlice({
     // tasks/update/byForm
     builder.addCase(updateTasksByForm.fulfilled, (state, action) => {
       const taskData = state.data.find(
-        (task) => task.id === action.payload.taskId
+        (task) => task.id === action.payload.taskId,
       );
       Object.assign(taskData, {
         title: action.payload.title,

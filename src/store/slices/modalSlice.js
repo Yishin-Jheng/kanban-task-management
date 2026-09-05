@@ -4,7 +4,6 @@ import { createTasks } from "../thunks/createTasks";
 import { deleteBoards } from "../thunks/deleteBoards";
 import { deleteTasks } from "../thunks/deleteTasks";
 import { fetchSubtasks } from "../thunks/fetchSubtasks";
-import { fetchTasks } from "../thunks/fetchTasks";
 import { updateBoards } from "../thunks/updateBoards";
 import { updateSubtasks } from "../thunks/updateSubtasks";
 import {
@@ -45,18 +44,15 @@ const modalSlice = createSlice({
     });
 
     // columns/fetch & tasks/fetch & subtasks/fetch
-    builder.addMatcher(
-      isAnyOf(fetchTasks.rejected, fetchSubtasks.rejected),
-      (state) => {
-        return {
-          ...state,
-          isOpen: true,
-          whichOpen: "errorMessageModal",
-          errorMsg:
-            "Fetching data failed. Please check your internet and try again.",
-        };
-      },
-    );
+    builder.addMatcher(isAnyOf(fetchSubtasks.rejected), (state) => {
+      return {
+        ...state,
+        isOpen: true,
+        whichOpen: "errorMessageModal",
+        errorMsg:
+          "Fetching data failed. Please check your internet and try again.",
+      };
+    });
 
     // others
     builder.addMatcher(

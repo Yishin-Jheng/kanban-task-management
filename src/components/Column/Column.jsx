@@ -1,9 +1,9 @@
-import { useEffect } from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
+import { getTasks } from "@/api/tasks";
 import Skeleton from "@/components/Skeleton/Skeleton";
-import { useThunk } from "@/hooks/useThunk";
-import { fetchTasks, setModal } from "@/store";
+import { setModal } from "@/store";
 import styles from "./Column.module.scss";
 
 const loadingTask = (numbers) => {
@@ -19,15 +19,16 @@ const loadingTask = (numbers) => {
     });
 };
 
-function Column({ statusName, decorationColor, columnId, isUpdatingTasks }) {
+/**
+ * Column
+ * @param {string} props.statusName 狀態名稱
+ * @param {string} props.decorationColor 裝飾色
+ * @param {number} props.columnId 狀態列ID
+ * @param {boolean} props.isUpdatingTasks 是否更新中
+ */
+function Column(props) {
+  const { statusName, decorationColor, columnId, isUpdatingTasks } = props;
   const dispatch = useDispatch();
-  const { data: tasksData } = useSelector((state) => {
-    return state.tasks;
-  });
-  const [doFetchTasks, isLoadingTasks] = useThunk(fetchTasks);
-  const tasksDataOfThisColumn = tasksData.filter(
-    (task) => task.columnId === columnId,
-  );
 
   const modalTaskDetail = (taskObj) => {
     dispatch(
@@ -39,11 +40,18 @@ function Column({ statusName, decorationColor, columnId, isUpdatingTasks }) {
     );
   };
 
-  useEffect(() => {
-    if (tasksDataOfThisColumn.length < 1) {
-      doFetchTasks({ columnId });
-    }
-  }, [doFetchTasks]);
+  const {
+    data: tasks,
+    isFetching: isFetchingTasks,
+    isError: isErrorTasks,
+  } = useQuery({
+    queryKey: ["tasks", columnId],
+    queryFn: () => getTasks({ columnId }),
+    enabled: !!columnId,
+  });
+
+  const tasksLength = tasks?.length;
+  const isShowSkeleton = isFetchingTasks && !isErrorTasks && !tasksLength;
 
   return (
     <div className={styles.column}>
@@ -56,12 +64,11 @@ function Column({ statusName, decorationColor, columnId, isUpdatingTasks }) {
         </div>
         <p
           className={styles.statusTitle}
-        >{`${statusName} (${tasksDataOfThisColumn.length})`}</p>
+        >{`${statusName} (${tasksLength ?? "-"})`}</p>
       </div>
-
       <Droppable
         droppableId={columnId.toString()}
-        isDropDisabled={isLoadingTasks}
+        isDropDisabled={isShowSkeleton}
       >
         {(provided) => (
           <ul
@@ -69,22 +76,21 @@ function Column({ statusName, decorationColor, columnId, isUpdatingTasks }) {
             className={styles.columnBlock}
             {...provided.droppableProps}
           >
-            {isLoadingTasks
-              ? loadingTask(3)
-              : tasksDataOfThisColumn.map((task, index) => (
+            {isShowSkeleton && loadingTask(3)}
+            {tasksLength > 0 &&
+              tasks.map((task, index) => {
+                return (
                   <Draggable
                     key={task.id}
                     index={index}
-                    draggableId={task.id.toString()}
+                    draggableId={String(task.id)}
                     isDragDisabled={isUpdatingTasks}
                   >
                     {(provided) => (
                       <li
                         ref={provided.innerRef}
                         className={styles.task}
-                        onClick={() => {
-                          modalTaskDetail(task);
-                        }}
+                        onClick={() => modalTaskDetail(task)}
                         {...provided.dragHandleProps}
                         {...provided.draggableProps}
                       >
@@ -95,7 +101,8 @@ function Column({ statusName, decorationColor, columnId, isUpdatingTasks }) {
                       </li>
                     )}
                   </Draggable>
-                ))}
+                );
+              })}
             {provided.placeholder}
           </ul>
         )}
@@ -130,18 +137,14 @@ function NewColumn() {
 }
 
 function LoadingColumn({ numbers }) {
-  const columnContent = Array(numbers)
+  return Array(numbers)
     .fill(0)
-    .map((_, i) => {
-      return (
-        <div key={i} className={styles.column}>
-          <Skeleton styleType="status" />
-          <ul className={styles.columnBlock}>{loadingTask(3)}</ul>
-        </div>
-      );
-    });
-
-  return columnContent;
+    .map((_, i) => (
+      <div key={i} className={styles.column}>
+        <Skeleton styleType="status" />
+        <ul className={styles.columnBlock}>{loadingTask(3)}</ul>
+      </div>
+    ));
 }
 
 export { Column, LoadingColumn, NewColumn };
