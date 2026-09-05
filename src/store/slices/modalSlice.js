@@ -3,7 +3,6 @@ import { createBoards } from "../thunks/createBoards";
 import { createTasks } from "../thunks/createTasks";
 import { deleteBoards } from "../thunks/deleteBoards";
 import { deleteTasks } from "../thunks/deleteTasks";
-import { fetchSubtasks } from "../thunks/fetchSubtasks";
 import { updateBoards } from "../thunks/updateBoards";
 import { updateSubtasks } from "../thunks/updateSubtasks";
 import {
@@ -40,17 +39,6 @@ const modalSlice = createSlice({
         isOpen: true,
         whichOpen: "errorMessageModal",
         errorMsg: "Email or password is incorrect. Please try again.",
-      };
-    });
-
-    // columns/fetch & tasks/fetch & subtasks/fetch
-    builder.addMatcher(isAnyOf(fetchSubtasks.rejected), (state) => {
-      return {
-        ...state,
-        isOpen: true,
-        whichOpen: "errorMessageModal",
-        errorMsg:
-          "Fetching data failed. Please check your internet and try again.",
       };
     });
 

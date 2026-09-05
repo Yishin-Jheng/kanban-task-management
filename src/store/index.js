@@ -32,7 +32,6 @@ export * from "./thunks/createBoards";
 export * from "./thunks/createTasks";
 export * from "./thunks/deleteBoards";
 export * from "./thunks/deleteTasks";
-export * from "./thunks/fetchSubtasks";
 export * from "./thunks/updateBoards";
 export * from "./thunks/updateSubtasks";
 export * from "./thunks/updateTasks";
