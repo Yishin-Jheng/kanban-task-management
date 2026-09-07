@@ -4,19 +4,19 @@ import { getColumns } from "@/api/columns";
 import { getSubtasks } from "@/api/subtasks";
 import Button from "@/components/Button/Button";
 import DotMenu from "@/components/DotMenu/DotMenu";
-import CheckBox from "@/components/formComponents/CheckBox/CheckBox";
 import { DropdownRequestVer } from "@/components/formComponents/Dropdown/Dropdown";
+import SubtaskCheckbox from "@/components/Modal/TaskDetailModal/SubtaskCheckbox";
 import Skeleton from "@/components/Skeleton/Skeleton";
 import { setModal } from "@/store";
 import styles from "../Modal.module.scss";
 
 /**
  * TaskDetailModal
- * @param {{ id: number, columnId: number, title: string, description: string, totalSubNum: number }} props.detailObj 目標task的細節資訊
+ * @param {{ id: number, columnId: number, title: string, description: string, totalSubNum: number,finishedSubNum: number }} props.taskInfo 任務詳細資訊
  */
 function TaskDetailModal(props) {
-  const { detailObj } = props;
-  const taskId = detailObj.id;
+  const { taskInfo } = props;
+  const { id: taskId, columnId } = taskInfo;
   const dispatch = useDispatch();
   const activeBoardId = useSelector((state) => state.boards.activeBoardId);
 
@@ -25,8 +25,7 @@ function TaskDetailModal(props) {
     queryFn: () => getColumns({ boardId: activeBoardId }),
     enabled: !!activeBoardId,
   });
-
-  const activeStatus = columns.find((col) => col.id === detailObj.columnId);
+  const activeStatus = columns.find((col) => col.id === columnId);
 
   const {
     data: subtasks,
@@ -37,7 +36,6 @@ function TaskDetailModal(props) {
     queryFn: () => getSubtasks({ taskId }),
     enabled: !!taskId,
   });
-
   const subtasksLength = subtasks?.length;
   const finishedNum = subtasks?.filter((subtask) => subtask.checkOrNot).length;
   const isShowSkeleton =
@@ -49,7 +47,7 @@ function TaskDetailModal(props) {
         isOpen: true,
         whichOpen: "taskModal",
         createOrNot: false,
-        detailObj: detailObj,
+        taskInfo: taskInfo,
       }),
     );
   };
@@ -57,13 +55,13 @@ function TaskDetailModal(props) {
   return (
     <>
       <div className={styles.modalTitle}>
-        <span>{detailObj.title}</span>
-        <DotMenu position="modal" detailObj={detailObj} />
+        <span>{taskInfo.title}</span>
+        <DotMenu position="modal" taskInfo={taskInfo} />
       </div>
-      <p className={styles.modalContent}>{detailObj.description}</p>
+      <p className={styles.modalContent}>{taskInfo.description}</p>
       <div className={styles.subtask}>
         <span className={styles.modalSubtitle}>
-          {`Subtasks (${finishedNum ?? "-"} of ${detailObj.totalSubNum})`}
+          {`Subtasks (${finishedNum ?? "-"} of ${taskInfo.totalSubNum})`}
         </span>
         <div className={styles.subtaskContent}>
           {isShowSkeleton && <Skeleton numbers={3} styleType="modal" />}
@@ -81,15 +79,22 @@ function TaskDetailModal(props) {
           )}
           {subtasksLength > 0 &&
             subtasks.map((subtask) => {
-              return <CheckBox key={subtask.id} itemObj={subtask} />;
+              return (
+                <SubtaskCheckbox
+                  key={subtask.id}
+                  subtaskInfo={subtask}
+                  taskId={taskId}
+                  columnId={columnId}
+                />
+              );
             })}
         </div>
       </div>
       <DropdownRequestVer
         label="Current Status"
-        value={activeStatus?.statusName}
+        value={activeStatus?.statusName ?? "-"}
         options={columns}
-        taskId={detailObj.id}
+        taskId={taskId}
       />
     </>
   );

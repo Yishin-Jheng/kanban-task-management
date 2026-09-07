@@ -16,30 +16,7 @@ const updateTasksStatus = createAsyncThunk(
     } else {
       return arg;
     }
-  }
-);
-
-const updateTasksSubNum = createAsyncThunk(
-  "tasks/update/subNum",
-  async (arg, { rejectWithValue }) => {
-    const { taskId, subNum } = arg;
-    const { data: currentSubNum, error: getSubNumError } = await supabase
-      .from("tasks")
-      .select("finishedSubNum")
-      .eq("id", taskId);
-
-    const { error: putTaskError } = await supabase
-      .from("tasks")
-      .update({ finishedSubNum: currentSubNum[0].finishedSubNum + subNum })
-      .eq("id", taskId)
-      .single();
-
-    if (getSubNumError || putTaskError) {
-      return rejectWithValue("Update finished subtask number of task error");
-    } else {
-      return arg;
-    }
-  }
+  },
 );
 
 const updateTasksByForm = createAsyncThunk(
@@ -83,10 +60,10 @@ const updateTasksByForm = createAsyncThunk(
           if (deleteSubError) {
             throw new Error(deleteSubError);
           }
-        })
+        }),
       );
     } catch (error) {
-      return rejectWithValue("Delete subtask error");
+      return rejectWithValue(`Delete subtask error: ${error.message}`);
     }
 
     // Subtask part - Update
@@ -127,7 +104,7 @@ const updateTasksByForm = createAsyncThunk(
     } else {
       return { ...arg, deleteFinishedSubtasks };
     }
-  }
+  },
 );
 
-export { updateTasksStatus, updateTasksSubNum, updateTasksByForm };
+export { updateTasksByForm, updateTasksStatus };

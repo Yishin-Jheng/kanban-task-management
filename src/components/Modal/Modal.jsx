@@ -7,7 +7,7 @@ import ErrorMessageModal from "@/components/Modal/modalContent/ErrorMessageModal
 import LoadingModal from "@/components/Modal/modalContent/LoadingModal";
 import NewOrEditBoardModal from "@/components/Modal/modalContent/NewOrEditBoardModal";
 import NewOrEditTaskModal from "@/components/Modal/modalContent/NewOrEditTaskModal";
-import TaskDetailModal from "@/components/Modal/modalContent/TaskDetailModal";
+import TaskDetailModal from "@/components/Modal/TaskDetailModal/TaskDetailModal";
 import { useWindowHeight } from "@/hooks/useWindowHeight";
 import { closeModal } from "@/store";
 import styles from "./Modal.module.scss";
@@ -44,7 +44,7 @@ function Modal() {
 
   let modalContent;
   if (whichOpen === "taskDetail") {
-    modalContent = <TaskDetailModal detailObj={detailObj} />;
+    modalContent = <TaskDetailModal taskInfo={detailObj} />;
   }
 
   if (whichOpen === "taskModal") {

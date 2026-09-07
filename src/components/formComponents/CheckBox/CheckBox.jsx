@@ -1,44 +1,37 @@
 import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
-import { useThunk } from "@/hooks/useThunk";
-import { updateSubtasks, updateTasksSubNum } from "@/store";
 import styles from "./CheckBox.module.scss";
 
-function CheckBox({ itemObj }) {
-  const [doUpdateSubtasks, isLoadingSubtasks] = useThunk(updateSubtasks);
-  const [doUpdateTasks, isLoadingTasks] = useThunk(updateTasksSubNum);
+/**
+ * CheckBox
+ * @param {string | number} props.id 元件ID
+ * @param {string} props.description 內容描述
+ * @param {boolean} props.isChecked 是否已勾選
+ * @param {boolean} props.isLoading 是否載入中
+ * @param {function} props.onChange 狀態改變時呼叫的函式
+ */
+function CheckBox(props) {
+  const { id, description, isChecked, isLoading, onChange } = props;
+  const checkboxId = `checkbox-${id}`;
 
   return (
     <div className={styles.checkboxWrapper}>
       <label
         className={styles.checkboxLabel}
-        htmlFor={
-          isLoadingSubtasks || isLoadingTasks ? "" : `subtask-${itemObj.id}`
-        }
+        htmlFor={isLoading ? "" : checkboxId}
       >
-        {isLoadingSubtasks || isLoadingTasks ? (
-          <LoadingIcon />
-        ) : (
+        {isLoading && <LoadingIcon />}
+        {!isLoading && (
           <>
             <input
-              id={`subtask-${itemObj.id}`}
+              id={checkboxId}
               type="checkbox"
-              defaultChecked={itemObj.checkOrNot}
-              onChange={() => {
-                doUpdateSubtasks({
-                  currentCheck: itemObj.checkOrNot,
-                  subtaskId: itemObj.id,
-                });
-                doUpdateTasks({
-                  taskId: itemObj.taskId,
-                  subNum: itemObj.checkOrNot ? -1 : 1,
-                });
-              }}
+              checked={isChecked}
+              onChange={onChange}
             />
             <span className={styles.checkmark}></span>
           </>
         )}
-
-        <p>{itemObj.description}</p>
+        <p>{description}</p>
       </label>
     </div>
   );

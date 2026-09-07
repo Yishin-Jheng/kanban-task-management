@@ -4,12 +4,7 @@ import { createTasks } from "../thunks/createTasks";
 import { deleteBoards } from "../thunks/deleteBoards";
 import { deleteTasks } from "../thunks/deleteTasks";
 import { updateBoards } from "../thunks/updateBoards";
-import { updateSubtasks } from "../thunks/updateSubtasks";
-import {
-  updateTasksByForm,
-  updateTasksStatus,
-  updateTasksSubNum,
-} from "../thunks/updateTasks";
+import { updateTasksByForm, updateTasksStatus } from "../thunks/updateTasks";
 import { userLogin } from "../thunks/userLogin";
 
 const modalSlice = createSlice({
@@ -67,9 +62,7 @@ const modalSlice = createSlice({
         createTasks.rejected,
         updateBoards.rejected,
         updateTasksStatus.rejected,
-        updateTasksSubNum.rejected,
         updateTasksByForm.rejected,
-        updateSubtasks.rejected,
         deleteBoards.rejected,
         deleteTasks.rejected,
       ),
