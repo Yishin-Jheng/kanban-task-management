@@ -84,7 +84,7 @@
   }
 
   &[data-open="open"] {
-    display: block !important;
+    display: block;
     opacity: 1;
     animation: unfold 0.2s;
   }

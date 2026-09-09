@@ -38,7 +38,7 @@ function Dropdown(props) {
   } = props;
   const [isOpen, setIsOpen] = useState(false);
   const [overViewport, setOverViewport] = useState(false);
-  const isMobileTwo = useMediaQuery({ query: `(max-width: 515px)` });
+  const isMobile2 = useMediaQuery({ query: `(max-width: 515px)` });
   const dropdownRef = useRef(null);
   const currentOption = options.find((col) => col.value === value);
 
@@ -73,7 +73,7 @@ function Dropdown(props) {
         <ul
           className={styles.optionList}
           data-open={isOpen ? "open" : "close"}
-          data-mobile={isMobileTwo || overViewport ? "mobile" : ""}
+          data-mobile={isMobile2 || overViewport ? "mobile" : ""}
           onClick={handleOpen}
         >
           {options.map((option) => {
