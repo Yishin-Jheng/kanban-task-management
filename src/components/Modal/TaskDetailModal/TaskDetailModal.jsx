@@ -75,7 +75,7 @@ function TaskDetailModal(props) {
     <>
       <div className={styles.modalTitle}>
         <span>{taskInfo.title}</span>
-        <DotMenu position="modal" taskInfo={taskInfo} />
+        <DotMenu type="task" targetInfo={taskInfo} />
       </div>
       <p className={styles.modalContent}>{taskInfo.description}</p>
       <div className={styles.subtask}>

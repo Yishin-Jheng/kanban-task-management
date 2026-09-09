@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createBoards } from "../thunks/createBoards";
-import { deleteBoards } from "../thunks/deleteBoards";
 import { updateBoards } from "../thunks/updateBoards";
 
 const boardsSlice = createSlice({
@@ -32,15 +31,6 @@ const boardsSlice = createSlice({
       boardData.boardName = action.payload.boardName;
     });
     builder.addCase(updateBoards.rejected, (state, action) => {
-      state.error = action.error;
-    });
-
-    // boards/delete
-    builder.addCase(deleteBoards.fulfilled, (state, action) => {
-      state.data = state.data.filter((board) => board.id !== action.payload);
-      state.activeBoardId = state.data[0].id;
-    });
-    builder.addCase(deleteBoards.rejected, (state, action) => {
       state.error = action.error;
     });
   },

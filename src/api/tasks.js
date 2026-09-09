@@ -30,3 +30,18 @@ export const updateTaskStatus = async (arg) => {
 
   if (error) throw error;
 };
+
+export const deleteTask = async (arg) => {
+  // FIXME: 測試用
+  // await new Promise((resolve) => setTimeout(resolve, 1000));
+  // throw new Error("deleteTask failed");
+
+  const { taskId } = arg;
+  const { error } = await supabase
+    .from("tasks")
+    .delete()
+    .eq("id", taskId)
+    .single();
+
+  if (error) throw error;
+};

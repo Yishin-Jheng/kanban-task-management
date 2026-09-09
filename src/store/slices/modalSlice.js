@@ -1,8 +1,6 @@
 import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { createBoards } from "../thunks/createBoards";
 import { createTasks } from "../thunks/createTasks";
-import { deleteBoards } from "../thunks/deleteBoards";
-import { deleteTasks } from "../thunks/deleteTasks";
 import { updateBoards } from "../thunks/updateBoards";
 import { updateTasksByForm } from "../thunks/updateTasks";
 import { userLogin } from "../thunks/userLogin";
@@ -44,8 +42,6 @@ const modalSlice = createSlice({
         createTasks.fulfilled,
         updateBoards.fulfilled,
         updateTasksByForm.fulfilled,
-        deleteBoards.fulfilled,
-        deleteTasks.fulfilled,
       ),
       (state) => {
         return {
@@ -62,8 +58,6 @@ const modalSlice = createSlice({
         createTasks.rejected,
         updateBoards.rejected,
         updateTasksByForm.rejected,
-        deleteBoards.rejected,
-        deleteTasks.rejected,
       ),
       (state, action) => {
         console.error(action.payload);

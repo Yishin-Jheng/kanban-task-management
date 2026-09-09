@@ -73,7 +73,10 @@ function Header({ isMobile }) {
       >
         {isMobile ? addIcon : <span>+ Add New Task</span>}
       </Button>
-      <DotMenu />
+      <DotMenu
+        type="board"
+        targetInfo={{ id: activeBoardId, title: boardName }}
+      />
     </header>
   );
 }

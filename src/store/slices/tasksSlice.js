@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createTasks } from "../thunks/createTasks";
-import { deleteTasks } from "../thunks/deleteTasks";
 import { updateTasksByForm } from "../thunks/updateTasks";
 
 const tasksSlice = createSlice({
@@ -39,14 +38,6 @@ const tasksSlice = createSlice({
       state.data.push(action.payload);
     });
     builder.addCase(createTasks.rejected, (state, action) => {
-      state.error = action.error;
-    });
-
-    // task/delete
-    builder.addCase(deleteTasks.fulfilled, (state, action) => {
-      state.data = state.data.filter((task) => task.id !== action.payload);
-    });
-    builder.addCase(deleteTasks.rejected, (state, action) => {
       state.error = action.error;
     });
   },

@@ -1,31 +1,58 @@
 import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
+import { dotMenuIcon } from "@/assets/icon";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import { setModal } from "@/store";
 import styles from "./DotMenu.module.scss";
 
-function DotMenu({ position, detailObj }) {
+const typeSettingMap = new Map([
+  [
+    "board",
+    {
+      editBtnText: "Edit Board",
+      deleteBtnText: "Delete Board",
+      editModal: "boardModal",
+    },
+  ],
+  [
+    "task",
+    {
+      editBtnText: "Edit Task",
+      deleteBtnText: "Delete Task",
+      editModal: "taskModal",
+    },
+  ],
+]);
+
+/**
+ * DotMenu
+ * @param {type} props.type 元件類型
+ * @param {{id: string | number, title: string}} props.targetInfo 元件詳細資訊
+ */
+function DotMenu(props) {
+  const { type, targetInfo = {} } = props;
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const dotMenuRef = useRef(null);
-  const inTaskModal = position === "modal";
-  const modalEdit = () => {
+  const setting = typeSettingMap.get(type) ?? {};
+
+  const handleEdit = () => {
     dispatch(
       setModal({
         isOpen: true,
-        whichOpen: inTaskModal ? "taskModal" : "boardModal",
+        whichOpen: setting.editModal,
         createOrNot: false,
-        detailObj: inTaskModal ? detailObj : null,
+        detailObj: targetInfo,
       }),
     );
   };
-  const modalDelete = () => {
+  const handleDelete = () => {
     dispatch(
       setModal({
         isOpen: true,
         whichOpen: "deleteModal",
-        deleteBoardOrTask: inTaskModal ? "task" : "board",
-        detailObj: inTaskModal ? detailObj : null,
+        deleteBoardOrTask: type,
+        detailObj: targetInfo,
       }),
     );
   };
@@ -40,19 +67,13 @@ function DotMenu({ position, detailObj }) {
       className={styles.dotMenu}
       onClick={() => setIsOpen((pre) => !pre)}
     >
-      <svg width="5" height="20" xmlns="http://www.w3.org/2000/svg">
-        <g fillRule="evenodd">
-          <circle cx="2.308" cy="2.308" r="2.308" />
-          <circle cx="2.308" cy="10" r="2.308" />
-          <circle cx="2.308" cy="17.692" r="2.308" />
-        </g>
-      </svg>
+      {dotMenuIcon}
       <ul className={styles.menuList} data-open={isOpen ? "open" : ""}>
-        <li className={styles.editBtn} onClick={modalEdit}>
-          {inTaskModal ? "Edit Task" : "Edit Board"}
+        <li className={styles.editBtn} onClick={handleEdit}>
+          {setting.editBtnText}
         </li>
-        <li className={styles.deleteBtn} onClick={modalDelete}>
-          {inTaskModal ? "Delete Task" : "Delete Board"}
+        <li className={styles.deleteBtn} onClick={handleDelete}>
+          {setting.deleteBtnText}
         </li>
       </ul>
     </div>
