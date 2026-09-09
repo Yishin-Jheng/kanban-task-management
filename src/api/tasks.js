@@ -15,3 +15,18 @@ export const getTasks = async (arg) => {
   if (error) throw error;
   return data;
 };
+
+export const updateTaskStatus = async (arg) => {
+  // FIXME: 測試用
+  // await new Promise((resolve) => setTimeout(resolve, 1000));
+  // throw new Error("updateTask failed");
+
+  const { taskId, columnId } = arg;
+  const { error } = await supabase
+    .from("tasks")
+    .update({ columnId: columnId })
+    .eq("id", taskId)
+    .single();
+
+  if (error) throw error;
+};

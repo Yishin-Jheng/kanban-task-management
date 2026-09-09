@@ -26,6 +26,10 @@
 .dropdown {
   position: relative;
   cursor: pointer;
+
+  &[data-disabled="disabled"] {
+    cursor: not-allowed;
+  }
 }
 
 .currentSelect {

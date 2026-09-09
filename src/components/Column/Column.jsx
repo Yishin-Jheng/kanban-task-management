@@ -24,10 +24,10 @@ const loadingTask = (numbers) => {
  * @param {string} props.statusName 狀態名稱
  * @param {string} props.decorationColor 裝飾色
  * @param {number} props.columnId 狀態列ID
- * @param {boolean} props.isUpdatingTasks 是否更新中
+ * @param {boolean} props.isLoading 是否載入中
  */
 function Column(props) {
-  const { statusName, decorationColor, columnId, isUpdatingTasks } = props;
+  const { statusName, decorationColor, columnId, isLoading } = props;
   const dispatch = useDispatch();
 
   const modalTaskDetail = (taskObj) => {
@@ -84,7 +84,7 @@ function Column(props) {
                     key={task.id}
                     index={index}
                     draggableId={String(task.id)}
-                    isDragDisabled={isUpdatingTasks}
+                    isDragDisabled={isLoading}
                   >
                     {(provided) => (
                       <li

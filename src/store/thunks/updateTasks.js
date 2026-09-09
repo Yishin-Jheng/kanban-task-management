@@ -1,24 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import supabase from "../supabase";
 
-const updateTasksStatus = createAsyncThunk(
-  "tasks/update/status",
-  async (arg, { rejectWithValue }) => {
-    const { columnId, taskId } = arg;
-    const { error: putTaskError } = await supabase
-      .from("tasks")
-      .update({ columnId: columnId })
-      .eq("id", taskId)
-      .single();
-
-    if (putTaskError) {
-      return rejectWithValue("Update columnId of task error");
-    } else {
-      return arg;
-    }
-  },
-);
-
 const updateTasksByForm = createAsyncThunk(
   "tasks/update/byForm",
   async (arg, { rejectWithValue }) => {
@@ -107,4 +89,4 @@ const updateTasksByForm = createAsyncThunk(
   },
 );
 
-export { updateTasksByForm, updateTasksStatus };
+export { updateTasksByForm };

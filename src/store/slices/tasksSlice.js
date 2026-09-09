@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createTasks } from "../thunks/createTasks";
 import { deleteTasks } from "../thunks/deleteTasks";
-import { updateTasksByForm, updateTasksStatus } from "../thunks/updateTasks";
+import { updateTasksByForm } from "../thunks/updateTasks";
 
 const tasksSlice = createSlice({
   name: "tasks",
@@ -15,17 +15,6 @@ const tasksSlice = createSlice({
     },
   },
   extraReducers(builder) {
-    // tasks/update/status
-    builder.addCase(updateTasksStatus.fulfilled, (state, action) => {
-      const taskData = state.data.find(
-        (tasks) => tasks.id === action.payload.taskId,
-      );
-      taskData.columnId = action.payload.columnId;
-    });
-    builder.addCase(updateTasksStatus.rejected, (state, action) => {
-      state.error = action.error;
-    });
-
     // tasks/update/byForm
     builder.addCase(updateTasksByForm.fulfilled, (state, action) => {
       const taskData = state.data.find(

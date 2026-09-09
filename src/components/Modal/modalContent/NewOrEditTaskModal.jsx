@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getColumns } from "@/api/columns";
 import Button from "@/components/Button/Button";
 import { DeletableInput } from "@/components/formComponents/DeletableInput/DeletableInput";
-import { Dropdown } from "@/components/formComponents/Dropdown/Dropdown";
+import Dropdown from "@/components/formComponents/Dropdown/Dropdown";
 import Input from "@/components/formComponents/Input/Input";
 import Textarea from "@/components/formComponents/Textarea/Textarea";
 import { useFormData } from "@/hooks/useFormData";
@@ -108,7 +108,10 @@ function NewOrEditTaskModal({ createOrNot, detailObj }) {
         label="Status"
         value={activeStatus?.statusName}
         options={columns}
-        handleFormChange={handleFormChange(formData, "columnId")}
+        onChange={(option) => {
+          const handleChange = handleFormChange(formData, "columnId");
+          handleChange(option.value);
+        }}
       />
       <Button
         type="formPrimary"

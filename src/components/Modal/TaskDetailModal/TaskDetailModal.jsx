@@ -1,10 +1,12 @@
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getColumns } from "@/api/columns";
 import { getSubtasks } from "@/api/subtasks";
+import { updateTaskStatus } from "@/api/tasks";
 import Button from "@/components/Button/Button";
 import DotMenu from "@/components/DotMenu/DotMenu";
-import { DropdownRequestVer } from "@/components/formComponents/Dropdown/Dropdown";
+import Dropdown from "@/components/formComponents/Dropdown/Dropdown";
 import SubtaskCheckbox from "@/components/Modal/TaskDetailModal/SubtaskCheckbox";
 import Skeleton from "@/components/Skeleton/Skeleton";
 import { setModal } from "@/store";
@@ -16,16 +18,20 @@ import styles from "../Modal.module.scss";
  */
 function TaskDetailModal(props) {
   const { taskInfo } = props;
-  const { id: taskId, columnId } = taskInfo;
+  const { id: taskId } = taskInfo;
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
   const activeBoardId = useSelector((state) => state.boards.activeBoardId);
+  const [columnId, setColumnId] = useState(taskInfo.columnId);
 
   const { data: columns = [] } = useQuery({
     queryKey: ["columns", activeBoardId],
     queryFn: () => getColumns({ boardId: activeBoardId }),
     enabled: !!activeBoardId,
+    select: (data) =>
+      data.map((col) => ({ text: col.statusName, value: col.id })),
   });
-  const activeStatus = columns.find((col) => col.id === columnId);
+  const activeStatus = columns.find((col) => col.value === columnId);
 
   const {
     data: subtasks,
@@ -40,6 +46,19 @@ function TaskDetailModal(props) {
   const finishedNum = subtasks?.filter((subtask) => subtask.checkOrNot).length;
   const isShowSkeleton =
     isFetchingSubtasks && !isErrorSubtasks && !subtasksLength;
+
+  const {
+    mutateAsync: doUpdateTaskStatus,
+    isPending: isPendingUpdateTaskStatus,
+  } = useMutation({
+    mutationFn: updateTaskStatus,
+    onSuccess: (_, arg) => {
+      setColumnId(arg.columnId);
+      queryClient.invalidateQueries({
+        queryKey: ["tasks"],
+      });
+    },
+  });
 
   const modalEditTask = () => {
     dispatch(
@@ -90,11 +109,17 @@ function TaskDetailModal(props) {
             })}
         </div>
       </div>
-      <DropdownRequestVer
+      <Dropdown
         label="Current Status"
-        value={activeStatus?.statusName ?? "-"}
+        value={activeStatus?.value}
         options={columns}
-        taskId={taskId}
+        isLoading={isPendingUpdateTaskStatus}
+        onChange={(column) => {
+          doUpdateTaskStatus({
+            taskId,
+            columnId: column.value,
+          });
+        }}
       />
     </>
   );

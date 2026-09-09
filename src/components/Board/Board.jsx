@@ -1,30 +1,21 @@
 import { DragDropContext } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { getBoards } from "@/api/boards";
 import { getColumns } from "@/api/columns";
+import { updateTaskStatus } from "@/api/tasks";
 import { Column, LoadingColumn, NewColumn } from "@/components/Column/Column";
 import EmptyColumn from "@/components/Column/EmptyColumn";
-import { useThunk } from "@/hooks/useThunk";
-import { updateTasksStatus } from "@/store";
 import styles from "./Board.module.scss";
 
 function Board() {
+  const queryClient = useQueryClient();
   const activeBoardId = useSelector((state) => state.boards.activeBoardId);
-  const [doUpdateTasks, isUpdatingTasks] = useThunk(updateTasksStatus);
-
-  const handleDragAndDrop = function (results) {
-    // NOTE: source is start point, destination is end point
-    const { source, destination, draggableId } = results;
-
-    if (!destination) return;
-    if (source.droppableId === destination.droppableId) return;
-
-    doUpdateTasks({
-      columnId: Number(destination.droppableId),
-      taskId: Number(draggableId),
-    });
-  };
 
   const {
     data: boards,
@@ -46,11 +37,34 @@ function Board() {
     enabled: !!activeBoardId,
     placeholderData: keepPreviousData,
   });
-
   const columnsLength = columns?.length;
   const isFetching = isFetchingBoards || isFetchingColumns;
   const isError = isErrorBoards || isErrorColumns;
   const isShowSkeleton = isFetching && !isError && !columnsLength;
+
+  const {
+    mutateAsync: doUpdateTaskStatus,
+    isPending: isPendingUpdateTaskStatus,
+  } = useMutation({
+    mutationFn: updateTaskStatus,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["tasks"],
+      });
+    },
+  });
+
+  const handleDragAndDrop = function (results) {
+    const { source: startPoint, destination: endPoint, draggableId } = results;
+
+    if (!endPoint) return;
+    if (startPoint.droppableId === endPoint.droppableId) return;
+
+    doUpdateTaskStatus({
+      taskId: Number(draggableId),
+      columnId: Number(endPoint.droppableId),
+    });
+  };
 
   return (
     <div className={styles.board}>
@@ -75,7 +89,7 @@ function Board() {
                   statusName={status.statusName}
                   decorationColor={status.decorationColor}
                   columnId={status.id}
-                  isUpdatingTasks={isUpdatingTasks}
+                  isLoading={isPendingUpdateTaskStatus}
                 />
               );
             })}
