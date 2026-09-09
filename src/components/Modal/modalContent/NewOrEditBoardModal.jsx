@@ -96,6 +96,10 @@ function NewOrEditBoardModal({ createOrNot }) {
                   id: 2,
                   placeholder: "e.g. Doing",
                 },
+                {
+                  id: 3,
+                  placeholder: "e.g. Done",
+                },
               ]
             : columns.filter((col) => col.boardId === activeBoardId)
         }

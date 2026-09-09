@@ -116,6 +116,7 @@ function DeletableInput({
             </div>
           );
         })}
+        <div className={styles.scrollerAnchor}></div>
       </div>
       <Button type="form" onClick={handleAddInput}>
         {btnLabel}
