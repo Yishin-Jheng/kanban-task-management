@@ -1,81 +1,51 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import clsx from "clsx";
+import { crossIcon } from "@/assets/icon";
 import Button from "@/components/Button/Button";
 import styles from "./DeletableInput.module.scss";
 
 function DeletableInput({
-  checkInvalid,
-  label,
-  btnLabel,
+  label = "",
+  btnLabel = "+ Add New Item",
   valueKey,
   values,
-  handleFormChange,
-  handleFormDelete,
+  checkInvalid = false,
+  onChange = () => {},
 }) {
+  // FIXME: 本地資料要不要留等之後zustand進來再評估看看
   const [items, setItems] = useState(values);
-  const [deletedItems, setDeletedItems] = useState([]);
-  const validItems =
-    valueKey === "description"
-      ? items.filter((item) => item.description)
-      : items.filter((item) => item.statusName);
-
   const handleAddInput = () => {
-    const maxIdNum = Math.max(...items.map((item) => item.id));
-    setItems([
+    const maxIdNum = Math.max(...items.map((item) => item.localId));
+    const updatedValues = [
       ...items,
       {
-        id: maxIdNum >= 0 ? maxIdNum + 1 : 1,
+        localId: maxIdNum >= 0 ? maxIdNum + 1 : 1,
         [valueKey]: "",
       },
-    ]);
-  };
-
-  const handleRemoveInput = (removedItem) => {
-    if (removedItem.taskId) {
-      setDeletedItems([
-        ...deletedItems,
-        {
-          id: removedItem.id,
-          checkOrNot: removedItem.checkOrNot,
-          isDeleted: true,
-        },
-      ]);
-    }
-
-    if (removedItem.boardId) {
-      setDeletedItems([
-        ...deletedItems,
-        {
-          id: removedItem.id,
-          isDeleted: true,
-        },
-      ]);
-    }
-
-    setItems(items.filter((item) => item.id !== removedItem.id));
+    ];
+    setItems(updatedValues);
+    onChange(updatedValues);
   };
 
   const handleInputChange = (id, value) => {
-    setItems(
-      items.map((item) => {
-        if (item.id === id) {
-          if (item.taskId || item.boardId) {
-            return { ...item, isUpdated: true, [valueKey]: value };
-          } else {
-            return { ...item, [valueKey]: value };
-          }
-        } else {
-          return item;
-        }
-      }),
-    );
+    const updatedValues = items.map((item) => {
+      if (item.localId === id) {
+        return { ...item, [valueKey]: value };
+      }
+
+      return item;
+    });
+    setItems(updatedValues);
+    onChange(updatedValues);
   };
 
-  handleFormChange(validItems);
-
-  useEffect(() => {
-    handleFormDelete(deletedItems);
-  }, [deletedItems, handleFormDelete]);
+  const handleRemoveInput = (removedItem) => {
+    const updatedValues = items.filter(
+      (item) => item.localId !== removedItem.localId,
+    );
+    setItems(updatedValues);
+    onChange(updatedValues);
+  };
 
   return (
     <div className={styles.inputBox}>
@@ -83,36 +53,25 @@ function DeletableInput({
       <div className={styles.inputScrollbox}>
         {items.map((obj) => {
           return (
-            <div key={obj.id} className={styles.inputGroup}>
+            <div key={obj.localId} className={styles.inputGroup}>
               {valueKey === "description" ? (
                 <InputBlock
+                  localId={obj.localId}
+                  value={obj.description}
+                  placeholder={obj.placeholder}
                   checkInvalid={checkInvalid}
-                  id={obj.id}
-                  value={obj.description ? obj.description : ""}
-                  placeholder={obj.placeholder ? obj.placeholder : ""}
-                  handleInputChange={handleInputChange}
+                  onChange={handleInputChange}
                 />
               ) : (
                 <InputBlock
+                  localId={obj.localId}
+                  value={obj.statusName}
+                  placeholder={obj.placeholder}
                   checkInvalid={checkInvalid}
-                  id={obj.id}
-                  value={obj.statusName ? obj.statusName : ""}
-                  placeholder={obj.placeholder ? obj.placeholder : ""}
-                  handleInputChange={handleInputChange}
+                  onChange={handleInputChange}
                 />
               )}
-
-              <svg
-                width="16"
-                height="15"
-                xmlns="http://www.w3.org/2000/svg"
-                onClick={() => handleRemoveInput(obj)}
-              >
-                <g fillRule="evenodd">
-                  <path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z" />
-                  <path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z" />
-                </g>
-              </svg>
+              <div onClick={() => handleRemoveInput(obj)}>{crossIcon}</div>
             </div>
           );
         })}
@@ -126,11 +85,11 @@ function DeletableInput({
 }
 
 function InputBlock({
+  localId,
+  value = "",
+  placeholder = "",
   checkInvalid,
-  id,
-  value,
-  placeholder,
-  handleInputChange,
+  onChange = () => {},
 }) {
   const [input, setInput] = useState(value);
   const [clicked, setClicked] = useState(false);
@@ -138,11 +97,8 @@ function InputBlock({
 
   return (
     <>
-      {isInvalid ? (
-        <span className={styles.invalidText}>Can't be empty</span>
-      ) : null}
       <input
-        id={id}
+        id={localId}
         className={clsx(styles.input, isInvalid ? styles.invalidWrapper : "")}
         type="text"
         value={input}
@@ -153,9 +109,12 @@ function InputBlock({
         }}
         onChange={(e) => {
           setInput(e.target.value);
-          handleInputChange(id, e.target.value);
+          onChange(localId, e.target.value);
         }}
       />
+      {isInvalid ? (
+        <span className={styles.invalidText}>Can't be empty</span>
+      ) : null}
     </>
   );
 }

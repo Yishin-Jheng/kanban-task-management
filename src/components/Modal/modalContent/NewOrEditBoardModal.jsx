@@ -11,6 +11,12 @@ import { useThunk } from "@/hooks/useThunk";
 import { createBoards, setModal, updateBoards } from "@/store";
 import styles from "../Modal.module.scss";
 
+const exampleInputs = [
+  { localId: 1, placeholder: "e.g. Todo" },
+  { localId: 2, placeholder: "e.g. Doing" },
+  { localId: 3, placeholder: "e.g. Done" },
+];
+
 function NewOrEditBoardModal({ createOrNot }) {
   const dispatch = useDispatch();
   const activeBoardId = useSelector((state) => state.boards.activeBoardId);
@@ -87,20 +93,7 @@ function NewOrEditBoardModal({ createOrNot }) {
         valueKey="statusName"
         values={
           createOrNot
-            ? [
-                {
-                  id: 1,
-                  placeholder: "e.g. Todo",
-                },
-                {
-                  id: 2,
-                  placeholder: "e.g. Doing",
-                },
-                {
-                  id: 3,
-                  placeholder: "e.g. Done",
-                },
-              ]
+            ? exampleInputs
             : columns.filter((col) => col.boardId === activeBoardId)
         }
         handleFormChange={handleFormChange(formData, "columns")}

@@ -1,15 +1,25 @@
 import { useState } from "react";
-import styles from "./Input.module.scss";
 import clsx from "clsx";
+import styles from "./Input.module.scss";
 
-function Input({
-  checkInvalid,
-  label,
-  type,
-  value,
-  placeholder,
-  handleFormChange,
-}) {
+/**
+ * Input
+ * @param {string} props.label 標題
+ * @param {string} props.type 類型
+ * @param {string} props.value 初始值
+ * @param {string} props.placeholder 提示文字
+ * @param {boolean} props.checkInvalid 是否要進行必填檢查
+ * @param {function} props.handleFormChange 狀態改變時呼叫的函式
+ */
+function Input(props) {
+  const {
+    label = "",
+    type = "",
+    value = "",
+    placeholder = "",
+    checkInvalid = false,
+    handleFormChange = () => {},
+  } = props;
   const [input, setInput] = useState(value);
   const [clicked, setClicked] = useState(false);
   const isInvalid = (clicked && !input) || (checkInvalid && !input);

@@ -49,7 +49,7 @@ function Modal() {
 
   if (whichOpen === "taskModal") {
     modalContent = (
-      <NewOrEditTaskModal createOrNot={createOrNot} detailObj={detailObj} />
+      <NewOrEditTaskModal createOrNot={createOrNot} taskInfo={detailObj} />
     );
   }
 

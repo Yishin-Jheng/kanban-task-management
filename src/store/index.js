@@ -27,9 +27,7 @@ const store = configureStore({
 setupListeners(store.dispatch);
 
 export * from "./thunks/createBoards";
-export * from "./thunks/createTasks";
 export * from "./thunks/updateBoards";
-export * from "./thunks/updateTasks";
 export * from "./thunks/userLogin";
 export {
   addListArray,

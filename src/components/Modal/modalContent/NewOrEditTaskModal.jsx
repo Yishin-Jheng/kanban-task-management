@@ -1,36 +1,38 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getColumns } from "@/api/columns";
+import { getSubtasks } from "@/api/subtasks";
+import { upsertTask } from "@/api/tasks";
 import Button from "@/components/Button/Button";
 import { DeletableInput } from "@/components/formComponents/DeletableInput/DeletableInput";
 import Dropdown from "@/components/formComponents/Dropdown/Dropdown";
 import Input from "@/components/formComponents/Input/Input";
 import Textarea from "@/components/formComponents/Textarea/Textarea";
+import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import { useFormData } from "@/hooks/useFormData";
-import { useThunk } from "@/hooks/useThunk";
-import { createTasks, setModal, updateTasksByForm } from "@/store";
+import { setModal } from "@/store";
 import styles from "../Modal.module.scss";
 
 const exampleInputs = [
-  {
-    id: 1,
-    placeholder: "e.g. Make coffee",
-  },
-  {
-    id: 2,
-    placeholder: "e.g. Drink coffee & smile",
-  },
+  { localId: 1, placeholder: "e.g. Make coffee" },
+  { localId: 2, placeholder: "e.g. Drink coffee & smile" },
+  { localId: 3, placeholder: "e.g. Go to work" },
 ];
 
-function NewOrEditTaskModal({ createOrNot, detailObj }) {
+/**
+ * NewOrEditTaskModal
+ * @param {boolean} props.createOrNot 是否為新增任務
+ * @param {{ id: number, columnId: number, title: string, description: string, totalSubNum: number,finishedSubNum: number }} props.taskInfo 任務詳細資訊
+ */
+function NewOrEditTaskModal(props) {
+  const { createOrNot, taskInfo = {} } = props;
+  const { id: taskId, columnId } = taskInfo;
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
   const activeBoardId = useSelector((state) => state.boards.activeBoardId);
-  const subtasksData = useSelector((state) => state.subtasks.data);
   const [checkInvalid, setCheckInvalid] = useState(false);
   const [getFormData, handleFormChange] = useFormData();
-  const [doCreateTask, isCreatingTask] = useThunk(createTasks);
-  const [doUpdateTask, isUpdatingTask] = useThunk(updateTasksByForm);
 
   const formData = getFormData();
 
@@ -38,21 +40,37 @@ function NewOrEditTaskModal({ createOrNot, detailObj }) {
     queryKey: ["columns", activeBoardId],
     queryFn: () => getColumns({ boardId: activeBoardId }),
     enabled: !!activeBoardId,
+    select: (data) =>
+      data.map((col) => ({ text: col.statusName, value: col.id })),
   });
-
   const activeStatus = createOrNot
     ? columns[0]
-    : columns.find((col) => col.id === detailObj.columnId);
+    : columns.find((col) => col.value === columnId);
 
-  const showLoadingModal = () => {
-    dispatch(
-      setModal({
-        isOpen: true,
-        whichOpen: "loadingModal",
-        isLoading: true,
-      }),
-    );
-  };
+  const { data: subtasks = [], refetch: refetchSubtasks } = useQuery({
+    queryKey: ["subtasks", taskId],
+    queryFn: () => getSubtasks({ taskId }),
+    enabled: createOrNot && !!taskId,
+    select: (data) => data.map((item) => ({ ...item, localId: item.id })),
+  });
+
+  const { mutateAsync: doUpsertTask, isPending: isPendingUpsertTask } =
+    useMutation({
+      mutationFn: upsertTask,
+      onSuccess: () => {
+        dispatch(
+          setModal({
+            isOpen: true,
+            whichOpen: "loadingModal",
+            isLoading: false,
+          }),
+        );
+        refetchSubtasks();
+        queryClient.invalidateQueries({
+          queryKey: ["tasks"],
+        });
+      },
+    });
 
   const handleSubmit = (formDataRef) => {
     return () => {
@@ -60,13 +78,8 @@ function NewOrEditTaskModal({ createOrNot, detailObj }) {
       setCheckInvalid(true);
 
       if (form.title && form.description) {
-        showLoadingModal();
-
-        if (createOrNot) {
-          doCreateTask({ ...form });
-        } else {
-          doUpdateTask({ taskId: detailObj.id, ...form });
-        }
+        // console.log({ taskId: taskId, ...form });
+        doUpsertTask({ taskId, ...form });
       }
     };
   };
@@ -77,36 +90,33 @@ function NewOrEditTaskModal({ createOrNot, detailObj }) {
         <span>{createOrNot ? "Add New Task" : "Edit Task"}</span>
       </div>
       <Input
-        checkInvalid={checkInvalid}
         label="Title"
         type="text"
-        value={createOrNot ? "" : detailObj.title}
+        value={taskInfo.title}
         placeholder="e.g. Take coffee break"
+        checkInvalid={checkInvalid}
         handleFormChange={handleFormChange(formData, "title")}
       />
       <Textarea
-        checkInvalid={checkInvalid}
         label="Description"
-        value={createOrNot ? "" : detailObj.description}
+        value={taskInfo.description}
         placeholder="e.g. It’s always good to take a break. This 15 minute break will recharge the batteries a little."
+        checkInvalid={checkInvalid}
         handleFormChange={handleFormChange(formData, "description")}
       />
       <DeletableInput
-        checkInvalid={checkInvalid}
         label="Subtasks"
         btnLabel="+ Add New Subtask"
         valueKey="description"
-        values={
-          createOrNot
-            ? exampleInputs
-            : subtasksData.filter((s) => s.taskId === detailObj.id)
-        }
-        handleFormChange={handleFormChange(formData, "subtasks")}
-        handleFormDelete={handleFormChange(formData, "deletedSubtasks")}
+        // BUG: 如果不變更subtasks的值會無法觸發onChange，導致form裡面紀錄的資料是空的
+        values={createOrNot ? exampleInputs : subtasks}
+        checkInvalid={checkInvalid}
+        onChange={handleFormChange(formData, "subtasks")}
       />
       <Dropdown
         label="Status"
-        value={activeStatus?.statusName}
+        // BUG: 目前下拉顯示的選項會跟formData不一樣，之後改state時需要留意
+        value={activeStatus?.value}
         options={columns}
         onChange={(option) => {
           const handleChange = handleFormChange(formData, "columnId");
@@ -116,9 +126,11 @@ function NewOrEditTaskModal({ createOrNot, detailObj }) {
       <Button
         type="formPrimary"
         text={createOrNot ? "Create Task" : "Save Changes"}
-        isDisabled={isUpdatingTask || isCreatingTask}
+        isDisabled={isPendingUpsertTask}
         onClick={handleSubmit(getFormData)}
-      />
+      >
+        {isPendingUpsertTask && <LoadingIcon color="#fff" />}
+      </Button>
     </>
   );
 }

@@ -1,8 +1,6 @@
 import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { createBoards } from "../thunks/createBoards";
-import { createTasks } from "../thunks/createTasks";
 import { updateBoards } from "../thunks/updateBoards";
-import { updateTasksByForm } from "../thunks/updateTasks";
 import { userLogin } from "../thunks/userLogin";
 
 const modalSlice = createSlice({
@@ -37,12 +35,7 @@ const modalSlice = createSlice({
 
     // others
     builder.addMatcher(
-      isAnyOf(
-        createBoards.fulfilled,
-        createTasks.fulfilled,
-        updateBoards.fulfilled,
-        updateTasksByForm.fulfilled,
-      ),
+      isAnyOf(createBoards.fulfilled, updateBoards.fulfilled),
       (state) => {
         return {
           ...state,
@@ -53,12 +46,7 @@ const modalSlice = createSlice({
       },
     );
     builder.addMatcher(
-      isAnyOf(
-        createBoards.rejected,
-        createTasks.rejected,
-        updateBoards.rejected,
-        updateTasksByForm.rejected,
-      ),
+      isAnyOf(createBoards.rejected, updateBoards.rejected),
       (state, action) => {
         console.error(action.payload);
         return {

@@ -76,13 +76,11 @@ function DeleteModal(props) {
         <Button
           type="formWarning"
           text="Delete"
+          isDisabled={isPendingDeleteItem}
           onClick={() => {
-            if (!isPendingDeleteItem && setting) {
-              doDeleteItem({ [setting.mutateArgKey]: id });
-            }
+            doDeleteItem({ [setting.mutateArgKey]: id });
           }}
         >
-          {!isPendingDeleteItem && "Delete"}
           {isPendingDeleteItem && <LoadingIcon color="#fff" />}
         </Button>
         <Button

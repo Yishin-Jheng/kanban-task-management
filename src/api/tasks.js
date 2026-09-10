@@ -16,6 +16,28 @@ export const getTasks = async (arg) => {
   return data;
 };
 
+export const upsertTask = async (arg) => {
+  // FIXME: 測試用
+  // await new Promise((resolve) => setTimeout(resolve, 1000));
+  // throw new Error("createTask failed");
+
+  const { taskId, title, description, columnId, subtasks = [] } = arg;
+  const { error } = await supabase.rpc("upsert_task_with_subtasks", {
+    pTaskId: taskId ?? null,
+    pTitle: title,
+    pDescription: description,
+    // FIXME: 等Dropdown的資料不一致問題修好再移除67的預設值
+    pColumnId: columnId ?? 67,
+    pSubtasks: subtasks.map((subtask) => ({
+      id: subtask.id ?? null,
+      description: subtask.description,
+      checkOrNot: subtask.checkOrNot ?? false,
+    })),
+  });
+
+  if (error) throw error;
+};
+
 export const updateTaskStatus = async (arg) => {
   // FIXME: 測試用
   // await new Promise((resolve) => setTimeout(resolve, 1000));

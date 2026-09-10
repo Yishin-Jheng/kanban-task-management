@@ -24,6 +24,10 @@
   background-color: var(--color-basic);
   font-family: $font-primary;
 
+  &[data-invalid="invalid"] {
+    outline: 1px solid $color-warning;
+  }
+
   &:focus {
     outline: 1px solid $color-primary;
   }
@@ -40,8 +44,4 @@
   position: absolute;
   bottom: 1.6rem;
   right: 1.2rem;
-
-  &[data-invalid="invalid"] {
-    outline: 1px solid $color-warning;
-  }
 }
