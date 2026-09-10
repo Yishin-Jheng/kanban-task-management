@@ -10,7 +10,6 @@ import {
   setListArray,
 } from "./slices/formSlice";
 import { closeModal, modalReducer, setModal } from "./slices/modalSlice";
-import { resetTasks, tasksReducer } from "./slices/tasksSlice";
 import { usersReducer } from "./slices/usersSlice";
 
 const store = configureStore({
@@ -18,7 +17,6 @@ const store = configureStore({
     users: usersReducer,
     boards: boardsReducer,
     columns: columnsReducer,
-    tasks: tasksReducer,
     modal: modalReducer,
     form: formReducer,
   },
@@ -34,7 +32,6 @@ export {
   closeModal,
   removeListArray,
   resetColumns,
-  resetTasks,
   setActiveBoard,
   setForm,
   setListArray,
