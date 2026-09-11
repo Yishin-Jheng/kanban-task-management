@@ -14,12 +14,6 @@ import { useFormData } from "@/hooks/useFormData";
 import { setModal } from "@/store";
 import styles from "../Modal.module.scss";
 
-const exampleInputs = [
-  { localId: 1, placeholder: "e.g. Make coffee" },
-  { localId: 2, placeholder: "e.g. Drink coffee & smile" },
-  { localId: 3, placeholder: "e.g. Go to work" },
-];
-
 /**
  * NewOrEditTaskModal
  * @param {boolean} props.createOrNot 是否為新增任務
@@ -28,13 +22,11 @@ const exampleInputs = [
 function NewOrEditTaskModal(props) {
   const { createOrNot, taskInfo = {} } = props;
   const { id: taskId, columnId } = taskInfo;
+
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const activeBoardId = useSelector((state) => state.boards.activeBoardId);
-  const [checkInvalid, setCheckInvalid] = useState(false);
-  const [getFormData, handleFormChange] = useFormData();
-
-  const formData = getFormData();
+  const [invalidKeys, setInvalidKeys] = useState([]);
 
   const { data: columns = [] } = useQuery({
     queryKey: ["columns", activeBoardId],
@@ -57,7 +49,7 @@ function NewOrEditTaskModal(props) {
   const { mutateAsync: doUpsertTask, isPending: isPendingUpsertTask } =
     useMutation({
       mutationFn: upsertTask,
-      onSuccess: () => {
+      onSuccess: (columnId) => {
         dispatch(
           setModal({
             isOpen: true,
@@ -65,22 +57,29 @@ function NewOrEditTaskModal(props) {
             isLoading: false,
           }),
         );
-        refetchSubtasks();
+        if (taskId) refetchSubtasks();
         queryClient.invalidateQueries({
-          queryKey: ["tasks"],
+          queryKey: ["tasks", columnId],
         });
       },
     });
 
-  const handleSubmit = (formDataRef) => {
+  const [formData, getOnFormChange] = useFormData(taskInfo, {
+    subtasks,
+    columnId: activeStatus?.value,
+  });
+  const checkInvalid = () => {
+    const { title, description } = formData;
+    const invalidKeys = [];
+    if (!title) invalidKeys.push("title");
+    if (!description) invalidKeys.push("description");
+    setInvalidKeys(invalidKeys);
+    return invalidKeys.length > 0;
+  };
+  const handleSubmit = () => {
     return () => {
-      const form = formDataRef().current;
-      setCheckInvalid(true);
-
-      if (form.title && form.description) {
-        // console.log({ taskId: taskId, ...form });
-        doUpsertTask({ taskId, ...form });
-      }
+      if (checkInvalid()) return;
+      doUpsertTask(formData);
     };
   };
 
@@ -92,42 +91,39 @@ function NewOrEditTaskModal(props) {
       <Input
         label="Title"
         type="text"
-        value={taskInfo.title}
+        value={formData.title}
         placeholder="e.g. Take coffee break"
-        checkInvalid={checkInvalid}
-        handleFormChange={handleFormChange(formData, "title")}
+        isRequired
+        isInvalid={invalidKeys.includes("title")}
+        onChange={getOnFormChange("title")}
       />
       <Textarea
         label="Description"
-        value={taskInfo.description}
+        value={formData.description}
         placeholder="e.g. It’s always good to take a break. This 15 minute break will recharge the batteries a little."
-        checkInvalid={checkInvalid}
-        handleFormChange={handleFormChange(formData, "description")}
+        isRequired
+        isInvalid={invalidKeys.includes("description")}
+        onChange={getOnFormChange("description")}
       />
       <DeletableInput
         label="Subtasks"
         btnLabel="+ Add New Subtask"
         valueKey="description"
-        // BUG: 如果不變更subtasks的值會無法觸發onChange，導致form裡面紀錄的資料是空的
-        values={createOrNot ? exampleInputs : subtasks}
-        checkInvalid={checkInvalid}
-        onChange={handleFormChange(formData, "subtasks")}
+        values={formData.subtasks}
+        isInvalid={invalidKeys.includes("subtasks")}
+        onChange={getOnFormChange("subtasks")}
       />
       <Dropdown
         label="Status"
-        // BUG: 目前下拉顯示的選項會跟formData不一樣，之後改state時需要留意
-        value={activeStatus?.value}
+        value={formData.columnId}
         options={columns}
-        onChange={(option) => {
-          const handleChange = handleFormChange(formData, "columnId");
-          handleChange(option.value);
-        }}
+        onChange={getOnFormChange("columnId")}
       />
       <Button
         type="formPrimary"
         text={createOrNot ? "Create Task" : "Save Changes"}
         isDisabled={isPendingUpsertTask}
-        onClick={handleSubmit(getFormData)}
+        onClick={handleSubmit()}
       >
         {isPendingUpsertTask && <LoadingIcon color="#fff" />}
       </Button>

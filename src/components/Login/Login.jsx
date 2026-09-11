@@ -10,18 +10,15 @@ import styles from "./Login.module.scss";
 
 function Login() {
   const [checkInvalid, setCheckInvalid] = useState(false);
-  const [getFormData, handleFormChange] = useFormData();
+  const [formData, getOnFormChange] = useFormData();
   const [doLogin, isLoading] = useThunk(userLogin);
-
-  const formData = getFormData();
 
   const handleSubmit = (formData) => {
     return () => {
-      const form = formData().current;
       setCheckInvalid(true);
 
-      if (form.email && form.password) {
-        doLogin({ ...form });
+      if (formData.email && formData.password) {
+        doLogin(formData);
       }
     };
   };
@@ -54,16 +51,16 @@ function Login() {
         label="Email Address"
         type="email"
         value={""}
-        handleFormChange={handleFormChange(formData, "email")}
+        handleFormChange={getOnFormChange("email")}
       />
       <Input
         checkInvalid={checkInvalid}
         label="Password"
         type="password"
         value={""}
-        handleFormChange={handleFormChange(formData, "password")}
+        handleFormChange={getOnFormChange("password")}
       />
-      <Button type="formPrimary" onClick={handleSubmit(getFormData)}>
+      <Button type="formPrimary" onClick={handleSubmit(formData)}>
         {isLoading ? <LoadingIcon size="2rem" /> : "Log In"}
       </Button>
     </form>

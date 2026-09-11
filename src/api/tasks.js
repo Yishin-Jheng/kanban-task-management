@@ -1,10 +1,6 @@
 import supabase from "@/store/supabase";
 
 export const getTasks = async (arg) => {
-  // FIXME: 測試用
-  // await new Promise((resolve) => setTimeout(resolve, 1000));
-  // throw new Error("getTasks failed");
-
   const { columnId } = arg;
   const { data, error } = await supabase
     .from("tasks")
@@ -17,18 +13,14 @@ export const getTasks = async (arg) => {
 };
 
 export const upsertTask = async (arg) => {
-  // FIXME: 測試用
-  // await new Promise((resolve) => setTimeout(resolve, 1000));
-  // throw new Error("createTask failed");
-
-  const { taskId, title, description, columnId, subtasks = [] } = arg;
-  const { error } = await supabase.rpc("upsert_task_with_subtasks", {
-    pTaskId: taskId ?? null,
+  const { id, title, description, columnId, subtasks = [] } = arg;
+  const validSubtasks = subtasks.filter((subtask) => subtask.description);
+  const { data, error } = await supabase.rpc("upsert_task_with_subtasks", {
+    pTaskId: id ?? null,
     pTitle: title,
     pDescription: description,
-    // FIXME: 等Dropdown的資料不一致問題修好再移除67的預設值
-    pColumnId: columnId ?? 67,
-    pSubtasks: subtasks.map((subtask) => ({
+    pColumnId: columnId,
+    pSubtasks: validSubtasks.map((subtask) => ({
       id: subtask.id ?? null,
       description: subtask.description,
       checkOrNot: subtask.checkOrNot ?? false,
@@ -36,13 +28,10 @@ export const upsertTask = async (arg) => {
   });
 
   if (error) throw error;
+  return data;
 };
 
 export const updateTaskStatus = async (arg) => {
-  // FIXME: 測試用
-  // await new Promise((resolve) => setTimeout(resolve, 1000));
-  // throw new Error("updateTask failed");
-
   const { taskId, columnId } = arg;
   const { error } = await supabase
     .from("tasks")
@@ -54,10 +43,6 @@ export const updateTaskStatus = async (arg) => {
 };
 
 export const deleteTask = async (arg) => {
-  // FIXME: 測試用
-  // await new Promise((resolve) => setTimeout(resolve, 1000));
-  // throw new Error("deleteTask failed");
-
   const { taskId } = arg;
   const { error } = await supabase
     .from("tasks")
