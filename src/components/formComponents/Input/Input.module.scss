@@ -31,11 +31,19 @@
   outline: 1px solid $color-warning;
 }
 
-.inputTitle {
+.inputTitle,
+.required {
   @include body-m;
   display: inline-block;
-  color: $color-grey-light-1;
   margin-bottom: 1rem;
+}
+
+.inputTitle {
+  color: $color-grey-light-1;
+}
+
+.required {
+  color: $color-warning;
 }
 
 .invalidText {

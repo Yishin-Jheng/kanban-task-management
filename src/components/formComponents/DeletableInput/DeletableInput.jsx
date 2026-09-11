@@ -1,77 +1,73 @@
-import { useState } from "react";
 import clsx from "clsx";
 import { crossIcon } from "@/assets/icon";
 import Button from "@/components/Button/Button";
 import styles from "./DeletableInput.module.scss";
 
+/**
+ * DeletableInput
+ * @param {string} props.label 標題
+ * @param {string} props.btnLabel 按鈕文字
+ * @param {string} props.valueKey 顯示值的key
+ * @param {{localId: number, [valueKey]: string}[]} props.values 顯示值
+ * @param {string[]} props.placeholders 提示文字
+ * @param {number} props.maxLength 最大字數限制
+ * @param {boolean} props.isInvalid 是否必填檢查未通過
+ * @param {function} props.onChange 狀態改變時呼叫的函式
+ */
 function DeletableInput({
   label = "",
   btnLabel = "+ Add New Item",
   valueKey,
-  values,
-  checkInvalid = false,
+  values = [],
+  placeholders = ["e.g. Make coffee", "e.g. Drink coffee & smile"],
+  maxLength = 120,
+  isInvalid = false,
   onChange = () => {},
 }) {
-  // FIXME: 本地資料要不要留等之後zustand進來再評估看看
-  const [items, setItems] = useState(values);
   const handleAddInput = () => {
-    const maxIdNum = Math.max(...items.map((item) => item.localId));
-    const updatedValues = [
-      ...items,
+    const maxIdNum = Math.max(...values.map((item) => item.localId));
+    onChange([
+      ...values,
       {
-        localId: maxIdNum >= 0 ? maxIdNum + 1 : 1,
+        localId: maxIdNum > 0 ? maxIdNum + 1 : 1,
         [valueKey]: "",
       },
-    ];
-    setItems(updatedValues);
-    onChange(updatedValues);
+    ]);
   };
 
   const handleInputChange = (id, value) => {
-    const updatedValues = items.map((item) => {
-      if (item.localId === id) {
-        return { ...item, [valueKey]: value };
-      }
-
-      return item;
-    });
-    setItems(updatedValues);
-    onChange(updatedValues);
+    onChange(
+      values.map((item) => {
+        if (item.localId === id) {
+          return { ...item, [valueKey]: value };
+        }
+        return item;
+      }),
+    );
   };
 
-  const handleRemoveInput = (removedItem) => {
-    const updatedValues = items.filter(
-      (item) => item.localId !== removedItem.localId,
-    );
-    setItems(updatedValues);
-    onChange(updatedValues);
+  const handleRemoveInput = (id) => {
+    onChange(values.filter((item) => item.localId !== id));
   };
 
   return (
     <div className={styles.inputBox}>
       <span className={styles.inputTitle}>{label}</span>
       <div className={styles.inputScrollbox}>
-        {items.map((obj) => {
+        {values.map((item, index) => {
           return (
-            <div key={obj.localId} className={styles.inputGroup}>
-              {valueKey === "description" ? (
-                <InputBlock
-                  localId={obj.localId}
-                  value={obj.description}
-                  placeholder={obj.placeholder}
-                  checkInvalid={checkInvalid}
-                  onChange={handleInputChange}
-                />
-              ) : (
-                <InputBlock
-                  localId={obj.localId}
-                  value={obj.statusName}
-                  placeholder={obj.placeholder}
-                  checkInvalid={checkInvalid}
-                  onChange={handleInputChange}
-                />
-              )}
-              <div onClick={() => handleRemoveInput(obj)}>{crossIcon}</div>
+            <div key={item.localId} className={styles.inputGroup}>
+              <InputBlock
+                localId={item.localId}
+                value={item[valueKey]}
+                placeholder={placeholders[index] ?? ""}
+                maxLength={maxLength}
+                isInvalid={isInvalid}
+                onChange={handleInputChange}
+              />
+              <div onClick={() => handleRemoveInput(item.localId)}>
+                {crossIcon}
+              </div>
             </div>
           );
         })}
@@ -88,33 +84,28 @@ function InputBlock({
   localId,
   value = "",
   placeholder = "",
-  checkInvalid,
+  maxLength = 120,
+  isInvalid = false,
   onChange = () => {},
 }) {
-  const [input, setInput] = useState(value);
-  const [clicked, setClicked] = useState(false);
-  const isInvalid = (clicked && !input) || (checkInvalid && !input);
-
+  const isShowInvalidMsg = isInvalid && !value;
   return (
     <>
-      <input
-        id={localId}
-        className={clsx(styles.input, isInvalid ? styles.invalidWrapper : "")}
-        type="text"
-        value={input}
-        maxLength="120"
-        placeholder={placeholder}
-        onBlur={() => {
-          setClicked(true);
-        }}
-        onChange={(e) => {
-          setInput(e.target.value);
-          onChange(localId, e.target.value);
-        }}
-      />
-      {isInvalid ? (
+      {isShowInvalidMsg ? (
         <span className={styles.invalidText}>Can't be empty</span>
       ) : null}
+      <input
+        id={localId}
+        className={clsx(
+          styles.input,
+          isShowInvalidMsg ? styles.invalidWrapper : "",
+        )}
+        type="text"
+        value={value}
+        maxLength={maxLength}
+        placeholder={placeholder}
+        onChange={(e) => onChange(e.target.value)}
+      />
     </>
   );
 }

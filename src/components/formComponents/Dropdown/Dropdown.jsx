@@ -23,7 +23,7 @@ const handleOverViewport = function (dropdownRef, setOverViewport) {
 /**
  * Dropdown
  * @param {string} props.label 標題
- * @param {string} props.value 目前選擇的選項值
+ * @param {string} props.value 當前選項的值
  * @param {{text: string, value: string | number}[]} props.options 選項列表
  * @param {boolean} props.isLoading 是否載入中
  * @param {function} props.onChange 狀態改變時呼叫的函式
@@ -83,7 +83,7 @@ function Dropdown(props) {
                 key={value}
                 className={styles.option}
                 onClick={() => {
-                  if (!isLoading) onChange(option);
+                  if (!isLoading) onChange(option.value, option);
                 }}
               >
                 {optionFormatter(text)}

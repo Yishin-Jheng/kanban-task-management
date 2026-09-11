@@ -1,24 +1,32 @@
-import { useState } from "react";
 import styles from "./Textarea.module.scss";
 
-function Textarea({
-  checkInvalid,
-  label,
-  value,
-  placeholder,
-  handleFormChange,
-}) {
-  const [input, setInput] = useState(value);
-  const [clicked, setClicked] = useState(false);
-  const isInvalid = (clicked && !input) || (checkInvalid && !input);
-
-  if (input) {
-    handleFormChange(input);
-  }
+/**
+ * Textarea
+ * @param {string} props.label 標題
+ * @param {string} props.value 顯示值
+ * @param {string} props.placeholder 提示文字
+ * @param {number} props.maxLength 最大字數限制
+ * @param {boolean} props.isRequired 是否為必填
+ * @param {boolean} props.isInvalid 是否必填檢查未通過
+ * @param {function} props.onChange 狀態改變時呼叫的函式
+ */
+function Textarea(props) {
+  const {
+    label = "",
+    value = "",
+    placeholder = "",
+    maxLength = 300,
+    isRequired = false,
+    isInvalid = false,
+    onChange = () => {},
+  } = props;
 
   return (
     <div className={styles.textareaWrapper}>
-      <span className={styles.textareaTitle}>{label}</span>
+      <p>
+        <span className={styles.textareaTitle}>{label}</span>
+        {isRequired && <span className={styles.required}>*</span>}
+      </p>
       {isInvalid && <span className={styles.invalidText}>Can't be empty</span>}
       <textarea
         id={label}
@@ -26,16 +34,10 @@ function Textarea({
         data-invalid={isInvalid ? "invalid" : ""}
         type="text"
         rows="5"
-        maxLength="300"
-        value={input}
+        value={value}
+        maxLength={maxLength}
         placeholder={placeholder}
-        onBlur={() => {
-          setClicked(true);
-        }}
-        onChange={(e) => {
-          setInput(e.target.value);
-          handleFormChange(e.target.value);
-        }}
+        onChange={(e) => onChange(e.target.value)}
       />
     </div>
   );

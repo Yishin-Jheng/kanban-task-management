@@ -6,11 +6,19 @@
   position: relative;
 }
 
-.textareaTitle {
+.textareaTitle,
+.required {
   @include body-m;
   display: inline-block;
-  color: $color-grey-light-1;
   margin-bottom: 1rem;
+}
+
+.textareaTitle {
+  color: $color-grey-light-1;
+}
+
+.required {
+  color: $color-warning;
 }
 
 .textarea {
