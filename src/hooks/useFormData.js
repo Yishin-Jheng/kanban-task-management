@@ -1,13 +1,28 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
-export function useFormData(initialData = {}) {
-  const formData = useRef(initialData);
-  const getFormData = () => formData;
-  const handleFormChange = (formData, key) => {
+/**
+ * useFormData
+ * @param {Object} initialData 初始表單資料
+ * @param {Object} asyncDependencies 非同步的依賴項資料
+ */
+export function useFormData(initialData = {}, asyncDependencies = {}) {
+  const [formData, setFormData] = useState(initialData);
+  const seededKeys = useRef(new Set());
+
+  const getOnFormChange = (key) => {
     return (value) => {
-      formData.current = { ...formData.current, [key]: value };
+      setFormData((prev) => ({ ...prev, [key]: value }));
     };
   };
 
-  return [getFormData, handleFormChange];
+  useEffect(() => {
+    Object.entries(asyncDependencies).forEach(([key, value]) => {
+      if (value !== undefined && !seededKeys.current.has(key)) {
+        setFormData((prev) => ({ ...prev, [key]: value }));
+        seededKeys.current.add(key);
+      }
+    });
+  }, Object.values(asyncDependencies));
+
+  return [formData, getOnFormChange];
 }
