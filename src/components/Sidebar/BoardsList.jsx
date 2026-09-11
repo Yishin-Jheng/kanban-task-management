@@ -6,7 +6,7 @@ import { getBoards } from "@/api/boards";
 import { boardIcon } from "@/assets/icon";
 import Skeleton from "@/components/Skeleton/Skeleton";
 import { SidebarContext } from "@/sidebarContext";
-import { resetColumns, setActiveBoard } from "@/store";
+import { setActiveBoard } from "@/store";
 import styles from "./Sidebar.module.scss";
 
 function BoardsList() {
@@ -49,7 +49,6 @@ function BoardsList() {
                   if (isActive) return;
                   if (isMobile) handleHidden();
                   dispatch(setActiveBoard(board.id));
-                  dispatch(resetColumns());
                 }}
               >
                 {boardIcon}
