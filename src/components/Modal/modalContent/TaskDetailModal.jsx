@@ -7,7 +7,7 @@ import { updateTaskStatus } from "@/api/tasks";
 import Button from "@/components/Button/Button";
 import DotMenu from "@/components/DotMenu/DotMenu";
 import Dropdown from "@/components/formComponents/Dropdown/Dropdown";
-import SubtaskCheckbox from "@/components/Modal/TaskDetailModal/SubtaskCheckbox";
+import SubtaskCheckbox from "@/components/Modal/modalContent/SubtaskCheckbox";
 import Skeleton from "@/components/Skeleton/Skeleton";
 import { setModal } from "@/store";
 import styles from "../Modal.module.scss";

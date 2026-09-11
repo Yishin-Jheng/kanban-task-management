@@ -30,16 +30,6 @@ function Column(props) {
   const { statusName, decorationColor, columnId, isLoading } = props;
   const dispatch = useDispatch();
 
-  const modalTaskDetail = (taskObj) => {
-    dispatch(
-      setModal({
-        isOpen: true,
-        whichOpen: "taskDetail",
-        detailObj: taskObj,
-      }),
-    );
-  };
-
   const {
     data: tasks,
     isFetching: isFetchingTasks,
@@ -52,6 +42,16 @@ function Column(props) {
 
   const tasksLength = tasks?.length;
   const isShowSkeleton = isFetchingTasks && !isErrorTasks && !tasksLength;
+
+  const modalTaskDetail = (taskObj) => {
+    dispatch(
+      setModal({
+        isOpen: true,
+        whichOpen: "taskDetail",
+        detailObj: taskObj,
+      }),
+    );
+  };
 
   return (
     <div className={styles.column}>

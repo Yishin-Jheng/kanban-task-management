@@ -25,6 +25,7 @@ const typeSettingMap = new Map([
 ]);
 
 /**
+ * XXX: 可以考慮改成純UI，但感覺維持現狀也不是不行
  * DotMenu
  * @param {type} props.type 元件類型
  * @param {{id: string | number, title: string}} props.targetInfo 元件詳細資訊
