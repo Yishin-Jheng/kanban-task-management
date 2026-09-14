@@ -113,12 +113,12 @@
   grid-column: 1 / -1;
 
   &__box {
+    @include transition;
     position: relative;
     padding: 1.2rem;
 
     border-radius: 5px;
     background-color: var(--color-background);
-    transition: all 0.3s;
     pointer-events: none;
 
     &:not(:last-child) {

@@ -2,6 +2,7 @@
 @use "mixins" as *;
 
 .hiddenSwitch {
+  @include transition;
   z-index: 999;
   position: fixed;
   left: 0;
@@ -11,7 +12,6 @@
   cursor: pointer;
   border-radius: 0 100px 100px 0;
   background-color: $color-primary;
-  transition: all 0.3s;
 
   &:hover {
     background-color: $color-primary-light-1;

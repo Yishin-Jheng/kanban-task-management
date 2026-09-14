@@ -29,19 +29,19 @@
 @mixin heading-s {
   color: $color-grey-light-1;
   font-weight: 700;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 15px;
   letter-spacing: 2.4px;
 }
 
 @mixin body-l {
   font-weight: 500;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 23px;
 }
 
 @mixin body-m {
   font-weight: 700;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 15px;
 }

@@ -15,6 +15,7 @@
 }
 
 .sideBar {
+  @include transition;
   grid-row: 1 / -1;
   grid-column: 1 / 2;
   color: $color-primary;
@@ -23,7 +24,6 @@
 
   display: flex;
   flex-direction: column;
-  transition: all 0.3s;
 
   @include respond-to(mobile-1) {
     z-index: 9999;
@@ -103,6 +103,7 @@
 .hiddenSwitch {
   @include heading-m;
   @include light-icon;
+  @include transition;
 
   display: flex;
   gap: 17px;
@@ -112,7 +113,6 @@
   padding-left: 3.4rem;
   color: $color-grey-light-1;
   border-radius: 0 100px 100px 0;
-  transition: all 0.3s;
 
   &[data-active="active"] {
     color: $color-white !important;
@@ -162,12 +162,12 @@
 
 .themeSwitch {
   @include light-icon;
+  @include transition;
 
   margin: 0 2.4rem;
   padding: 1.4rem 0;
   border-radius: 5px;
   background-color: var(--color-background);
-  transition: all 0.3s;
 
   label {
     display: flex;
@@ -207,6 +207,7 @@
   }
 
   span {
+    @include transition;
     position: absolute;
     top: 0;
     left: 0;
@@ -214,10 +215,10 @@
     bottom: 0;
     background-color: $color-primary;
     border-radius: 999px;
-    transition: all 0.3s;
   }
 
   span::before {
+    @include transition;
     position: absolute;
     content: "";
     height: 14px;
@@ -226,7 +227,6 @@
     left: 2.5px;
     border-radius: 999px;
     background-color: white;
-    transition: 0.3s;
   }
 }
 

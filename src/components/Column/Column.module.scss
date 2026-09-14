@@ -9,6 +9,7 @@
 
 .newColumn {
   @include heading-xl;
+  @include transition;
   width: 300px;
   height: calc(100% - 39px);
   display: flex;
@@ -18,7 +19,6 @@
   color: $color-grey-light-1;
   border-radius: 5px;
   background-color: var(--color-column);
-  transition: all 0.3s;
   cursor: pointer;
 
   &:hover {
@@ -58,12 +58,12 @@
 
 .task,
 .loadingTask {
+  @include transition;
   width: 28rem;
   padding: 2.3rem 1.6rem;
   border-radius: 5px;
   background-color: var(--color-basic);
   box-shadow: 0 5px 5px rgba($color-black, 0.05);
-  transition: all 0.3s;
   transition-delay: 0.5s;
 
   &:not(:last-child) {
@@ -85,9 +85,9 @@
 
 .taskDescription {
   @include heading-m;
+  @include transition;
   color: var(--color-text);
   margin-bottom: 8px;
-  transition: all 0.3s;
 }
 
 .task:hover > .taskDescription {

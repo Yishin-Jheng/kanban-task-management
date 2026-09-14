@@ -3,11 +3,11 @@
 @use "mixins" as *;
 
 .checkboxWrapper {
+  @include transition;
   position: relative;
   padding: 1.2rem;
   border-radius: 5px;
   background-color: var(--color-background);
-  transition: all 0.3s;
   pointer-events: none;
 
   &:not(:last-child) {
@@ -28,8 +28,8 @@
 
   p {
     @include body-m;
+    @include transition;
     color: var(--color-text);
-    transition: all 0.3s;
   }
 
   input {

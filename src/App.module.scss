@@ -29,6 +29,7 @@
 
 .main {
   @include scrollbar;
+  @include transition;
   &::-webkit-scrollbar {
     height: 8px;
   }
@@ -37,7 +38,6 @@
   height: calc(100vh - 97px);
   background-color: var(--color-background);
   overflow-x: scroll;
-  transition: all 0.3s;
 
   @include respond-to(mobile-1) {
     height: calc(100vh - 64px);

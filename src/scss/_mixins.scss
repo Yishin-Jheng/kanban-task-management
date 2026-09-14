@@ -44,3 +44,7 @@
     background: $color-grey-light-1;
   }
 }
+
+@mixin transition {
+  transition: all 0.3s;
+}

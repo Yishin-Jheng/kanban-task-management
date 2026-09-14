@@ -50,12 +50,12 @@
   }
 
   svg {
-    cursor: pointer;
+    @include transition;
     flex-shrink: 0;
     margin-left: 1rem;
     margin-right: 0.6rem;
     fill: $color-grey-light-1;
-    transition: all 0.3s;
+    cursor: pointer;
 
     &:hover {
       fill: $color-warning;
