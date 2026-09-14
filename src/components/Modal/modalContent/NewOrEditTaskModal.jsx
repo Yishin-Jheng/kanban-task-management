@@ -77,10 +77,8 @@ function NewOrEditTaskModal(props) {
     return invalidKeys.length > 0;
   };
   const handleSubmit = () => {
-    return () => {
-      if (checkInvalid()) return;
-      doUpsertTask(formData);
-    };
+    if (checkInvalid()) return;
+    doUpsertTask(formData);
   };
 
   return (
@@ -123,7 +121,7 @@ function NewOrEditTaskModal(props) {
         type="formPrimary"
         text={createOrNot ? "Create Task" : "Save Changes"}
         isDisabled={isPendingUpsertTask}
-        onClick={handleSubmit()}
+        onClick={handleSubmit}
       >
         {isPendingUpsertTask && <LoadingIcon color="#fff" />}
       </Button>

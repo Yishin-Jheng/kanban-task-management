@@ -70,10 +70,8 @@ function NewOrEditBoardModal(props) {
     return invalidKeys.length > 0;
   };
   const handleSubmit = () => {
-    return () => {
-      if (checkInvalid()) return;
-      doUpsertBoard(formData);
-    };
+    if (checkInvalid()) return;
+    doUpsertBoard(formData);
   };
 
   return (
@@ -103,7 +101,7 @@ function NewOrEditBoardModal(props) {
         type="formPrimary"
         text={createOrNot ? "Create New Board" : "Save Changes"}
         isDisabled={isPendingUpsertBoard}
-        onClick={handleSubmit()}
+        onClick={handleSubmit}
       >
         {isPendingUpsertBoard && <LoadingIcon color="#fff" />}
       </Button>

@@ -41,39 +41,19 @@
   }
 }
 
-.loginIcon {
+.loginTip {
   @include body-m;
+  @include transition;
   display: flex;
   gap: 0.5rem;
   align-items: center;
+  padding: 5px 10px;
   color: $color-primary;
-  text-decoration: underline;
+  background-color: $color-grey-light-2;
+  border-radius: 99px;
   cursor: pointer;
-}
 
-.guestInfo {
-  @include body-m;
-  opacity: 1;
-  position: absolute;
-  top: -1rem;
-  left: 50%;
-  width: 80%;
-  padding: 1.2rem;
-  border-radius: 10px;
-  text-align: center;
-  background-color: var(--color-background);
-  transform: translate(-50%, -8.3rem);
-  transition: all 0.3s;
-
-  p {
-    color: $color-grey-light-1;
-  }
-
-  strong {
-    color: $color-primary;
-  }
-
-  @include respond-to(mobile-2) {
-    top: -3rem;
+  &:hover {
+    opacity: 0.7;
   }
 }
