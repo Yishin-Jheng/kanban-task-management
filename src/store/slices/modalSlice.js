@@ -1,6 +1,4 @@
-import { createSlice, isAnyOf } from "@reduxjs/toolkit";
-import { createBoards } from "../thunks/createBoards";
-import { updateBoards } from "../thunks/updateBoards";
+import { createSlice } from "@reduxjs/toolkit";
 import { userLogin } from "../thunks/userLogin";
 
 const modalSlice = createSlice({
@@ -15,7 +13,7 @@ const modalSlice = createSlice({
     errorMsg: null,
   },
   reducers: {
-    setModal(state, action) {
+    setModal(_, action) {
       return action.payload;
     },
     closeModal(state) {
@@ -32,32 +30,6 @@ const modalSlice = createSlice({
         errorMsg: "Email or password is incorrect. Please try again.",
       };
     });
-
-    // others
-    builder.addMatcher(
-      isAnyOf(createBoards.fulfilled, updateBoards.fulfilled),
-      (state) => {
-        return {
-          ...state,
-          isOpen: true,
-          whichOpen: "loadingModal",
-          isLoading: false,
-        };
-      },
-    );
-    builder.addMatcher(
-      isAnyOf(createBoards.rejected, updateBoards.rejected),
-      (state, action) => {
-        console.error(action.payload);
-        return {
-          ...state,
-          isOpen: true,
-          whichOpen: "errorMessageModal",
-          errorMsg:
-            "Change is invalid. Guest has no permission to modify board or column. If you did not sign in as guest, please check your internet and try again.",
-        };
-      },
-    );
   },
 });
 

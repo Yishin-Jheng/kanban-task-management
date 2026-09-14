@@ -42,7 +42,7 @@ function NewOrEditTaskModal(props) {
   const { data: subtasks = [], refetch: refetchSubtasks } = useQuery({
     queryKey: ["subtasks", taskId],
     queryFn: () => getSubtasks({ taskId }),
-    enabled: createOrNot && !!taskId,
+    enabled: !!taskId,
     select: (data) => data.map((item) => ({ ...item, localId: item.id })),
   });
 

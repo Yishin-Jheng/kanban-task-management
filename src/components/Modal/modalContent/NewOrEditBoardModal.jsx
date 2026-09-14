@@ -1,110 +1,112 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useQuery } from "@tanstack/react-query";
-import { getBoards } from "@/api/boards";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getBoards, upsertBoard } from "@/api/boards";
 import { getColumns } from "@/api/columns";
 import Button from "@/components/Button/Button";
 import { DeletableInput } from "@/components/formComponents/DeletableInput/DeletableInput";
 import Input from "@/components/formComponents/Input/Input";
+import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import { useFormData } from "@/hooks/useFormData";
-import { useThunk } from "@/hooks/useThunk";
-import { createBoards, setModal, updateBoards } from "@/store";
+import { setActiveBoard, setModal } from "@/store";
 import styles from "../Modal.module.scss";
 
-const exampleInputs = [
-  { localId: 1, placeholder: "e.g. Todo" },
-  { localId: 2, placeholder: "e.g. Doing" },
-  { localId: 3, placeholder: "e.g. Done" },
-];
+/**
+ * NewOrEditBoardModal
+ * @param {boolean} props.createOrNot 是否為新增任務
+ */
+function NewOrEditBoardModal(props) {
+  const { createOrNot } = props;
 
-function NewOrEditBoardModal({ createOrNot }) {
   const dispatch = useDispatch();
-  const activeBoardId = useSelector((state) => state.boards.activeBoardId);
+  const boardId = useSelector((state) => {
+    return createOrNot ? null : state.boards.activeBoardId;
+  });
+  const [invalidKeys, setInvalidKeys] = useState([]);
 
-  const [checkInvalid, setCheckInvalid] = useState(false);
-  const [getFormData, handleFormChange] = useFormData();
-  const [doCreateBoard, isCreatingBoard] = useThunk(createBoards);
-  const [doUpdateBoard, isUpdatingBoard] = useThunk(updateBoards);
-
-  const formData = getFormData();
-  const [title, btnText] = createOrNot
-    ? ["Add New Board", "Create New Board"]
-    : ["Edit Board", "Save Changes"];
-
-  const showLoadingModal = () => {
-    dispatch(
-      setModal({
-        isOpen: true,
-        whichOpen: "loadingModal",
-        isLoading: true,
-      }),
-    );
-  };
-
-  const handleSubmit = (formData) => {
-    return () => {
-      const form = formData().current;
-      setCheckInvalid(true);
-
-      if (form.boardName) {
-        showLoadingModal();
-        if (createOrNot) {
-          doCreateBoard({ ...form });
-          return;
-        }
-        doUpdateBoard({ boardId: activeBoardId, ...form });
-      }
-    };
-  };
-
-  const { data: boardName } = useQuery({
+  const { data: boardName, refetch: refetchBoards } = useQuery({
     queryKey: ["boards"],
     queryFn: getBoards,
-    enabled: !createOrNot,
+    enabled: !!boardId,
     select: (data) => {
-      const activeBoard = data.find((board) => board.id === activeBoardId);
-      return activeBoard?.boardName;
+      const board = data.find((board) => board.id === boardId);
+      return board?.boardName;
     },
   });
 
-  const { data: columns = [] } = useQuery({
-    queryKey: ["columns", activeBoardId],
-    queryFn: () => getColumns({ boardId: activeBoardId }),
-    enabled: !!activeBoardId,
+  const { data: columns = [], refetch: refetchColumns } = useQuery({
+    queryKey: ["columns", boardId],
+    queryFn: () => getColumns({ boardId }),
+    enabled: !!boardId,
+    select: (data) => data.map((item) => ({ ...item, localId: item.id })),
   });
+
+  const { mutateAsync: doUpsertBoard, isPending: isPendingUpsertBoard } =
+    useMutation({
+      mutationFn: upsertBoard,
+      onSuccess: (currentboardId) => {
+        dispatch(
+          setModal({
+            isOpen: true,
+            whichOpen: "loadingModal",
+            isLoading: false,
+          }),
+        );
+        if (boardId) refetchColumns();
+        refetchBoards();
+        dispatch(setActiveBoard(currentboardId));
+      },
+    });
+
+  const [formData, getOnFormChange] = useFormData(
+    { id: boardId },
+    { boardName, columns },
+  );
+  const checkInvalid = () => {
+    const { boardName } = formData;
+    const invalidKeys = [];
+    if (!boardName) invalidKeys.push("boardName");
+    setInvalidKeys(invalidKeys);
+    return invalidKeys.length > 0;
+  };
+  const handleSubmit = () => {
+    return () => {
+      if (checkInvalid()) return;
+      doUpsertBoard(formData);
+    };
+  };
 
   return (
     <>
       <div className={styles.modalTitle}>
-        <span>{title}</span>
+        <span>{createOrNot ? "Add New Board" : "Edit Board"}</span>
       </div>
       <Input
-        checkInvalid={checkInvalid}
         label="Board Name"
         type="text"
-        value={createOrNot ? "" : boardName}
+        value={formData.boardName}
         placeholder="e.g. Web Design"
-        handleFormChange={handleFormChange(formData, "boardName")}
+        isRequired
+        isInvalid={invalidKeys.includes("boardName")}
+        onChange={getOnFormChange("boardName")}
       />
       <DeletableInput
-        checkInvalid={checkInvalid}
         label="Board Columns"
         btnLabel="+ Add New Column"
         valueKey="statusName"
-        values={
-          createOrNot
-            ? exampleInputs
-            : columns.filter((col) => col.boardId === activeBoardId)
-        }
-        handleFormChange={handleFormChange(formData, "columns")}
-        handleFormDelete={handleFormChange(formData, "deletedColumns")}
+        values={formData.columns}
+        placeholders={["e.g. Todo", "e.g. Doing"]}
+        isInvalid={invalidKeys.includes("columns")}
+        onChange={getOnFormChange("columns")}
       />
       <Button
         type="formPrimary"
-        text={btnText}
-        isDisabled={isUpdatingBoard || isCreatingBoard}
-        onClick={handleSubmit(getFormData)}
-      />
+        text={createOrNot ? "Create New Board" : "Save Changes"}
+        isDisabled={isPendingUpsertBoard}
+        onClick={handleSubmit()}
+      >
+        {isPendingUpsertBoard && <LoadingIcon color="#fff" />}
+      </Button>
     </>
   );
 }

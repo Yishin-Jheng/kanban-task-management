@@ -104,7 +104,7 @@ function InputBlock({
         value={value}
         maxLength={maxLength}
         placeholder={placeholder}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => onChange(localId, e.target.value)}
       />
     </>
   );
