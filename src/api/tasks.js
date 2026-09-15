@@ -1,4 +1,4 @@
-import supabase from "@/store/supabase";
+import supabase from "@/api/supabase";
 
 export const getTasks = async (arg) => {
   const { columnId } = arg;

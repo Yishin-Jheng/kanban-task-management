@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { userLogin } from "../thunks/userLogin";
 
 const modalSlice = createSlice({
   name: "modal",
@@ -19,17 +18,6 @@ const modalSlice = createSlice({
     closeModal(state) {
       state.isOpen = false;
     },
-  },
-  extraReducers(builder) {
-    // users/login
-    builder.addCase(userLogin.rejected, (state) => {
-      return {
-        ...state,
-        isOpen: true,
-        whichOpen: "errorMessageModal",
-        errorMsg: "Email or password is incorrect. Please try again.",
-      };
-    });
   },
 });
 

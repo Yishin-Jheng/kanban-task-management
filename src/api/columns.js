@@ -1,10 +1,6 @@
-import supabase from "@/store/supabase";
+import supabase from "@/api/supabase";
 
 export const getColumns = async (arg) => {
-  // FIXME: 測試用
-  // await new Promise((resolve) => setTimeout(resolve, 1000));
-  // throw new Error("getColumns failed");
-
   const { boardId } = arg;
   const { data, error } = await supabase
     .from("columns")

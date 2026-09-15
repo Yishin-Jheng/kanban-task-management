@@ -20,10 +20,9 @@ function Modal() {
     deleteBoardOrTask,
     detailObj,
     isLoading,
+    errorTitle,
     errorMsg,
-  } = useSelector((state) => {
-    return state.modal;
-  });
+  } = useSelector((state) => state.modal);
   const [formHeight, setFormHeight] = useState(0);
   const windowHeight = useWindowHeight();
   const isMobile2 = useMediaQuery({ query: `(max-width: 515px)` });
@@ -31,9 +30,7 @@ function Modal() {
 
   useEffect(() => {
     if (formRef.current) {
-      // NOTE:
-      // 有些 task 抓到的高度比實際高度還要矮上不少(>100px)，而且每次抓到的數字都會有點浮動
-      // 暫時還是沒辦法讓他抓得很準確，但目前有讓dropdown可以視情況變更展開方向，理論上針對不同視窗高度應該都是可以適應的。
+      // NOTE: 有些 task 抓到的高度比實際高度還要矮上不少(>100px)，而且每次抓到的數字都會有點浮動。暫時還是沒辦法讓他抓得很準確，但目前有讓dropdown可以視情況變更展開方向，理論上針對不同視窗高度應該都是可以適應的。
       setFormHeight(formRef.current.clientHeight);
     }
   }, [whichOpen, detailObj]);
@@ -68,7 +65,9 @@ function Modal() {
   }
 
   if (whichOpen === "errorMessageModal") {
-    modalContent = <ErrorMessageModal errorMsg={errorMsg} />;
+    modalContent = (
+      <ErrorMessageModal errorTitle={errorTitle} errorMsg={errorMsg} />
+    );
   }
 
   return (

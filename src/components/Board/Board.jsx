@@ -1,11 +1,6 @@
 import { DragDropContext } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
-import {
-  keepPreviousData,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getBoards } from "@/api/boards";
 import { getColumns } from "@/api/columns";
 import { updateTaskStatus } from "@/api/tasks";
@@ -35,7 +30,6 @@ function Board() {
     queryKey: ["columns", activeBoardId],
     queryFn: () => getColumns({ boardId: activeBoardId }),
     enabled: !!activeBoardId,
-    placeholderData: keepPreviousData,
   });
   const columnsLength = columns?.length;
   const isFetching = isFetchingBoards || isFetchingColumns;

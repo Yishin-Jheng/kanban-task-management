@@ -1,4 +1,4 @@
-import supabase from "@/store/supabase";
+import supabase from "@/api/supabase";
 
 export const getBoards = async () => {
   const { data, error } = await supabase
