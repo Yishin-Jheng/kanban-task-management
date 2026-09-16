@@ -38,7 +38,7 @@ function Sidebar({ isMobile }) {
   const { mutateAsync: doLogout, isPending: isPendingLogout } = useMutation({
     mutationFn: logout,
     onSuccess: () => {
-      dispatch(setActiveBoard(0));
+      dispatch(setActiveBoard(null));
       queryClient.removeQueries({
         predicate: (query) => query.queryKey[0] !== "session",
       });

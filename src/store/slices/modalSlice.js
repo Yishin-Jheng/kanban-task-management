@@ -6,7 +6,7 @@ const modalSlice = createSlice({
     isOpen: false,
     whichOpen: "",
     createOrNot: true,
-    deleteBoardOrTask: "",
+    deleteType: "",
     detailObj: {},
     isLoading: true,
     errorMsg: null,

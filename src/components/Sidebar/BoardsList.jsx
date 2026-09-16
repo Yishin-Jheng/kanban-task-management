@@ -28,7 +28,7 @@ function BoardsList() {
     if (!activeBoardId && boardsLength) {
       dispatch(setActiveBoard(boards[0].id));
     }
-  }, [activeBoardId, boards, dispatch]);
+  }, [activeBoardId, boards, boardsLength, dispatch]);
 
   return (
     <>

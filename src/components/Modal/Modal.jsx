@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 import clsx from "clsx";
+import ModalBackground from "@/components/Modal/ModalBackground";
 import DeleteModal from "@/components/Modal/modalContent/DeleteModal";
 import ErrorMessageModal from "@/components/Modal/modalContent/ErrorMessageModal";
-import LoadingModal from "@/components/Modal/modalContent/LoadingModal";
 import NewOrEditBoardModal from "@/components/Modal/modalContent/NewOrEditBoardModal";
 import NewOrEditTaskModal from "@/components/Modal/modalContent/NewOrEditTaskModal";
+import SuccessModal from "@/components/Modal/modalContent/SuccessModal";
 import TaskDetailModal from "@/components/Modal/modalContent/TaskDetailModal";
 import { useWindowHeight } from "@/hooks/useWindowHeight";
-import { closeModal } from "@/store";
 import styles from "./Modal.module.scss";
 
 function Modal() {
@@ -17,88 +17,58 @@ function Modal() {
     isOpen,
     whichOpen,
     createOrNot,
-    deleteBoardOrTask,
+    deleteType,
     detailObj,
-    isLoading,
     errorTitle,
     errorMsg,
   } = useSelector((state) => state.modal);
   const [formHeight, setFormHeight] = useState(0);
-  const windowHeight = useWindowHeight();
-  const isMobile2 = useMediaQuery({ query: `(max-width: 515px)` });
   const formRef = useRef("");
+  const isMobile2 = useMediaQuery({ query: `(max-width: 515px)` });
+  const windowHeight = useWindowHeight();
+  const isShowHorizontal = windowHeight - formHeight < 180;
 
   useEffect(() => {
     if (formRef.current) {
-      // NOTE: 有些 task 抓到的高度比實際高度還要矮上不少(>100px)，而且每次抓到的數字都會有點浮動。暫時還是沒辦法讓他抓得很準確，但目前有讓dropdown可以視情況變更展開方向，理論上針對不同視窗高度應該都是可以適應的。
       setFormHeight(formRef.current.clientHeight);
     }
   }, [whichOpen, detailObj]);
 
-  if (!isOpen) {
-    return;
-  }
-
-  let modalContent;
-  if (whichOpen === "taskDetail") {
-    modalContent = <TaskDetailModal taskInfo={detailObj} />;
-  }
-
-  if (whichOpen === "taskModal") {
-    modalContent = (
-      <NewOrEditTaskModal createOrNot={createOrNot} taskInfo={detailObj} />
-    );
-  }
-
-  if (whichOpen === "boardModal") {
-    modalContent = <NewOrEditBoardModal createOrNot={createOrNot} />;
-  }
-
-  if (whichOpen === "deleteModal") {
-    modalContent = (
-      <DeleteModal type={deleteBoardOrTask} detailObj={detailObj} />
-    );
-  }
-
-  if (whichOpen === "loadingModal") {
-    modalContent = <LoadingModal isLoading={isLoading} />;
-  }
-
-  if (whichOpen === "errorMessageModal") {
-    modalContent = (
-      <ErrorMessageModal errorTitle={errorTitle} errorMsg={errorMsg} />
-    );
-  }
-
   return (
-    <>
-      <form
-        ref={formRef}
-        className={clsx(
-          styles.modal,
-          windowHeight - formHeight < 180 && !isMobile2
-            ? styles.horizontalModal
-            : styles.verticalModal,
-        )}
-      >
-        {modalContent}
-      </form>
-      <ModalBackground disable={whichOpen === "loadingModal"} />
-    </>
-  );
-}
-
-function ModalBackground({ disable }) {
-  const dispatch = useDispatch();
-  return (
-    <div
-      className={styles.modalBackground}
-      onClick={() => {
-        if (!disable) {
-          dispatch(closeModal());
-        }
-      }}
-    ></div>
+    isOpen && (
+      <>
+        <form
+          ref={formRef}
+          className={clsx(
+            styles.modal,
+            isShowHorizontal && !isMobile2
+              ? styles.horizontalModal
+              : styles.verticalModal,
+          )}
+        >
+          {whichOpen === "taskDetail" && (
+            <TaskDetailModal taskInfo={detailObj} />
+          )}
+          {whichOpen === "taskModal" && (
+            <NewOrEditTaskModal
+              createOrNot={createOrNot}
+              taskInfo={detailObj}
+            />
+          )}
+          {whichOpen === "boardModal" && (
+            <NewOrEditBoardModal createOrNot={createOrNot} />
+          )}
+          {whichOpen === "deleteModal" && (
+            <DeleteModal type={deleteType} detailObj={detailObj} />
+          )}
+          {whichOpen === "successModal" && <SuccessModal />}
+          {whichOpen === "errorMessageModal" && (
+            <ErrorMessageModal errorTitle={errorTitle} errorMsg={errorMsg} />
+          )}
+        </form>
+        <ModalBackground />
+      </>
+    )
   );
 }
 

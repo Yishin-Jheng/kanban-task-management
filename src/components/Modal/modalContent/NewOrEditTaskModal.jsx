@@ -53,8 +53,7 @@ function NewOrEditTaskModal(props) {
         dispatch(
           setModal({
             isOpen: true,
-            whichOpen: "loadingModal",
-            isLoading: false,
+            whichOpen: "successModal",
           }),
         );
         if (taskId) refetchSubtasks();

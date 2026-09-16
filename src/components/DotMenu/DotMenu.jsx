@@ -33,8 +33,8 @@ const typeSettingMap = new Map([
 function DotMenu(props) {
   const { type, targetInfo = {} } = props;
   const dispatch = useDispatch();
-  const [isOpen, setIsOpen] = useState(false);
   const dotMenuRef = useRef(null);
+  const [isOpen, setIsOpen] = useState(false);
   const setting = typeSettingMap.get(type) ?? {};
 
   const handleEdit = () => {
@@ -52,7 +52,7 @@ function DotMenu(props) {
       setModal({
         isOpen: true,
         whichOpen: "deleteModal",
-        deleteBoardOrTask: type,
+        deleteType: type,
         detailObj: targetInfo,
       }),
     );

@@ -52,8 +52,7 @@ function DeleteModal(props) {
         dispatch(
           setModal({
             isOpen: true,
-            whichOpen: "loadingModal",
-            isLoading: false,
+            whichOpen: "successModal",
           }),
         );
         queryClient.invalidateQueries({
