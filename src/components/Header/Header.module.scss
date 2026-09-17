@@ -26,19 +26,18 @@
   @include transition;
   color: var(--color-text);
   display: block;
-  margin-right: auto;
 
   @include respond-to(mobile-1) {
-    margin-left: 1rem;
-    margin-right: 1rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-left: 1.5rem;
+    cursor: pointer;
   }
 }
 
-.sidebarHiddenBtn {
-  margin-right: auto;
-}
-
 .createTaskBtn {
+  margin-left: auto;
   margin-right: 24px;
 
   @include respond-to(mobile-2) {

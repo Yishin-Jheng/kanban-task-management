@@ -1,7 +1,6 @@
 import { TbMoodSadDizzy } from "react-icons/tb";
-import { useDispatch } from "react-redux";
 import Button from "@/components/Button/Button";
-import { setModal } from "@/store";
+import { useModalStore } from "@/store/useModalStore";
 import styles from "./EmptyColumn.module.scss";
 
 /**
@@ -11,15 +10,14 @@ import styles from "./EmptyColumn.module.scss";
  */
 function EmptyColumn(props) {
   const { isError = false, isBoardsEmpty = false } = props;
-  const dispatch = useDispatch();
+  const { setModal } = useModalStore.getState();
+
   const modalEditBoard = () => {
-    dispatch(
-      setModal({
-        isOpen: true,
-        whichOpen: "boardModal",
-        createOrNot: isBoardsEmpty,
-      }),
-    );
+    setModal({
+      isOpen: true,
+      isAddNew: isBoardsEmpty,
+      modalType: "boardModal",
+    });
   };
 
   return (

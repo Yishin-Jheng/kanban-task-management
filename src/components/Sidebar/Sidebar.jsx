@@ -1,7 +1,6 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BiLogOutCircle } from "react-icons/bi";
-import { useDispatch } from "react-redux";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { logout } from "@/api/auth";
 import {
   boardIcon,
@@ -13,36 +12,35 @@ import logoLight from "@/assets/logo-dark.svg";
 import logoDark from "@/assets/logo-light.svg";
 import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import BoardsList from "@/components/Sidebar/BoardsList";
-import { SidebarContext } from "@/sidebarContext";
-import { setActiveBoard, setModal } from "@/store";
+import { useModalStore } from "@/store/useModalStore";
+import { useSidebarStore } from "@/store/useSidebarStore";
 import styles from "./Sidebar.module.scss";
 
-function Sidebar({ isMobile }) {
-  const dispatch = useDispatch();
-  const queryClient = useQueryClient();
-  const { sidebarHidden, handleHidden } = useContext(SidebarContext);
+/**
+ * Sidebar
+ * @param {boolean} props.isMobile 是否為行動裝置
+ */
+function Sidebar(props) {
+  const { isMobile } = props;
+  const isSidebarHidden = useSidebarStore((store) => store.isSidebarHidden);
+  const { toggleSidebar } = useSidebarStore.getState();
+  const { setModal } = useModalStore.getState();
   const [theme, setTheme] = useState("light");
   const logo = theme === "light" ? logoLight : logoDark;
 
   const modalAddBoard = () => {
-    if (isMobile) handleHidden();
-    dispatch(
-      setModal({
-        isOpen: true,
-        whichOpen: "boardModal",
-        createOrNot: true,
-      }),
-    );
+    if (isMobile) toggleSidebar();
+    setModal({
+      isOpen: true,
+      isAddNew: true,
+      modalType: "boardModal",
+    });
   };
 
   const { mutateAsync: doLogout, isPending: isPendingLogout } = useMutation({
     mutationFn: logout,
     onSuccess: () => {
-      dispatch(setActiveBoard(null));
-      queryClient.removeQueries({
-        predicate: (query) => query.queryKey[0] !== "session",
-      });
-      queryClient.invalidateQueries({ queryKey: ["session"] });
+      window.location.reload();
     },
   });
 
@@ -51,17 +49,19 @@ function Sidebar({ isMobile }) {
     themeRoot.dataset.theme = theme;
   }, [theme]);
 
-  if (sidebarHidden && !isMobile) {
+  if (isSidebarHidden && !isMobile) {
     return (
       <figure className={styles.logoImgMin}>
         <img src={logo} alt="logo" />
       </figure>
     );
   }
-  if (sidebarHidden) return null;
 
   return (
-    <aside className={styles.sideBar}>
+    <aside
+      className={styles.sideBar}
+      data-sidebar-hidden={isSidebarHidden ? "hidden" : ""}
+    >
       <figure className={styles.logoImg}>
         <img src={logo} alt="logo" />
       </figure>
@@ -96,7 +96,7 @@ function Sidebar({ isMobile }) {
         )}
         <span>Log Out</span>
       </div>
-      <div className={styles.hiddenSwitch} onClick={handleHidden}>
+      <div className={styles.hiddenSwitch} onClick={toggleSidebar}>
         {hideSidebarIcon}
         <span>Hide Sidebar</span>
       </div>

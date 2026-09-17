@@ -1,8 +1,7 @@
 import { useRef, useState } from "react";
-import { useDispatch } from "react-redux";
 import { dotMenuIcon } from "@/assets/icon";
 import { useClickOutside } from "@/hooks/useClickOutside";
-import { setModal } from "@/store";
+import { useModalStore } from "@/store/useModalStore";
 import styles from "./DotMenu.module.scss";
 
 const typeSettingMap = new Map([
@@ -25,37 +24,32 @@ const typeSettingMap = new Map([
 ]);
 
 /**
- * XXX: 可以考慮改成純UI，但感覺維持現狀也不是不行
  * DotMenu
  * @param {type} props.type 元件類型
  * @param {{id: string | number, title: string}} props.targetInfo 元件詳細資訊
  */
 function DotMenu(props) {
   const { type, targetInfo = {} } = props;
-  const dispatch = useDispatch();
+  const { setModal } = useModalStore.getState();
   const dotMenuRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const setting = typeSettingMap.get(type) ?? {};
 
   const handleEdit = () => {
-    dispatch(
-      setModal({
-        isOpen: true,
-        whichOpen: setting.editModal,
-        createOrNot: false,
-        detailObj: targetInfo,
-      }),
-    );
+    setModal({
+      isOpen: true,
+      isAddNew: false,
+      modalType: setting.editModal,
+      detailObj: targetInfo,
+    });
   };
   const handleDelete = () => {
-    dispatch(
-      setModal({
-        isOpen: true,
-        whichOpen: "deleteModal",
-        deleteType: type,
-        detailObj: targetInfo,
-      }),
-    );
+    setModal({
+      isOpen: true,
+      modalType: "deleteModal",
+      deleteType: type,
+      detailObj: targetInfo,
+    });
   };
 
   useClickOutside(dotMenuRef, () => {

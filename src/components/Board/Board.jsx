@@ -1,16 +1,16 @@
 import { DragDropContext } from "react-beautiful-dnd";
-import { useSelector } from "react-redux";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getBoards } from "@/api/boards";
 import { getColumns } from "@/api/columns";
 import { updateTaskStatus } from "@/api/tasks";
 import { Column, LoadingColumn, NewColumn } from "@/components/Column/Column";
 import EmptyColumn from "@/components/Column/EmptyColumn";
+import { useBoardStore } from "@/store/useBoardStore";
 import styles from "./Board.module.scss";
 
 function Board() {
   const queryClient = useQueryClient();
-  const activeBoardId = useSelector((state) => state.boards.activeBoardId);
+  const activeBoardId = useBoardStore((store) => store.activeBoardId);
 
   const {
     data: boards,

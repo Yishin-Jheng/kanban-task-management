@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getColumns } from "@/api/columns";
 import { getSubtasks } from "@/api/subtasks";
@@ -11,7 +10,8 @@ import Input from "@/components/formComponents/Input/Input";
 import Textarea from "@/components/formComponents/Textarea/Textarea";
 import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import { useFormData } from "@/hooks/useFormData";
-import { setModal } from "@/store";
+import { useBoardStore } from "@/store/useBoardStore";
+import { useModalStore } from "@/store/useModalStore";
 import styles from "../Modal.module.scss";
 
 /**
@@ -23,9 +23,9 @@ function NewOrEditTaskModal(props) {
   const { createOrNot, taskInfo = {} } = props;
   const { id: taskId, columnId } = taskInfo;
 
-  const dispatch = useDispatch();
   const queryClient = useQueryClient();
-  const activeBoardId = useSelector((state) => state.boards.activeBoardId);
+  const activeBoardId = useBoardStore((store) => store.activeBoardId);
+  const { setModal } = useModalStore.getState();
   const [invalidKeys, setInvalidKeys] = useState([]);
 
   const { data: columns = [] } = useQuery({
@@ -50,12 +50,10 @@ function NewOrEditTaskModal(props) {
     useMutation({
       mutationFn: upsertTask,
       onSuccess: (columnId) => {
-        dispatch(
-          setModal({
-            isOpen: true,
-            whichOpen: "successModal",
-          }),
-        );
+        setModal({
+          isOpen: true,
+          modalType: "successModal",
+        });
         if (taskId) refetchSubtasks();
         queryClient.invalidateQueries({
           queryKey: ["tasks", columnId],

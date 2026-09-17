@@ -1,10 +1,10 @@
-import { useDispatch } from "react-redux";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteBoard } from "@/api/boards";
 import { deleteTask } from "@/api/tasks";
 import Button from "@/components/Button/Button";
 import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
-import { closeModal, setActiveBoard, setModal } from "@/store";
+import { useBoardStore } from "@/store/useBoardStore";
+import { useModalStore } from "@/store/useModalStore";
 import styles from "../Modal.module.scss";
 
 const typeSettingMap = new Map([
@@ -41,7 +41,8 @@ const typeSettingMap = new Map([
 function DeleteModal(props) {
   const { type, detailObj } = props;
   const { id, title } = detailObj;
-  const dispatch = useDispatch();
+  const { setActiveBoard } = useBoardStore.getState();
+  const { setModal, closeModal } = useModalStore.getState();
   const queryClient = useQueryClient();
   const setting = typeSettingMap.get(type) ?? {};
 
@@ -49,18 +50,16 @@ function DeleteModal(props) {
     useMutation({
       mutationFn: setting.mutateFunc,
       onSuccess: () => {
-        dispatch(
-          setModal({
-            isOpen: true,
-            whichOpen: "successModal",
-          }),
-        );
+        setModal({
+          isOpen: true,
+          modalType: "successModal",
+        });
         queryClient.invalidateQueries({
           queryKey: setting.refetchQueryKey,
         });
 
         if (type === "board") {
-          dispatch(setActiveBoard(null));
+          setActiveBoard(null);
         }
       },
     });
@@ -82,11 +81,7 @@ function DeleteModal(props) {
         >
           {isPendingDeleteItem && <LoadingIcon color="#fff" />}
         </Button>
-        <Button
-          type="form"
-          text="Cancel"
-          onClick={() => dispatch(closeModal())}
-        />
+        <Button type="form" text="Cancel" onClick={closeModal} />
       </div>
     </>
   );

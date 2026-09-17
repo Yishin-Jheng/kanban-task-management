@@ -1,15 +1,14 @@
-import { useDispatch } from "react-redux";
-import { closeModal } from "@/store";
+import { useModalStore } from "@/store/useModalStore";
 import styles from "./Modal.module.scss";
 
 function ModalBackground({ isDisable }) {
-  const dispatch = useDispatch();
+  const { closeModal } = useModalStore.getState();
   return (
     <div
       className={styles.modalBackground}
       onClick={() => {
         if (!isDisable) {
-          dispatch(closeModal());
+          closeModal();
         }
       }}
     ></div>

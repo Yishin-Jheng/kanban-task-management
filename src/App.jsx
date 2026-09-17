@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { useMediaQuery } from "react-responsive";
 import { useQuery } from "@tanstack/react-query";
 import { retrieveSession } from "@/api/auth";
@@ -9,19 +9,14 @@ import Login from "@/components/Login/Login";
 import Modal from "@/components/Modal/Modal";
 import PageLoading from "@/components/PageLoading/PageLoading";
 import Sidebar from "@/components/Sidebar/Sidebar";
-import { SidebarContext } from "@/sidebarContext";
+import { useSidebarStore } from "@/store/useSidebarStore";
 import styles from "./App.module.scss";
 
 function App() {
-  const [sidebarHidden, setSidebarHidden] = useState(
-    () => window.matchMedia("(max-width: 670px)").matches,
-  );
   const isMobile = useMediaQuery({ query: "(max-width: 670px)" });
-  const showSidebarBackround = isMobile && !sidebarHidden;
-
-  const handleHidden = function () {
-    setSidebarHidden(!sidebarHidden);
-  };
+  const isSidebarHidden = useSidebarStore((store) => store.isSidebarHidden);
+  const { toggleSidebar, setSidebarHidden } = useSidebarStore.getState();
+  const showSidebarBackround = isMobile && !isSidebarHidden;
 
   const { data: isLogin, isPending: isPendingSession } = useQuery({
     queryKey: ["session"],
@@ -29,25 +24,28 @@ function App() {
     select: (userData) => !!userData,
   });
 
+  useEffect(() => {
+    setSidebarHidden(window.matchMedia("(max-width: 670px)").matches);
+  }, []);
+
   if (isPendingSession) {
     return <PageLoading />;
   }
 
   return (
-    // XXX: 因為 context 會讓下面所有元件都重新渲染，看了就會很想全部換成 zustand
-    <SidebarContext.Provider value={{ sidebarHidden, handleHidden }}>
+    <>
       {!isLogin && <Login />}
       {isLogin && (
         <div
           className={styles.container}
-          data-sidebar-hidden={sidebarHidden ? "sidebarHidden" : ""}
+          data-sidebar-hidden={isSidebarHidden ? "hidden" : ""}
         >
           <Header isMobile={isMobile} />
           <Sidebar isMobile={isMobile} />
-          {sidebarHidden && <HiddenSwitch />}
+          {isSidebarHidden && <HiddenSwitch />}
           <main
             className={styles.main}
-            data-sidebar-hidden={sidebarHidden ? "sidebarHidden" : ""}
+            data-sidebar-hidden={isSidebarHidden ? "hidden" : ""}
             onWheel={(e) => {
               e.target.scrollLeft += e.deltaY;
             }}
@@ -57,13 +55,13 @@ function App() {
           {showSidebarBackround && (
             <div
               className={styles.mobileSidebarBackground}
-              onClick={handleHidden}
+              onClick={toggleSidebar}
             />
           )}
         </div>
       )}
       <Modal />
-    </SidebarContext.Provider>
+    </>
   );
 }
 

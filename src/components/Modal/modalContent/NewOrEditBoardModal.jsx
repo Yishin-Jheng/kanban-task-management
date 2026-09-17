@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getBoards, upsertBoard } from "@/api/boards";
 import { getColumns } from "@/api/columns";
@@ -8,7 +7,8 @@ import { DeletableInput } from "@/components/formComponents/DeletableInput/Delet
 import Input from "@/components/formComponents/Input/Input";
 import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import { useFormData } from "@/hooks/useFormData";
-import { setActiveBoard, setModal } from "@/store";
+import { useBoardStore } from "@/store/useBoardStore";
+import { useModalStore } from "@/store/useModalStore";
 import styles from "../Modal.module.scss";
 
 /**
@@ -17,11 +17,11 @@ import styles from "../Modal.module.scss";
  */
 function NewOrEditBoardModal(props) {
   const { createOrNot } = props;
-
-  const dispatch = useDispatch();
-  const boardId = useSelector((state) => {
-    return createOrNot ? null : state.boards.activeBoardId;
-  });
+  const boardId = useBoardStore((store) =>
+    createOrNot ? null : store.activeBoardId,
+  );
+  const { setActiveBoard } = useBoardStore.getState();
+  const { setModal } = useModalStore.getState();
   const [invalidKeys, setInvalidKeys] = useState([]);
 
   const { data: boardName, refetch: refetchBoards } = useQuery({
@@ -45,15 +45,13 @@ function NewOrEditBoardModal(props) {
     useMutation({
       mutationFn: upsertBoard,
       onSuccess: (currentboardId) => {
-        dispatch(
-          setModal({
-            isOpen: true,
-            whichOpen: "successModal",
-          }),
-        );
+        setModal({
+          isOpen: true,
+          modalType: "successModal",
+        });
         if (boardId) refetchColumns();
         refetchBoards();
-        dispatch(setActiveBoard(currentboardId));
+        setActiveBoard(currentboardId);
       },
     });
 

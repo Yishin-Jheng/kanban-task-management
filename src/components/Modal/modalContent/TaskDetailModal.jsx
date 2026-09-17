@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getColumns } from "@/api/columns";
 import { getSubtasks } from "@/api/subtasks";
@@ -9,7 +8,8 @@ import DotMenu from "@/components/DotMenu/DotMenu";
 import Dropdown from "@/components/formComponents/Dropdown/Dropdown";
 import SubtaskCheckbox from "@/components/Modal/modalContent/SubtaskCheckbox";
 import Skeleton from "@/components/Skeleton/Skeleton";
-import { setModal } from "@/store";
+import { useBoardStore } from "@/store/useBoardStore";
+import { useModalStore } from "@/store/useModalStore";
 import styles from "../Modal.module.scss";
 
 /**
@@ -19,9 +19,10 @@ import styles from "../Modal.module.scss";
 function TaskDetailModal(props) {
   const { taskInfo } = props;
   const { id: taskId } = taskInfo;
-  const dispatch = useDispatch();
+
   const queryClient = useQueryClient();
-  const activeBoardId = useSelector((state) => state.boards.activeBoardId);
+  const activeBoardId = useBoardStore((store) => store.activeBoardId);
+  const { setModal } = useModalStore.getState();
   const [columnId, setColumnId] = useState(taskInfo.columnId);
 
   const { data: columns = [] } = useQuery({
@@ -61,14 +62,12 @@ function TaskDetailModal(props) {
   });
 
   const modalEditTask = () => {
-    dispatch(
-      setModal({
-        isOpen: true,
-        whichOpen: "taskModal",
-        createOrNot: false,
-        taskInfo: taskInfo,
-      }),
-    );
+    setModal({
+      isOpen: true,
+      isAddNew: false,
+      modalType: "taskModal",
+      detailObj: taskInfo,
+    });
   };
 
   return (

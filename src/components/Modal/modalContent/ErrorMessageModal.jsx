@@ -1,6 +1,5 @@
-import { useDispatch } from "react-redux";
 import Button from "@/components/Button/Button";
-import { closeModal } from "@/store/slices/modalSlice";
+import { useModalStore } from "@/store/useModalStore";
 import styles from "../Modal.module.scss";
 
 /**
@@ -10,7 +9,7 @@ import styles from "../Modal.module.scss";
  */
 function ErrorMessageModal(props) {
   const { errorTitle = "Something is wrong...", errorMsg = "" } = props;
-  const dispatch = useDispatch();
+  const { closeModal } = useModalStore.getState();
 
   return (
     <>
@@ -18,13 +17,7 @@ function ErrorMessageModal(props) {
         <span>{errorTitle}</span>
       </div>
       <p className={styles.modalContent}>{errorMsg}</p>
-      <Button
-        type="form"
-        text="Close"
-        onClick={() => {
-          dispatch(closeModal());
-        }}
-      />
+      <Button type="form" text="Close" onClick={closeModal} />
     </>
   );
 }

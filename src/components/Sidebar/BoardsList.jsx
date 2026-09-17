@@ -1,19 +1,18 @@
-import { useContext, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 import { useMediaQuery } from "react-responsive";
 import { useQuery } from "@tanstack/react-query";
 import { getBoards } from "@/api/boards";
 import { boardIcon } from "@/assets/icon";
 import Skeleton from "@/components/Skeleton/Skeleton";
-import { SidebarContext } from "@/sidebarContext";
-import { setActiveBoard } from "@/store";
+import { useBoardStore } from "@/store/useBoardStore";
+import { useSidebarStore } from "@/store/useSidebarStore";
 import styles from "./Sidebar.module.scss";
 
 function BoardsList() {
-  const dispatch = useDispatch();
-  const isMobile = useMediaQuery({ query: `(max-width: 670px)` });
-  const { handleHidden } = useContext(SidebarContext);
-  const { activeBoardId } = useSelector((state) => state.boards);
+  const isMobile = useMediaQuery({ query: "(max-width: 670px)" });
+  const activeBoardId = useBoardStore((store) => store.activeBoardId);
+  const { setActiveBoard } = useBoardStore.getState();
+  const { toggleSidebar } = useSidebarStore.getState();
 
   const { data: boards, isFetching: isFetchingBoards } = useQuery({
     queryKey: ["boards"],
@@ -23,12 +22,11 @@ function BoardsList() {
   const boardsLength = boards?.length;
   const isShowSkeleton = isFetchingBoards && !boardsLength;
 
-  // TODO: 導入 zustand 後需調整
   useEffect(() => {
     if (!activeBoardId && boardsLength) {
-      dispatch(setActiveBoard(boards[0].id));
+      setActiveBoard(boards[0].id);
     }
-  }, [activeBoardId, boards, boardsLength, dispatch]);
+  }, [activeBoardId, boards, boardsLength, setActiveBoard]);
 
   return (
     <>
@@ -47,8 +45,9 @@ function BoardsList() {
                 data-active={isActive ? "active" : ""}
                 onClick={() => {
                   if (isActive) return;
-                  if (isMobile) handleHidden();
-                  dispatch(setActiveBoard(board.id));
+                  if (isMobile) toggleSidebar();
+
+                  setActiveBoard(board.id);
                 }}
               >
                 {boardIcon}

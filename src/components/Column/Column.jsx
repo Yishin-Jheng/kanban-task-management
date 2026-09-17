@@ -1,9 +1,8 @@
 import { Draggable, Droppable } from "react-beautiful-dnd";
-import { useDispatch } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import { getTasks } from "@/api/tasks";
 import Skeleton from "@/components/Skeleton/Skeleton";
-import { setModal } from "@/store";
+import { useModalStore } from "@/store/useModalStore";
 import styles from "./Column.module.scss";
 
 const loadingTask = (numbers) => {
@@ -28,7 +27,7 @@ const loadingTask = (numbers) => {
  */
 function Column(props) {
   const { statusName, decorationColor, columnId, isLoading } = props;
-  const dispatch = useDispatch();
+  const { setModal } = useModalStore.getState();
 
   const {
     data: tasks,
@@ -44,13 +43,11 @@ function Column(props) {
   const isShowSkeleton = isFetchingTasks && !isErrorTasks && !tasksLength;
 
   const modalTaskDetail = (taskObj) => {
-    dispatch(
-      setModal({
-        isOpen: true,
-        whichOpen: "taskDetail",
-        detailObj: taskObj,
-      }),
-    );
+    setModal({
+      isOpen: true,
+      modalType: "taskDetail",
+      detailObj: taskObj,
+    });
   };
 
   return (
@@ -112,15 +109,13 @@ function Column(props) {
 }
 
 function NewColumn() {
-  const dispatch = useDispatch();
+  const { setModal } = useModalStore.getState();
   const modalEditBoard = () => {
-    dispatch(
-      setModal({
-        isOpen: true,
-        whichOpen: "boardModal",
-        createOrNot: false,
-      }),
-    );
+    setModal({
+      isOpen: true,
+      isAddNew: false,
+      modalType: "boardModal",
+    });
   };
 
   return (

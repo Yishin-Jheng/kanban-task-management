@@ -1,18 +1,17 @@
 import { useState } from "react";
 import { FaUserSecret } from "react-icons/fa";
-import { useDispatch } from "react-redux";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { login } from "@/api/auth";
 import Button from "@/components/Button/Button";
 import Input from "@/components/formComponents/Input/Input";
 import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import { useFormData } from "@/hooks/useFormData";
-import { setModal } from "@/store";
+import { useModalStore } from "@/store/useModalStore";
 import styles from "./Login.module.scss";
 
 function Login() {
-  const dispatch = useDispatch();
   const queryClient = useQueryClient();
+  const { setModal } = useModalStore.getState();
   const [invalidKeys, setInvalidKeys] = useState([]);
   const [formData, getOnFormChange] = useFormData();
 
@@ -34,15 +33,13 @@ function Login() {
     onError: () => {
       onEmailChange("");
       onPasswordChange("");
-      dispatch(
-        setModal({
-          isOpen: true,
-          whichOpen: "errorMessageModal",
-          errorTitle: "Login Failed...",
-          errorMsg:
-            "Email or password is not correct. Please check and try again.",
-        }),
-      );
+      setModal({
+        isOpen: true,
+        modalType: "errorMessageModal",
+        errorTitle: "Login Failed...",
+        errorMsg:
+          "Email or password is not correct. Please check and try again.",
+      });
     },
   });
 

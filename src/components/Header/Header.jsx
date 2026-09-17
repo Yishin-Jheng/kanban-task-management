@@ -1,5 +1,3 @@
-import { useContext } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import { getBoards } from "@/api/boards";
 import { getColumns } from "@/api/columns";
@@ -8,22 +6,23 @@ import logoMin from "@/assets/logo-mobile.svg";
 import Button from "@/components/Button/Button";
 import DotMenu from "@/components/DotMenu/DotMenu";
 import Skeleton from "@/components/Skeleton/Skeleton";
-import { SidebarContext } from "@/sidebarContext";
-import { setModal } from "@/store";
+import { useBoardStore } from "@/store/useBoardStore";
+import { useModalStore } from "@/store/useModalStore";
+import { useSidebarStore } from "@/store/useSidebarStore";
 import styles from "./Header.module.scss";
 
 function Header({ isMobile }) {
-  const dispatch = useDispatch();
-  const { sidebarHidden, handleHidden } = useContext(SidebarContext);
-  const activeBoardId = useSelector((state) => state.boards.activeBoardId);
+  const isSidebarHidden = useSidebarStore((store) => store.isSidebarHidden);
+  const activeBoardId = useBoardStore((store) => store.activeBoardId);
+  const { toggleSidebar } = useSidebarStore.getState();
+  const { setModal } = useModalStore.getState();
+
   const modalAddTask = () => {
-    dispatch(
-      setModal({
-        isOpen: true,
-        whichOpen: "taskModal",
-        createOrNot: true,
-      }),
-    );
+    setModal({
+      isOpen: true,
+      isAddNew: true,
+      modalType: "taskModal",
+    });
   };
 
   const { data: boardName, isFetching: isFetchingBoardName } = useQuery({
@@ -54,16 +53,12 @@ function Header({ isMobile }) {
         <h1
           className={styles.headerTitle}
           onClick={() => {
-            if (isMobile) handleHidden();
+            if (isMobile) toggleSidebar();
           }}
         >
           {boardName ?? ""}
+          {isMobile && <>{isSidebarHidden ? downIcon : upIcon}</>}
         </h1>
-      )}
-      {isMobile && (
-        <div className={styles.sidebarHiddenBtn} onClick={handleHidden}>
-          {sidebarHidden ? downIcon : upIcon}
-        </div>
       )}
       <Button
         className={styles.createTaskBtn}
