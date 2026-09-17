@@ -13,12 +13,12 @@ import styles from "../Modal.module.scss";
 
 /**
  * NewOrEditBoardModal
- * @param {boolean} props.createOrNot 是否為新增任務
+ * @param {boolean} props.isAddNew 是否為新增任務
  */
 function NewOrEditBoardModal(props) {
-  const { createOrNot } = props;
+  const { isAddNew } = props;
   const boardId = useBoardStore((store) =>
-    createOrNot ? null : store.activeBoardId,
+    isAddNew ? null : store.activeBoardId,
   );
   const { setActiveBoard } = useBoardStore.getState();
   const { setModal } = useModalStore.getState();
@@ -74,7 +74,7 @@ function NewOrEditBoardModal(props) {
   return (
     <>
       <div className={styles.modalTitle}>
-        <span>{createOrNot ? "Add New Board" : "Edit Board"}</span>
+        <span>{isAddNew ? "Add New Board" : "Edit Board"}</span>
       </div>
       <Input
         label="Board Name"
@@ -96,7 +96,7 @@ function NewOrEditBoardModal(props) {
       />
       <Button
         type="formPrimary"
-        text={createOrNot ? "Create New Board" : "Save Changes"}
+        text={isAddNew ? "Create New Board" : "Save Changes"}
         isDisabled={isPendingUpsertBoard}
         onClick={handleSubmit}
       >

@@ -16,11 +16,11 @@ import styles from "../Modal.module.scss";
 
 /**
  * NewOrEditTaskModal
- * @param {boolean} props.createOrNot 是否為新增任務
+ * @param {boolean} props.isAddNew 是否為新增任務
  * @param {{ id: number, columnId: number, title: string, description: string, totalSubNum: number,finishedSubNum: number }} props.taskInfo 任務詳細資訊
  */
 function NewOrEditTaskModal(props) {
-  const { createOrNot, taskInfo = {} } = props;
+  const { isAddNew, taskInfo = {} } = props;
   const { id: taskId, columnId } = taskInfo;
 
   const queryClient = useQueryClient();
@@ -35,7 +35,7 @@ function NewOrEditTaskModal(props) {
     select: (data) =>
       data.map((col) => ({ text: col.statusName, value: col.id })),
   });
-  const activeStatus = createOrNot
+  const activeStatus = isAddNew
     ? columns[0]
     : columns.find((col) => col.value === columnId);
 
@@ -81,7 +81,7 @@ function NewOrEditTaskModal(props) {
   return (
     <>
       <div className={styles.modalTitle}>
-        <span>{createOrNot ? "Add New Task" : "Edit Task"}</span>
+        <span>{isAddNew ? "Add New Task" : "Edit Task"}</span>
       </div>
       <Input
         label="Title"
@@ -116,7 +116,7 @@ function NewOrEditTaskModal(props) {
       />
       <Button
         type="formPrimary"
-        text={createOrNot ? "Create Task" : "Save Changes"}
+        text={isAddNew ? "Create Task" : "Save Changes"}
         isDisabled={isPendingUpsertTask}
         onClick={handleSubmit}
       >
