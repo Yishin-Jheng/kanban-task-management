@@ -39,7 +39,6 @@
   width: 100%;
   padding: 1rem 1.4rem;
 
-  color: var(--color-text);
   background-color: var(--color-basic);
   border: 1px solid rgba($color-grey-light-1, 0.3);
   border-radius: 5px;
@@ -51,6 +50,14 @@
 
   &[data-open="open"] {
     outline: 1px solid $color-primary;
+  }
+}
+
+.selectText {
+  color: rgba($color-grey-light-1, 0.5);
+
+  &[data-active="active"] {
+    color: var(--color-text);
   }
 }
 

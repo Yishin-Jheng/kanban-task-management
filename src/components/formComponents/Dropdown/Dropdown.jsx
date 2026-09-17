@@ -38,7 +38,7 @@ function Dropdown(props) {
   } = props;
   const [isOpen, setIsOpen] = useState(false);
   const [overViewport, setOverViewport] = useState(false);
-  const isMobile2 = useMediaQuery({ query: `(max-width: 515px)` });
+  const isMobile2 = useMediaQuery({ query: "(max-width: 515px)" });
   const dropdownRef = useRef(null);
   const currentOption = options.find((col) => col.value === value);
 
@@ -62,7 +62,14 @@ function Dropdown(props) {
         onClick={handleOpen}
       >
         <div className={styles.currentSelect} data-open={isOpen ? "open" : ""}>
-          <span>{optionFormatter(currentOption?.text)}</span>
+          <span
+            className={styles.selectText}
+            data-active={currentOption ? "active" : ""}
+          >
+            {currentOption
+              ? optionFormatter(currentOption.text)
+              : "Please select"}
+          </span>
           {isLoading && <LoadingIcon />}
           {!isLoading && (
             <figure className={styles.selectIcon}>
