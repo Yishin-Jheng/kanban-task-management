@@ -23,10 +23,10 @@ function BoardsList() {
   const isShowSkeleton = isFetchingBoards && !boardsLength;
 
   useEffect(() => {
-    if (!activeBoardId && boardsLength) {
-      setActiveBoard(boards[0].id);
+    if (!activeBoardId && !isFetchingBoards) {
+      setActiveBoard(boardsLength ? boards[0].id : null);
     }
-  }, [activeBoardId, boards, boardsLength, setActiveBoard]);
+  }, [activeBoardId, boards, isFetchingBoards]);
 
   return (
     <>

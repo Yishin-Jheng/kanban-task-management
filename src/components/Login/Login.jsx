@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FaUserSecret } from "react-icons/fa";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { login } from "@/api/auth";
+import { GUEST_EMAIL, GUEST_PASSWORD, login } from "@/api/auth";
 import Button from "@/components/Button/Button";
 import Input from "@/components/formComponents/Input/Input";
 import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
@@ -58,8 +58,8 @@ function Login() {
   };
 
   const handleGuestLogin = () => {
-    onEmailChange("guest@kanban.com");
-    onPasswordChange("kanban_guest");
+    onEmailChange(GUEST_EMAIL);
+    onPasswordChange(GUEST_PASSWORD);
   };
 
   return (
