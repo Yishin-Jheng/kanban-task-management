@@ -1,4 +1,4 @@
-import { Draggable, Droppable } from "react-beautiful-dnd";
+import { Draggable, Droppable } from "@hello-pangea/dnd";
 import { useQuery } from "@tanstack/react-query";
 import { getTasks } from "@/api/tasks";
 import Skeleton from "@/components/Skeleton/Skeleton";

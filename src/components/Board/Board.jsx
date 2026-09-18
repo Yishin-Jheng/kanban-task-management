@@ -1,4 +1,4 @@
-import { DragDropContext } from "react-beautiful-dnd";
+import { DragDropContext } from "@hello-pangea/dnd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getBoards } from "@/api/boards";
 import { getColumns } from "@/api/columns";
