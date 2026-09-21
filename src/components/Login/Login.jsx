@@ -64,7 +64,13 @@ function Login() {
 
   return (
     <div className={styles.loginContainer}>
-      <form className={styles.login}>
+      <form
+        className={styles.login}
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit();
+        }}
+      >
         <div className={styles.loginTitle}>
           <span>Account Login</span>
           <div className={styles.loginTip} onClick={handleGuestLogin}>
@@ -88,7 +94,7 @@ function Login() {
           isInvalid={invalidKeys.includes("password")}
           onChange={onPasswordChange}
         />
-        <Button type="formPrimary" onClick={handleSubmit}>
+        <Button type="formPrimary" htmlType="submit" onClick={handleSubmit}>
           {isPendingLogin ? <LoadingIcon size="2rem" color="#fff" /> : "Log In"}
         </Button>
       </form>

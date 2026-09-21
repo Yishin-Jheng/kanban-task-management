@@ -11,6 +11,7 @@ const buttonTypeMap = new Map([
 /**
  * Button
  * @param {'default' | 'form' | 'formPrimary' | 'formWarning'} props.type 按鈕類型
+ * @param {'button' | 'submit'} props.htmlType 按鈕類型
  * @param {string} props.text 按鈕文字
  * @param {string} props.className 額外樣式
  * @param {boolean} props.isMobile 是否為行動裝置
@@ -20,6 +21,7 @@ const buttonTypeMap = new Map([
 function Button(props) {
   const {
     type = "default",
+    htmlType = "button",
     text = "",
     className,
     isMobile = false,
@@ -27,7 +29,8 @@ function Button(props) {
     onClick,
   } = props;
   return (
-    <div
+    <button
+      type={htmlType}
       className={clsx(buttonTypeMap.get(type), className)}
       data-mobile={isMobile ? "mobile" : ""}
       data-disabled={isDisabled ? "disabled" : ""}
@@ -38,7 +41,7 @@ function Button(props) {
       }}
     >
       {props.children || text}
-    </div>
+    </button>
   );
 }
 

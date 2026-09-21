@@ -37,7 +37,7 @@ function Modal() {
   return (
     isOpen && (
       <>
-        <form
+        <div
           ref={formRef}
           className={clsx(
             styles.modal,
@@ -62,7 +62,7 @@ function Modal() {
           {modalType === "errorMessageModal" && (
             <ErrorMessageModal errorTitle={errorTitle} errorMsg={errorMsg} />
           )}
-        </form>
+        </div>
         <ModalBackground />
       </>
     )
