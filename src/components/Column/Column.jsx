@@ -44,9 +44,8 @@ function Column(props) {
 
   const modalTaskDetail = (taskObj) => {
     setModal({
-      isOpen: true,
       modalType: "taskDetail",
-      detailObj: taskObj,
+      task: taskObj,
     });
   };
 
@@ -112,9 +111,8 @@ function NewColumn() {
   const { setModal } = useModalStore.getState();
   const modalEditBoard = () => {
     setModal({
-      isOpen: true,
+      modalType: "boardForm",
       isAddNew: false,
-      modalType: "boardModal",
     });
   };
 

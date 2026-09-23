@@ -45,10 +45,7 @@ function NewOrEditBoardModal(props) {
     useMutation({
       mutationFn: upsertBoard,
       onSuccess: (currentboardId) => {
-        setModal({
-          isOpen: true,
-          modalType: "successModal",
-        });
+        setModal({ modalType: "success" });
         if (boardId) refetchColumns();
         refetchBoards();
         setActiveBoard(currentboardId);

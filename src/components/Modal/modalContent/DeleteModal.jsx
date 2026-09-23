@@ -36,11 +36,11 @@ const typeSettingMap = new Map([
 /**
  * DeleteModal
  * @param {'board' | 'task'} props.type 元件類型
- * @param {{id: string | number, title: string}} props.detailObj 元件詳細資訊
+ * @param {{id: string | number, title: string}} props.targetInfo 元件詳細資訊
  */
 function DeleteModal(props) {
-  const { type, detailObj } = props;
-  const { id, title } = detailObj;
+  const { type, targetInfo } = props;
+  const { id, title } = targetInfo;
   const { setActiveBoard } = useBoardStore.getState();
   const { setModal, closeModal } = useModalStore.getState();
   const queryClient = useQueryClient();
@@ -50,10 +50,7 @@ function DeleteModal(props) {
     useMutation({
       mutationFn: setting.mutateFunc,
       onSuccess: () => {
-        setModal({
-          isOpen: true,
-          modalType: "successModal",
-        });
+        setModal({ modalType: "success" });
         queryClient.invalidateQueries({
           queryKey: setting.refetchQueryKey,
         });

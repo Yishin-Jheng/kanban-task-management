@@ -31,9 +31,8 @@ function Sidebar(props) {
   const modalAddBoard = () => {
     if (isMobile) toggleSidebar();
     setModal({
-      isOpen: true,
+      modalType: "boardForm",
       isAddNew: true,
-      modalType: "boardModal",
     });
   };
 

@@ -14,14 +14,14 @@ import styles from "./Modal.module.scss";
 
 function Modal() {
   const {
-    isOpen,
-    isAddNew,
     modalType,
+    isAddNew,
+    task,
     deleteType,
-    detailObj,
+    target,
     errorTitle,
     errorMsg,
-  } = useModalStore();
+  } = useModalStore((store) => store.modalState);
   const [formHeight, setFormHeight] = useState(0);
   const formRef = useRef("");
   const isMobile2 = useMediaQuery({ query: "(max-width: 515px)" });
@@ -32,10 +32,10 @@ function Modal() {
     if (formRef.current) {
       setFormHeight(formRef.current.clientHeight);
     }
-  }, [modalType, detailObj]);
+  }, [modalType]);
 
   return (
-    isOpen && (
+    !!modalType && (
       <>
         <div
           ref={formRef}
@@ -46,20 +46,18 @@ function Modal() {
               : styles.verticalModal,
           )}
         >
-          {modalType === "taskDetail" && (
-            <TaskDetailModal taskInfo={detailObj} />
+          {modalType === "taskDetail" && <TaskDetailModal taskInfo={task} />}
+          {modalType === "taskForm" && (
+            <NewOrEditTaskModal isAddNew={isAddNew} taskInfo={task} />
           )}
-          {modalType === "taskModal" && (
-            <NewOrEditTaskModal isAddNew={isAddNew} taskInfo={detailObj} />
-          )}
-          {modalType === "boardModal" && (
+          {modalType === "boardForm" && (
             <NewOrEditBoardModal isAddNew={isAddNew} />
           )}
-          {modalType === "deleteModal" && (
-            <DeleteModal type={deleteType} detailObj={detailObj} />
+          {modalType === "delete" && (
+            <DeleteModal type={deleteType} targetInfo={target} />
           )}
-          {modalType === "successModal" && <SuccessModal />}
-          {modalType === "errorMessageModal" && (
+          {modalType === "success" && <SuccessModal />}
+          {modalType === "error" && (
             <ErrorMessageModal errorTitle={errorTitle} errorMsg={errorMsg} />
           )}
         </div>

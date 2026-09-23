@@ -63,10 +63,9 @@ function TaskDetailModal(props) {
 
   const modalEditTask = () => {
     setModal({
-      isOpen: true,
+      modalType: "taskForm",
       isAddNew: false,
-      modalType: "taskModal",
-      detailObj: taskInfo,
+      task: taskInfo,
     });
   };
 

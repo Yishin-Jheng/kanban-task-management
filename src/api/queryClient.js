@@ -10,8 +10,7 @@ export const queryClient = new QueryClient({
       if (query.state.data !== undefined) return;
       if (query.meta?.skipGlobalError) return;
       setModal({
-        isOpen: true,
-        modalType: "errorMessageModal",
+        modalType: "error",
         errorMsg:
           "Fetching data failed. Please check your internet and try again.",
       });
@@ -21,8 +20,7 @@ export const queryClient = new QueryClient({
     onError: (_, arg) => {
       if (arg?.skipGlobalError) return;
       setModal({
-        isOpen: true,
-        modalType: "errorMessageModal",
+        modalType: "error",
         errorMsg:
           "Change is invalid. Please check your internet and try again.",
       });

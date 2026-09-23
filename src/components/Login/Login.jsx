@@ -34,8 +34,7 @@ function Login() {
       onEmailChange("");
       onPasswordChange("");
       setModal({
-        isOpen: true,
-        modalType: "errorMessageModal",
+        modalType: "error",
         errorTitle: "Login Failed...",
         errorMsg:
           "Email or password is not correct. Please check and try again.",

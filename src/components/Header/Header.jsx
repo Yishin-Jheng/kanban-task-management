@@ -19,9 +19,8 @@ function Header({ isMobile }) {
 
   const modalAddTask = () => {
     setModal({
-      isOpen: true,
+      modalType: "taskForm",
       isAddNew: true,
-      modalType: "taskModal",
     });
   };
 

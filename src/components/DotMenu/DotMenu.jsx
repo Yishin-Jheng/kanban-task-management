@@ -10,7 +10,7 @@ const typeSettingMap = new Map([
     {
       editBtnText: "Edit Board",
       deleteBtnText: "Delete Board",
-      editModal: "boardModal",
+      editModal: "boardForm",
     },
   ],
   [
@@ -18,15 +18,15 @@ const typeSettingMap = new Map([
     {
       editBtnText: "Edit Task",
       deleteBtnText: "Delete Task",
-      editModal: "taskModal",
+      editModal: "taskForm",
     },
   ],
 ]);
 
 /**
  * DotMenu
- * @param {type} props.type 元件類型
- * @param {{id: string | number, title: string}} props.targetInfo 元件詳細資訊
+ * @param {"task" | "board"} props.type 元件類型
+ * @param {{id: string | number, title: string} | { id: number, columnId: number, title: string, description: string, totalSubNum: number,finishedSubNum: number } | undefined} props.targetInfo 元件詳細資訊
  */
 function DotMenu(props) {
   const { type, targetInfo = {} } = props;
@@ -37,18 +37,16 @@ function DotMenu(props) {
 
   const handleEdit = () => {
     setModal({
-      isOpen: true,
-      isAddNew: false,
       modalType: setting.editModal,
-      detailObj: targetInfo,
+      isAddNew: false,
+      ...(type === "task" && { task: targetInfo }),
     });
   };
   const handleDelete = () => {
     setModal({
-      isOpen: true,
-      modalType: "deleteModal",
+      modalType: "delete",
       deleteType: type,
-      detailObj: targetInfo,
+      target: targetInfo,
     });
   };
 

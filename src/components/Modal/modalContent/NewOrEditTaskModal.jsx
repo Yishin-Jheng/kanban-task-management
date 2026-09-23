@@ -17,7 +17,7 @@ import styles from "../Modal.module.scss";
 /**
  * NewOrEditTaskModal
  * @param {boolean} props.isAddNew 是否為新增任務
- * @param {{ id: number, columnId: number, title: string, description: string, totalSubNum: number,finishedSubNum: number }} props.taskInfo 任務詳細資訊
+ * @param {{ id: number, columnId: number, title: string, description: string, totalSubNum: number,finishedSubNum: number } | undefined} props.taskInfo 任務詳細資訊
  */
 function NewOrEditTaskModal(props) {
   const { isAddNew, taskInfo = {} } = props;
@@ -49,14 +49,11 @@ function NewOrEditTaskModal(props) {
   const { mutateAsync: doUpsertTask, isPending: isPendingUpsertTask } =
     useMutation({
       mutationFn: upsertTask,
-      onSuccess: (columnId) => {
-        setModal({
-          isOpen: true,
-          modalType: "successModal",
-        });
+      onSuccess: () => {
+        setModal({ modalType: "success" });
         if (taskId) refetchSubtasks();
         queryClient.invalidateQueries({
-          queryKey: ["tasks", columnId],
+          queryKey: ["tasks"],
         });
       },
     });

@@ -14,9 +14,8 @@ function EmptyColumn(props) {
 
   const modalEditBoard = () => {
     setModal({
-      isOpen: true,
+      modalType: "boardForm",
       isAddNew: isBoardsEmpty,
-      modalType: "boardModal",
     });
   };
 
