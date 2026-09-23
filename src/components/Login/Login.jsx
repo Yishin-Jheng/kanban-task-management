@@ -19,7 +19,8 @@ function Login() {
   const onPasswordChange = getOnFormChange("password");
 
   const { mutateAsync: doLogin, isPending: isPendingLogin } = useMutation({
-    mutationFn: (arg) => login({ ...arg, skipGlobalError: true }),
+    mutationFn: login,
+    meta: { skipGlobalError: true },
     onSuccess: (userData) => {
       if (userData) {
         queryClient.invalidateQueries({
