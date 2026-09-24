@@ -1,6 +1,11 @@
 import supabase from "@/api/supabase";
+import type { Tables } from "@/types/supabase";
 
-export const getSubtasks = async (arg) => {
+export type Subtask = Tables<"subtasks">;
+
+export const getSubtasks = async (arg: {
+  taskId: number;
+}): Promise<Subtask[]> => {
   const { taskId } = arg;
   const { data, error } = await supabase
     .from("subtasks")
@@ -12,7 +17,10 @@ export const getSubtasks = async (arg) => {
   return data;
 };
 
-export const updateSubtask = async (arg) => {
+export const updateSubtask = async (arg: {
+  isChecked: boolean;
+  subtaskId: number;
+}): Promise<void> => {
   const { isChecked, subtaskId } = arg;
   const { error } = await supabase
     .from("subtasks")

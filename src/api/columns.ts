@@ -1,6 +1,11 @@
 import supabase from "@/api/supabase";
+import type { Tables } from "@/types/supabase";
 
-export const getColumns = async (arg) => {
+export type Column = Tables<"columns">;
+
+export const getColumns = async (arg: {
+  boardId: number;
+}): Promise<Column[]> => {
   const { boardId } = arg;
   const { data, error } = await supabase
     .from("columns")

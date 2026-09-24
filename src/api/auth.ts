@@ -1,16 +1,20 @@
+import { User } from "@supabase/supabase-js";
 import supabase from "@/api/supabase";
 
 export const GUEST_EMAIL = "guest@kanban.com";
 export const GUEST_PASSWORD = "kanban_guest";
 
-export const retrieveSession = async () => {
+export const retrieveSession = async (): Promise<User | null> => {
   const { data, error } = await supabase.auth.getSession();
 
   if (error) throw error;
   return data.session?.user ?? null;
 };
 
-export const login = async (arg) => {
+export const login = async (arg: {
+  email: string;
+  password: string;
+}): Promise<User | null> => {
   const { data, error } = await supabase.auth.signInWithPassword({
     email: arg.email,
     password: arg.password,
@@ -27,7 +31,7 @@ export const login = async (arg) => {
   return data?.user ?? null;
 };
 
-export const logout = async () => {
+export const logout = async (): Promise<void> => {
   const { error } = await supabase.auth.signOut();
 
   if (error) throw error;

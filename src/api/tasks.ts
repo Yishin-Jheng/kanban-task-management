@@ -1,6 +1,24 @@
+import type { Column } from "@/api/columns";
 import supabase from "@/api/supabase";
+import type { Tables } from "@/types/supabase";
 
-export const getTasks = async (arg) => {
+export type Task = Tables<"tasks">;
+
+interface SubtaskForm {
+  id?: number;
+  description?: string;
+  checkOrNot?: boolean;
+}
+
+interface TaskForm {
+  id?: number;
+  title: string;
+  description: string;
+  columnId: number;
+  subtasks?: SubtaskForm[];
+}
+
+export const getTasks = async (arg: { columnId: number }): Promise<Task[]> => {
   const { columnId } = arg;
   const { data, error } = await supabase
     .from("tasks")
@@ -12,9 +30,12 @@ export const getTasks = async (arg) => {
   return data;
 };
 
-export const upsertTask = async (arg) => {
+export const upsertTask = async (arg: TaskForm): Promise<Column["id"]> => {
   const { id, title, description, columnId, subtasks = [] } = arg;
-  const validSubtasks = subtasks.filter((subtask) => subtask.description);
+  const validSubtasks = subtasks.flatMap((subtask) => {
+    if (!subtask.description) return [];
+    return [{ ...subtask, description: subtask.description }];
+  });
   const { data, error } = await supabase.rpc("upsert_task_with_subtasks", {
     pTaskId: id ?? null,
     pTitle: title,
@@ -31,7 +52,10 @@ export const upsertTask = async (arg) => {
   return data;
 };
 
-export const updateTaskStatus = async (arg) => {
+export const updateTaskStatus = async (arg: {
+  taskId: number;
+  columnId: number;
+}): Promise<void> => {
   const { taskId, columnId } = arg;
   const { error } = await supabase
     .from("tasks")
@@ -42,7 +66,7 @@ export const updateTaskStatus = async (arg) => {
   if (error) throw error;
 };
 
-export const deleteTask = async (arg) => {
+export const deleteTask = async (arg: { taskId: number }): Promise<void> => {
   const { taskId } = arg;
   const { error } = await supabase
     .from("tasks")

@@ -1,6 +1,20 @@
 import supabase from "@/api/supabase";
+import { Tables } from "@/types/supabase";
 
-export const getBoards = async () => {
+type Board = Tables<"boards">;
+
+interface ColumnForm {
+  id?: number;
+  statusName?: string;
+}
+
+interface BoardForm {
+  id?: number;
+  boardName: string;
+  columns?: ColumnForm[];
+}
+
+export const getBoards = async (): Promise<Board[]> => {
   const { data, error } = await supabase
     .from("boards")
     .select("*")
@@ -10,9 +24,12 @@ export const getBoards = async () => {
   return data;
 };
 
-export const upsertBoard = async (arg) => {
+export const upsertBoard = async (arg: BoardForm): Promise<Board["id"]> => {
   const { id, boardName, columns = [] } = arg;
-  const validColumns = columns.filter((col) => col.statusName);
+  const validColumns = columns.flatMap((col) => {
+    if (!col.statusName) return [];
+    return [{ ...col, statusName: col.statusName }];
+  });
   const { data, error } = await supabase.rpc("upsert_board_with_columns", {
     pBoardId: id ?? null,
     pBoardName: boardName,
@@ -26,7 +43,7 @@ export const upsertBoard = async (arg) => {
   return data;
 };
 
-export const deleteBoard = async (arg) => {
+export const deleteBoard = async (arg: { boardId: number }): Promise<void> => {
   const { boardId } = arg;
   const { error } = await supabase
     .from("boards")
