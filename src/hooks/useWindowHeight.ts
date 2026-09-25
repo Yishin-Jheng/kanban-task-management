@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 
-function getWindowHeight() {
+function getWindowHeight(): number {
   const { innerHeight: height } = window;
   return height;
 }
 
-export function useWindowHeight() {
+export function useWindowHeight(): number {
   const [height, setHeight] = useState(getWindowHeight());
 
   useEffect(() => {
