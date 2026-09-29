@@ -1,11 +1,13 @@
 import styles from "./Skeleton.module.scss";
 
-/**
- * Skeleton
- * @param {number} numbers 顯示條數
- * @param {'board' | 'modal' | 'task' | 'subtask' | 'status' | 'title'} styleType 樣式類型
- */
-function Skeleton(props) {
+interface SkeletonProps {
+  /** 顯示數量 */
+  numbers?: number;
+  /** 樣式類型 */
+  styleType?: "board" | "modal" | "task" | "subtask" | "status" | "title";
+}
+
+function Skeleton(props: SkeletonProps) {
   const { numbers = 1, styleType = "task" } = props;
 
   const loadingBoxes = Array(numbers)
