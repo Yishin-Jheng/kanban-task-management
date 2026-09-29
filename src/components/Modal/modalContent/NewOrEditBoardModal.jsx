@@ -51,7 +51,7 @@ function NewOrEditBoardModal(props) {
     });
 
   const [formData, getOnFormChange] = useFormData(
-    { id: boardId },
+    { id: boardId, boardName: "", columns: [] },
     { boardName, columns },
   );
   const checkInvalid = () => {

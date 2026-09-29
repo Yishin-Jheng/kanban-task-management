@@ -13,13 +13,19 @@ import { useBoardStore } from "@/store/useBoardStore";
 import { useModalStore } from "@/store/useModalStore";
 import styles from "../Modal.module.scss";
 
+const defaultTaskInfo = {
+  title: "",
+  description: "",
+  columnId: "",
+};
+
 /**
  * NewOrEditTaskModal
  * @param {boolean} props.isAddNew 是否為新增任務
  * @param {{ id: number, columnId: number, title: string, description: string, totalSubNum: number,finishedSubNum: number } | undefined} props.taskInfo 任務詳細資訊
  */
 function NewOrEditTaskModal(props) {
-  const { isAddNew, taskInfo = {} } = props;
+  const { isAddNew, taskInfo = defaultTaskInfo } = props;
   const { id: taskId, columnId } = taskInfo;
 
   const queryClient = useQueryClient();
@@ -56,10 +62,13 @@ function NewOrEditTaskModal(props) {
       },
     });
 
-  const [formData, getOnFormChange] = useFormData(taskInfo, {
-    subtasks,
-    columnId: activeStatus?.value,
-  });
+  const [formData, getOnFormChange] = useFormData(
+    { ...taskInfo, subtasks: [] },
+    {
+      subtasks,
+      columnId: activeStatus?.value,
+    },
+  );
   const checkInvalid = () => {
     const { title, description } = formData;
     const invalidKeys = [];
