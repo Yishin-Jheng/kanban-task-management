@@ -5,41 +5,48 @@ import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import styles from "./Dropdown.module.scss";
 
-const optionFormatter = (string) => {
+const optionFormatter = (string: string): string => {
   if (!string) return "";
-  return string[0].toUpperCase() + string.slice(1);
+  return `${string[0].toUpperCase()}${string.slice(1)}`;
 };
 
-const handleOverViewport = function (dropdownRef, setOverViewport) {
-  const statusBottom = dropdownRef.current.getBoundingClientRect().bottom;
+const handleOverViewport = function (
+  dropdownRef: React.RefObject<HTMLElement>,
+  setOverViewport: React.Dispatch<React.SetStateAction<boolean>>,
+) {
+  const dropdown = dropdownRef.current;
 
-  if (window.innerHeight - statusBottom < 120) {
-    setOverViewport(true);
-  } else {
-    setOverViewport(false);
-  }
+  if (!dropdown) return;
+
+  const isOverViewport =
+    window.innerHeight - dropdown.getBoundingClientRect().bottom < 120;
+  setOverViewport(isOverViewport);
 };
 
-/**
- * Dropdown
- * @param {string} props.label 標題
- * @param {string} props.value 當前選項的值
- * @param {{text: string, value: string | number}[]} props.options 選項列表
- * @param {boolean} props.isLoading 是否載入中
- * @param {function} props.onChange 狀態改變時呼叫的函式
- */
-function Dropdown(props) {
-  const {
-    label = "",
-    value = null,
-    options = [],
-    isLoading = false,
-    onChange = () => {},
-  } = props;
+type DropdownOption = {
+  text: string;
+  value: string | number;
+};
+
+interface DropdownProps {
+  /** 標題 */
+  label: string;
+  /** 當前選項的值 */
+  value?: string | number;
+  /** 選項列表 */
+  options: DropdownOption[];
+  /** 是否載入中 */
+  isLoading?: boolean;
+  /** 狀態改變時呼叫的函式 */
+  onChange: (value: string | number, option: DropdownOption) => void;
+}
+
+function Dropdown(props: DropdownProps) {
+  const { label, value, options, isLoading = false, onChange } = props;
   const [isOpen, setIsOpen] = useState(false);
   const [overViewport, setOverViewport] = useState(false);
   const isMobile2 = useMediaQuery({ query: "(max-width: 515px)" });
-  const dropdownRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const currentOption = options.find((col) => col.value === value);
 
   const handleOpen = function () {

@@ -1,39 +1,47 @@
+import { useId } from "react";
 import styles from "./Textarea.module.scss";
 
-/**
- * Textarea
- * @param {string} props.label 標題
- * @param {string} props.value 顯示值
- * @param {string} props.placeholder 提示文字
- * @param {number} props.maxLength 最大字數限制
- * @param {boolean} props.isRequired 是否為必填
- * @param {boolean} props.isInvalid 是否必填檢查未通過
- * @param {function} props.onChange 狀態改變時呼叫的函式
- */
-function Textarea(props) {
+interface TextareaProps {
+  /** 標題 */
+  label: string;
+  /** 顯示值 */
+  value: string;
+  /** 提示文字 */
+  placeholder?: string;
+  /** 最大字數限制 */
+  maxLength?: number;
+  /** 是否為必填 */
+  isRequired?: boolean;
+  /** 是否必填檢查未通過 */
+  isInvalid?: boolean;
+  /** 狀態改變時呼叫的callback */
+  onChange: (value: string) => void;
+}
+
+function Textarea(props: TextareaProps) {
   const {
-    label = "",
-    value = "",
+    label,
+    value,
     placeholder = "",
     maxLength = 300,
     isRequired = false,
     isInvalid = false,
-    onChange = () => {},
+    onChange,
   } = props;
+  const textareaId = useId();
 
   return (
     <div className={styles.textareaWrapper}>
-      <p>
+      <label htmlFor={textareaId}>
         <span className={styles.textareaTitle}>{label}</span>
         {isRequired && <span className={styles.required}>*</span>}
-      </p>
+      </label>
       {isInvalid && <span className={styles.invalidText}>Can't be empty</span>}
       <textarea
-        id={label}
+        id={textareaId}
         className={styles.textarea}
         data-invalid={isInvalid ? "invalid" : ""}
-        type="text"
-        rows="5"
+        rows={5}
         value={value}
         maxLength={maxLength}
         placeholder={placeholder}
