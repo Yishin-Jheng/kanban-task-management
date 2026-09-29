@@ -38,7 +38,6 @@ function NewOrEditBoardModal(props) {
     queryKey: ["columns", boardId],
     queryFn: () => getColumns({ boardId }),
     enabled: !!boardId,
-    select: (data) => data.map((item) => ({ ...item, localId: item.id })),
   });
 
   const { mutateAsync: doUpsertBoard, isPending: isPendingUpsertBoard } =
@@ -87,6 +86,7 @@ function NewOrEditBoardModal(props) {
         btnLabel="+ Add New Column"
         valueKey="statusName"
         values={formData.columns}
+        emptyValue={{ statusName: "" }}
         placeholders={["e.g. Todo", "e.g. Doing"]}
         isInvalid={invalidKeys.includes("columns")}
         onChange={getOnFormChange("columns")}

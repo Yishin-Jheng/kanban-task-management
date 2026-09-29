@@ -112,10 +112,10 @@ function TaskDetailModal(props) {
         value={activeStatus?.value}
         options={columns}
         isLoading={isPendingUpdateTaskStatus}
-        onChange={(column) => {
+        onChange={(value) => {
           doUpdateTaskStatus({
             taskId,
-            columnId: column.value,
+            columnId: value,
           });
         }}
       />

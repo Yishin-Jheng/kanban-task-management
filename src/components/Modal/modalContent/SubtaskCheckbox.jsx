@@ -35,7 +35,6 @@ function SubtaskCheckbox(props) {
   return (
     <CheckBox
       key={id}
-      id={id}
       description={description}
       isChecked={isChecked}
       isLoading={isPendingUpdateSubtask}

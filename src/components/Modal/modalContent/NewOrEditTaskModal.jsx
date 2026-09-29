@@ -43,7 +43,6 @@ function NewOrEditTaskModal(props) {
     queryKey: ["subtasks", taskId],
     queryFn: () => getSubtasks({ taskId }),
     enabled: !!taskId,
-    select: (data) => data.map((item) => ({ ...item, localId: item.id })),
   });
 
   const { mutateAsync: doUpsertTask, isPending: isPendingUpsertTask } =
@@ -102,6 +101,7 @@ function NewOrEditTaskModal(props) {
         btnLabel="+ Add New Subtask"
         valueKey="description"
         values={formData.subtasks}
+        emptyValue={{ description: "" }}
         isInvalid={invalidKeys.includes("subtasks")}
         onChange={getOnFormChange("subtasks")}
       />
