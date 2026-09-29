@@ -8,7 +8,6 @@ import { DeletableInput } from "@/components/formComponents/DeletableInput/Delet
 import Dropdown from "@/components/formComponents/Dropdown/Dropdown";
 import Input from "@/components/formComponents/Input/Input";
 import Textarea from "@/components/formComponents/Textarea/Textarea";
-import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import { useFormData } from "@/hooks/useFormData";
 import { useBoardStore } from "@/store/useBoardStore";
 import { useModalStore } from "@/store/useModalStore";
@@ -113,11 +112,10 @@ function NewOrEditTaskModal(props) {
       />
       <Button
         type="formPrimary"
-        text={isAddNew ? "Create Task" : "Save Changes"}
-        isDisabled={isPendingUpsertTask}
+        isLoading={isPendingUpsertTask}
         onClick={handleSubmit}
       >
-        {isPendingUpsertTask && <LoadingIcon color="#fff" />}
+        {isAddNew ? "Create Task" : "Save Changes"}
       </Button>
     </>
   );

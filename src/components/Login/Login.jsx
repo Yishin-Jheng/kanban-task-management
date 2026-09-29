@@ -4,7 +4,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { GUEST_EMAIL, GUEST_PASSWORD, login } from "@/api/auth";
 import Button from "@/components/Button/Button";
 import Input from "@/components/formComponents/Input/Input";
-import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import { useFormData } from "@/hooks/useFormData";
 import { useModalStore } from "@/store/useModalStore";
 import styles from "./Login.module.scss";
@@ -13,7 +12,7 @@ function Login() {
   const queryClient = useQueryClient();
   const { setModal } = useModalStore.getState();
   const [invalidKeys, setInvalidKeys] = useState([]);
-  const [formData, getOnFormChange] = useFormData();
+  const [formData, getOnFormChange] = useFormData({ email: "", password: "" });
 
   const onEmailChange = getOnFormChange("email");
   const onPasswordChange = getOnFormChange("password");
@@ -53,7 +52,7 @@ function Login() {
   };
 
   const handleSubmit = () => {
-    if (checkInvalid()) return;
+    if (isPendingLogin || checkInvalid()) return;
     doLogin(formData);
   };
 
@@ -94,8 +93,8 @@ function Login() {
           isInvalid={invalidKeys.includes("password")}
           onChange={onPasswordChange}
         />
-        <Button type="formPrimary" htmlType="submit" onClick={handleSubmit}>
-          {isPendingLogin ? <LoadingIcon size="2rem" color="#fff" /> : "Log In"}
+        <Button type="formPrimary" htmlType="submit" isLoading={isPendingLogin}>
+          Log In
         </Button>
       </form>
     </div>

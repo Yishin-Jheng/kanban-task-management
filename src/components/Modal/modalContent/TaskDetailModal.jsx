@@ -87,11 +87,9 @@ function TaskDetailModal(props) {
               <div className={styles.subtaskMessage}>
                 No subtask yet. Try to add a new one.
               </div>
-              <Button
-                type="form"
-                text="+ New Subtask"
-                onClick={modalEditTask}
-              />
+              <Button type="form" onClick={modalEditTask}>
+                + New Subtask
+              </Button>
             </>
           )}
           {subtasksLength > 0 &&

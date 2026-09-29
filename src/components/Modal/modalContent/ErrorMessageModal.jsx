@@ -17,7 +17,9 @@ function ErrorMessageModal(props) {
         <span>{errorTitle}</span>
       </div>
       <p className={styles.modalContent}>{errorMsg}</p>
-      <Button type="form" text="Close" onClick={closeModal} />
+      <Button type="form" onClick={closeModal}>
+        Close
+      </Button>
     </>
   );
 }

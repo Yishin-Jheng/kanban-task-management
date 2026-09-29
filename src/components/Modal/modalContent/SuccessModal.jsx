@@ -12,7 +12,9 @@ function SuccessModal() {
       <p className={styles.modalContent}>
         Save is done. Click button to close modal window.
       </p>
-      <Button type="form" text="Close" onClick={closeModal} />
+      <Button type="form" onClick={closeModal}>
+        Close
+      </Button>
     </>
   );
 }

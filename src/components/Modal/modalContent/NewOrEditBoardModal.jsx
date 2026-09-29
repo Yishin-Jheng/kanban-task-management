@@ -5,7 +5,6 @@ import { getColumns } from "@/api/columns";
 import Button from "@/components/Button/Button";
 import { DeletableInput } from "@/components/formComponents/DeletableInput/DeletableInput";
 import Input from "@/components/formComponents/Input/Input";
-import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import { useFormData } from "@/hooks/useFormData";
 import { useBoardStore } from "@/store/useBoardStore";
 import { useModalStore } from "@/store/useModalStore";
@@ -93,11 +92,10 @@ function NewOrEditBoardModal(props) {
       />
       <Button
         type="formPrimary"
-        text={isAddNew ? "Create New Board" : "Save Changes"}
-        isDisabled={isPendingUpsertBoard}
+        isLoading={isPendingUpsertBoard}
         onClick={handleSubmit}
       >
-        {isPendingUpsertBoard && <LoadingIcon color="#fff" />}
+        {isAddNew ? "Create New Board" : "Save Changes"}
       </Button>
     </>
   );

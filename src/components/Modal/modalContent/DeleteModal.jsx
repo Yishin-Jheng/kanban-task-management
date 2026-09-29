@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteBoard } from "@/api/boards";
 import { deleteTask } from "@/api/tasks";
 import Button from "@/components/Button/Button";
-import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import { useBoardStore } from "@/store/useBoardStore";
 import { useModalStore } from "@/store/useModalStore";
 import styles from "../Modal.module.scss";
@@ -70,15 +69,16 @@ function DeleteModal(props) {
       <div className={styles.modalDeleteBtns}>
         <Button
           type="formWarning"
-          text="Delete"
-          isDisabled={isPendingDeleteItem}
+          isLoading={isPendingDeleteItem}
           onClick={() => {
             doDeleteItem({ [setting.mutateArgKey]: id });
           }}
         >
-          {isPendingDeleteItem && <LoadingIcon color="#fff" />}
+          Delete
         </Button>
-        <Button type="form" text="Cancel" onClick={closeModal} />
+        <Button type="form" onClick={closeModal}>
+          Cancel
+        </Button>
       </div>
     </>
   );

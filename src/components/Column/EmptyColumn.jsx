@@ -37,9 +37,8 @@ function EmptyColumn(props) {
               : "This board is empty. Create a new column to get started."}
           </p>
           <Button
-            text={`+ Add New ${isBoardsEmpty ? "Board" : "Column"}`}
             onClick={modalEditBoard}
-          />
+          >{`+ Add New ${isBoardsEmpty ? "Board" : "Column"}`}</Button>
         </>
       )}
     </div>
