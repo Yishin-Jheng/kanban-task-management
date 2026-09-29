@@ -1,4 +1,4 @@
-import { RefObject, useEffect } from "react";
+import { useEffect } from "react";
 
 /**
  * useClickOutside
@@ -6,7 +6,7 @@ import { RefObject, useEffect } from "react";
  * @param onClickOutside 點擊的 DOM 路徑中不包含目標元素時觸發的 callback
  */
 export function useClickOutside(
-  targetRef: RefObject<HTMLElement>,
+  targetRef: React.RefObject<HTMLElement>,
   onClickOutside: () => void,
 ) {
   useEffect(() => {
