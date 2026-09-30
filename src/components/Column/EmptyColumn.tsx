@@ -3,12 +3,14 @@ import Button from "@/components/Button/Button";
 import { useModalStore } from "@/store/useModalStore";
 import styles from "./EmptyColumn.module.scss";
 
-/**
- * EmptyColumn
- * @param {boolean} props.isError 是否為取得資料失敗
- * @param {boolean} props.isBoardsEmpty 是否尚未建立任何版塊
- */
-function EmptyColumn(props) {
+interface EmptyColumnProps {
+  /** 是否為取得資料失敗 */
+  isError?: boolean;
+  /** 是否尚未建立任何版塊 */
+  isBoardsEmpty?: boolean;
+}
+
+function EmptyColumn(props: EmptyColumnProps) {
   const { isError = false, isBoardsEmpty = false } = props;
   const { setModal } = useModalStore.getState();
 
@@ -36,9 +38,9 @@ function EmptyColumn(props) {
               ? "You have no boards. Create a new board to get started."
               : "This board is empty. Create a new column to get started."}
           </p>
-          <Button
-            onClick={modalEditBoard}
-          >{`+ Add New ${isBoardsEmpty ? "Board" : "Column"}`}</Button>
+          <Button onClick={modalEditBoard}>
+            + Add New {isBoardsEmpty ? "Board" : "Column"}
+          </Button>
         </>
       )}
     </div>

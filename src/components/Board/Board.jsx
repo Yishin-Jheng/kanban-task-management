@@ -3,8 +3,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getBoards } from "@/api/boards";
 import { getColumns } from "@/api/columns";
 import { updateTaskStatus } from "@/api/tasks";
-import { Column, LoadingColumn, NewColumn } from "@/components/Column/Column";
+import Column from "@/components/Column/Column";
 import EmptyColumn from "@/components/Column/EmptyColumn";
+import LoadingColumn from "@/components/Column/LoadingColumn";
+import NewColumn from "@/components/Column/NewColumn";
 import { useBoardStore } from "@/store/useBoardStore";
 import styles from "./Board.module.scss";
 
@@ -64,7 +66,7 @@ function Board() {
     <div className={styles.board}>
       {isShowSkeleton && (
         <div className={styles.columnContainer}>
-          <LoadingColumn numbers={3} />
+          <LoadingColumn colNumber={3} />
         </div>
       )}
       {!isShowSkeleton && !columnsLength && (
