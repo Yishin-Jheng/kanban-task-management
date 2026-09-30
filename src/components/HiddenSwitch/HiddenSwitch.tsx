@@ -3,6 +3,7 @@ import styles from "./HiddenSwitch.module.scss";
 
 function HiddenSwitch() {
   const { toggleSidebar } = useSidebarStore.getState();
+
   return (
     <div className={styles.hiddenSwitch} onClick={toggleSidebar}>
       <svg width="16" height="11" xmlns="http://www.w3.org/2000/svg">
