@@ -1,9 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { skipToken, useQuery } from "@tanstack/react-query";
 import { getBoards } from "@/api/boards";
 import { getColumns } from "@/api/columns";
 import { addIcon, downIcon, upIcon } from "@/assets/icon";
 import logoMin from "@/assets/logo-mobile.svg";
 import Button from "@/components/Button/Button";
+import type { ButtonSetting } from "@/components/DotMenu/DotMenu";
 import DotMenu from "@/components/DotMenu/DotMenu";
 import Skeleton from "@/components/Skeleton/Skeleton";
 import { useBoardStore } from "@/store/useBoardStore";
@@ -11,7 +12,13 @@ import { useModalStore } from "@/store/useModalStore";
 import { useSidebarStore } from "@/store/useSidebarStore";
 import styles from "./Header.module.scss";
 
-function Header({ isMobile }) {
+interface HeaderProps {
+  /** 是否為行動裝置 */
+  isMobile: boolean;
+}
+
+function Header(props: HeaderProps) {
+  const { isMobile } = props;
   const isSidebarHidden = useSidebarStore((store) => store.isSidebarHidden);
   const activeBoardId = useBoardStore((store) => store.activeBoardId);
   const { toggleSidebar } = useSidebarStore.getState();
@@ -35,15 +42,15 @@ function Header({ isMobile }) {
 
   const { data: isColumnsEmpty = true } = useQuery({
     queryKey: ["columns", activeBoardId],
-    queryFn: () => getColumns({ boardId: activeBoardId }),
-    enabled: !!activeBoardId,
-    select: (data) => {
-      return data?.length === 0;
-    },
+    queryFn:
+      typeof activeBoardId === "number"
+        ? () => getColumns({ boardId: activeBoardId })
+        : skipToken,
+    select: (data) => data.length === 0,
   });
 
   const isShowSkeleton = isFetchingBoardName && !boardName;
-  const dotMenuSetting = [
+  const dotMenuSetting: ButtonSetting[] = [
     {
       btnType: "default",
       btnText: "Edit Board",
@@ -58,6 +65,7 @@ function Header({ isMobile }) {
       btnType: "warning",
       btnText: "Delete Board",
       onClick: () => {
+        if (typeof activeBoardId !== "number") return;
         setModal({
           modalType: "delete",
           deleteType: "board",
@@ -78,8 +86,8 @@ function Header({ isMobile }) {
             if (isMobile) toggleSidebar();
           }}
         >
-          {boardName ?? ""}
-          {isMobile && <>{isSidebarHidden ? downIcon : upIcon}</>}
+          {boardName}
+          {isMobile && (isSidebarHidden ? downIcon : upIcon)}
         </h1>
       )}
       <Button

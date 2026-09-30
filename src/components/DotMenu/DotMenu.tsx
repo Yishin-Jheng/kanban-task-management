@@ -8,7 +8,7 @@ const buttonTypeMap = {
   warning: styles.btnWarning,
 } as const;
 
-type ButtonSetting = {
+export type ButtonSetting = {
   btnType: keyof typeof buttonTypeMap;
   btnText: string;
   onClick: () => void;

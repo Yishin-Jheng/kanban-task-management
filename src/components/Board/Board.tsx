@@ -1,5 +1,11 @@
+import type { DropResult } from "@hello-pangea/dnd";
 import { DragDropContext } from "@hello-pangea/dnd";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  skipToken,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { getBoards } from "@/api/boards";
 import { getColumns } from "@/api/columns";
 import { updateTaskStatus } from "@/api/tasks";
@@ -25,32 +31,32 @@ function Board() {
   });
 
   const {
-    data: columns,
+    data: columns = [],
     isFetching: isFetchingColumns,
     isError: isErrorColumns,
   } = useQuery({
     queryKey: ["columns", activeBoardId],
-    queryFn: () => getColumns({ boardId: activeBoardId }),
-    enabled: !!activeBoardId,
+    queryFn:
+      typeof activeBoardId === "number"
+        ? () => getColumns({ boardId: activeBoardId })
+        : skipToken,
   });
-  const columnsLength = columns?.length;
+  const columnsLength = columns.length;
   const isFetching = isFetchingBoards || isFetchingColumns;
   const isError = isErrorBoards || isErrorColumns;
   const isShowSkeleton = isFetching && !isError && !columnsLength;
 
-  const {
-    mutateAsync: doUpdateTaskStatus,
-    isPending: isPendingUpdateTaskStatus,
-  } = useMutation({
-    mutationFn: updateTaskStatus,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["tasks"],
-      });
-    },
-  });
+  const { mutate: doUpdateTaskStatus, isPending: isPendingUpdateTaskStatus } =
+    useMutation({
+      mutationFn: updateTaskStatus,
+      onSuccess: () => {
+        void queryClient.invalidateQueries({
+          queryKey: ["tasks"],
+        });
+      },
+    });
 
-  const handleDragAndDrop = function (results) {
+  const handleDragAndDrop = function (results: DropResult) {
     const { source: startPoint, destination: endPoint, draggableId } = results;
 
     if (!endPoint) return;
@@ -69,7 +75,7 @@ function Board() {
           <LoadingColumn colNumber={3} />
         </div>
       )}
-      {!isShowSkeleton && !columnsLength && (
+      {!isShowSkeleton && columnsLength === 0 && (
         <EmptyColumn
           isError={isError}
           isBoardsEmpty={isSuccessBoards && boards.length === 0}
@@ -78,13 +84,13 @@ function Board() {
       {columnsLength > 0 && (
         <DragDropContext onDragEnd={handleDragAndDrop}>
           <div className={styles.columnContainer}>
-            {columns.map((status) => {
+            {columns.map((col) => {
               return (
                 <Column
-                  key={status.id}
-                  statusName={status.statusName}
-                  decorationColor={status.decorationColor}
-                  columnId={status.id}
+                  key={col.id}
+                  statusName={col.statusName}
+                  decorationColor={col.decorationColor}
+                  columnId={col.id}
                   isLoading={isPendingUpdateTaskStatus}
                 />
               );
