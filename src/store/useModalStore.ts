@@ -1,15 +1,6 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-
-// TODO: 之後task的型別應該搬去api/tasks
-interface Task {
-  id: number;
-  columnId: number;
-  title: string;
-  description: string;
-  totalSubNum: number;
-  finishedSubNum: number;
-}
+import type { Task } from "@/api/tasks";
 
 type ModalState =
   | { modalType: null }

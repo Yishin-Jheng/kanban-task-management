@@ -1,7 +1,7 @@
 import supabase from "@/api/supabase";
 import { Tables } from "@/types/supabase";
 
-type Board = Tables<"boards">;
+export type Board = Tables<"boards">;
 
 interface ColumnForm {
   id?: number;
