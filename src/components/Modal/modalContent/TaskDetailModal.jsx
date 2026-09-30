@@ -68,12 +68,30 @@ function TaskDetailModal(props) {
       task: taskInfo,
     });
   };
+  const dotMenuSetting = [
+    {
+      btnType: "default",
+      btnText: "Edit Task",
+      onClick: modalEditTask,
+    },
+    {
+      btnType: "warning",
+      btnText: "Delete Task",
+      onClick: () => {
+        setModal({
+          modalType: "delete",
+          deleteType: "task",
+          target: taskInfo,
+        });
+      },
+    },
+  ];
 
   return (
     <>
       <div className={styles.modalTitle}>
         <span>{taskInfo.title}</span>
-        <DotMenu type="task" targetInfo={taskInfo} />
+        <DotMenu settings={dotMenuSetting} />
       </div>
       <p className={styles.modalContent}>{taskInfo.description}</p>
       <div className={styles.subtask}>

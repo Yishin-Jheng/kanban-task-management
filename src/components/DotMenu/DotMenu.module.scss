@@ -41,8 +41,8 @@
   }
 }
 
-.editBtn,
-.deleteBtn {
+.btnDefault,
+.btnWarning {
   @include transition;
   padding: 0.8rem 1.6rem;
   border-radius: 5px;
@@ -53,10 +53,10 @@
   }
 }
 
-.editBtn {
+.btnDefault {
   color: $color-grey-light-1;
 }
 
-.deleteBtn {
+.btnWarning {
   color: $color-warning;
 }

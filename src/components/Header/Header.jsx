@@ -24,7 +24,7 @@ function Header({ isMobile }) {
     });
   };
 
-  const { data: boardName, isFetching: isFetchingBoardName } = useQuery({
+  const { data: boardName = "", isFetching: isFetchingBoardName } = useQuery({
     queryKey: ["boards"],
     queryFn: getBoards,
     select: (data) => {
@@ -43,6 +43,29 @@ function Header({ isMobile }) {
   });
 
   const isShowSkeleton = isFetchingBoardName && !boardName;
+  const dotMenuSetting = [
+    {
+      btnType: "default",
+      btnText: "Edit Board",
+      onClick: () => {
+        setModal({
+          modalType: "boardForm",
+          isAddNew: false,
+        });
+      },
+    },
+    {
+      btnType: "warning",
+      btnText: "Delete Board",
+      onClick: () => {
+        setModal({
+          modalType: "delete",
+          deleteType: "board",
+          target: { id: activeBoardId, title: boardName },
+        });
+      },
+    },
+  ];
 
   return (
     <header className={styles.header}>
@@ -67,10 +90,7 @@ function Header({ isMobile }) {
       >
         {isMobile ? addIcon : <span>+ Add New Task</span>}
       </Button>
-      <DotMenu
-        type="board"
-        targetInfo={{ id: activeBoardId, title: boardName }}
-      />
+      <DotMenu settings={dotMenuSetting} />
     </header>
   );
 }
