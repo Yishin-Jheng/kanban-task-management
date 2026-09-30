@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FaUserSecret } from "react-icons/fa";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { LoginForm } from "@/api/auth";
 import { GUEST_EMAIL, GUEST_PASSWORD, login } from "@/api/auth";
 import Button from "@/components/Button/Button";
 import Input from "@/components/formComponents/Input/Input";
@@ -11,21 +12,24 @@ import styles from "./Login.module.scss";
 function Login() {
   const queryClient = useQueryClient();
   const { setModal } = useModalStore.getState();
-  const [invalidKeys, setInvalidKeys] = useState([]);
-  const [formData, getOnFormChange] = useFormData({ email: "", password: "" });
+  const [invalidKeys, setInvalidKeys] = useState<(keyof LoginForm)[]>([]);
+  const [formData, getOnFormChange] = useFormData<LoginForm>({
+    email: "",
+    password: "",
+  });
 
   const onEmailChange = getOnFormChange("email");
   const onPasswordChange = getOnFormChange("password");
 
-  const { mutateAsync: doLogin, isPending: isPendingLogin } = useMutation({
+  const { mutate: doLogin, isPending: isPendingLogin } = useMutation({
     mutationFn: login,
     meta: { skipGlobalError: true },
     onSuccess: (userData) => {
       if (userData) {
-        queryClient.invalidateQueries({
+        void queryClient.invalidateQueries({
           queryKey: ["session"],
         });
-        queryClient.invalidateQueries({
+        void queryClient.invalidateQueries({
           queryKey: ["boards"],
         });
       }
@@ -44,7 +48,7 @@ function Login() {
 
   const checkInvalid = () => {
     const { email, password } = formData;
-    const invalidKeys = [];
+    const invalidKeys: (keyof LoginForm)[] = [];
     if (!email) invalidKeys.push("email");
     if (!password) invalidKeys.push("password");
     setInvalidKeys(invalidKeys);

@@ -1,5 +1,10 @@
-import { User } from "@supabase/supabase-js";
+import type { User } from "@supabase/supabase-js";
 import supabase from "@/api/supabase";
+
+export interface LoginForm {
+  email: string;
+  password: string;
+}
 
 export const GUEST_EMAIL = "guest@kanban.com";
 export const GUEST_PASSWORD = "kanban_guest";
@@ -11,10 +16,7 @@ export const retrieveSession = async (): Promise<User | null> => {
   return data.session?.user ?? null;
 };
 
-export const login = async (arg: {
-  email: string;
-  password: string;
-}): Promise<User | null> => {
+export const login = async (arg: LoginForm): Promise<User | null> => {
   const { data, error } = await supabase.auth.signInWithPassword({
     email: arg.email,
     password: arg.password,
