@@ -8,25 +8,28 @@ import {
   hideSidebarIcon,
   lightThemeIcon,
 } from "@/assets/icon";
-import logoLight from "@/assets/logo-dark.svg";
-import logoDark from "@/assets/logo-light.svg";
+import logoForLightTheme from "@/assets/logo-dark.svg";
+import logoForDarkTheme from "@/assets/logo-light.svg";
 import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
 import BoardsList from "@/components/Sidebar/BoardsList";
 import { useModalStore } from "@/store/useModalStore";
 import { useSidebarStore } from "@/store/useSidebarStore";
 import styles from "./Sidebar.module.scss";
 
-/**
- * Sidebar
- * @param {boolean} props.isMobile 是否為行動裝置
- */
-function Sidebar(props) {
+type ThemeType = "light" | "dark";
+
+interface SidebarProps {
+  /** 是否為行動裝置 */
+  isMobile: boolean;
+}
+
+function Sidebar(props: SidebarProps) {
   const { isMobile } = props;
   const isSidebarHidden = useSidebarStore((store) => store.isSidebarHidden);
   const { toggleSidebar } = useSidebarStore.getState();
   const { setModal } = useModalStore.getState();
-  const [theme, setTheme] = useState("light");
-  const logo = theme === "light" ? logoLight : logoDark;
+  const [theme, setTheme] = useState<ThemeType>("light");
+  const logo = theme === "light" ? logoForLightTheme : logoForDarkTheme;
 
   const modalAddBoard = () => {
     if (isMobile) toggleSidebar();
@@ -36,7 +39,7 @@ function Sidebar(props) {
     });
   };
 
-  const { mutateAsync: doLogout, isPending: isPendingLogout } = useMutation({
+  const { mutate: doLogout, isPending: isPendingLogout } = useMutation({
     mutationFn: logout,
     onSuccess: () => {
       window.location.reload();
@@ -44,8 +47,10 @@ function Sidebar(props) {
   });
 
   useEffect(() => {
-    let themeRoot = document.querySelector("#theme-root");
-    themeRoot.dataset.theme = theme;
+    const themeRoot = document.querySelector<HTMLElement>("#theme-root");
+    if (themeRoot) {
+      themeRoot.dataset.theme = theme;
+    }
   }, [theme]);
 
   if (isSidebarHidden && !isMobile) {
@@ -78,7 +83,8 @@ function Sidebar(props) {
             <input
               type="checkbox"
               name="themeSwitch"
-              onClick={() =>
+              checked={theme === "dark"}
+              onChange={() =>
                 setTheme((pre) => (pre === "light" ? "dark" : "light"))
               }
             />
@@ -87,7 +93,7 @@ function Sidebar(props) {
           {darkThemeIcon}
         </label>
       </div>
-      <div className={styles.logoutButton} onClick={doLogout}>
+      <div className={styles.logoutButton} onClick={() => doLogout()}>
         {isPendingLogout ? (
           <LoadingIcon size="2rem" />
         ) : (

@@ -14,25 +14,24 @@ function BoardsList() {
   const { setActiveBoard } = useBoardStore.getState();
   const { toggleSidebar } = useSidebarStore.getState();
 
-  const { data: boards, isFetching: isFetchingBoards } = useQuery({
+  const { data: boards = [], isFetching: isFetchingBoards } = useQuery({
     queryKey: ["boards"],
     queryFn: getBoards,
   });
 
-  const boardsLength = boards?.length;
+  const boardsLength = boards.length;
   const isShowSkeleton = isFetchingBoards && !boardsLength;
 
   useEffect(() => {
     if (!activeBoardId && !isFetchingBoards) {
-      setActiveBoard(boardsLength ? boards[0].id : null);
+      const firstBoard = boards[0];
+      setActiveBoard(firstBoard?.id ?? null);
     }
-  }, [activeBoardId, boards, isFetchingBoards]);
+  }, [activeBoardId, isFetchingBoards, boards]);
 
   return (
     <>
-      <span className={styles.boardTitle}>
-        All Borads ({boardsLength ?? "-"})
-      </span>
+      <span className={styles.boardTitle}>All Boards ({boardsLength})</span>
       {isShowSkeleton && <Skeleton numbers={3} styleType="board" />}
       {boardsLength > 0 && (
         <ul className={styles.boards}>
