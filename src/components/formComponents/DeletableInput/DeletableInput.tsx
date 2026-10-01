@@ -11,7 +11,7 @@ interface DeletableInputProps<K extends string> {
   /** 顯示值的key */
   valueKey: K;
   /** 顯示值 */
-  values: Record<K, string>[];
+  values?: Record<K, string>[];
   /** 點擊新增按鈕後新增的預設值 */
   emptyValue: Record<K, string>;
   /** 提示文字 */
@@ -29,7 +29,7 @@ function DeletableInput<K extends string>(props: DeletableInputProps<K>) {
     label,
     btnLabel = "+ Add New Item",
     valueKey,
-    values,
+    values = [],
     emptyValue,
     placeholders = ["e.g. Make coffee", "e.g. Drink coffee & smile"],
     maxLength = 120,

@@ -6,8 +6,7 @@ import { useClickOutside } from "@/hooks/useClickOutside";
 import styles from "./Dropdown.module.scss";
 
 const optionFormatter = (string: string): string => {
-  if (!string) return "";
-  return `${string[0].toUpperCase()}${string.slice(1)}`;
+  return `${string.charAt(0).toUpperCase()}${string.slice(1)}`;
 };
 
 const handleOverViewport = function (
@@ -23,25 +22,27 @@ const handleOverViewport = function (
   setOverViewport(isOverViewport);
 };
 
-type DropdownOption = {
+type DropdownOption<ValueType extends string | number> = {
   text: string;
-  value: string | number;
+  value: ValueType;
 };
 
-interface DropdownProps {
+interface DropdownProps<ValueType extends string | number> {
   /** 標題 */
   label: string;
   /** 當前選項的值 */
   value?: string | number;
   /** 選項列表 */
-  options: DropdownOption[];
+  options: DropdownOption<ValueType>[];
   /** 是否載入中 */
   isLoading?: boolean;
   /** 狀態改變時呼叫的函式 */
-  onChange: (value: string | number, option: DropdownOption) => void;
+  onChange: (value: ValueType, option: DropdownOption<ValueType>) => void;
 }
 
-function Dropdown(props: DropdownProps) {
+function Dropdown<ValueType extends string | number>(
+  props: DropdownProps<ValueType>,
+) {
   const { label, value, options, isLoading = false, onChange } = props;
   const [isOpen, setIsOpen] = useState(false);
   const [overViewport, setOverViewport] = useState(false);
