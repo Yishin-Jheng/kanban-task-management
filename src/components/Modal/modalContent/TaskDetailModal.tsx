@@ -1,9 +1,16 @@
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  skipToken,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { getColumns } from "@/api/columns";
 import { getSubtasks } from "@/api/subtasks";
+import type { Task } from "@/api/tasks";
 import { updateTaskStatus } from "@/api/tasks";
 import Button from "@/components/Button/Button";
+import type { ButtonSetting } from "@/components/DotMenu/DotMenu";
 import DotMenu from "@/components/DotMenu/DotMenu";
 import Dropdown from "@/components/formComponents/Dropdown/Dropdown";
 import SubtaskCheckbox from "@/components/Modal/modalContent/SubtaskCheckbox";
@@ -12,11 +19,12 @@ import { useBoardStore } from "@/store/useBoardStore";
 import { useModalStore } from "@/store/useModalStore";
 import styles from "../Modal.module.scss";
 
-/**
- * TaskDetailModal
- * @param {{ id: number, columnId: number, title: string, description: string, totalSubNum: number,finishedSubNum: number }} props.taskInfo 任務詳細資訊
- */
-function TaskDetailModal(props) {
+interface TaskDetailModalProps {
+  /** 任務詳細資訊 */
+  taskInfo: Task;
+}
+
+function TaskDetailModal(props: TaskDetailModalProps) {
   const { taskInfo } = props;
   const { id: taskId } = taskInfo;
 
@@ -27,39 +35,38 @@ function TaskDetailModal(props) {
 
   const { data: columns = [] } = useQuery({
     queryKey: ["columns", activeBoardId],
-    queryFn: () => getColumns({ boardId: activeBoardId }),
-    enabled: !!activeBoardId,
+    queryFn:
+      typeof activeBoardId === "number"
+        ? () => getColumns({ boardId: activeBoardId })
+        : skipToken,
     select: (data) =>
       data.map((col) => ({ text: col.statusName, value: col.id })),
   });
   const activeStatus = columns.find((col) => col.value === columnId);
 
   const {
-    data: subtasks,
+    data: subtasks = [],
     isFetching: isFetchingSubtasks,
     isError: isErrorSubtasks,
   } = useQuery({
     queryKey: ["subtasks", taskId],
     queryFn: () => getSubtasks({ taskId }),
-    enabled: !!taskId,
   });
-  const subtasksLength = subtasks?.length;
-  const finishedNum = subtasks?.filter((subtask) => subtask.checkOrNot).length;
+  const subtasksLength = subtasks.length;
+  const finishedNum = subtasks.filter((subtask) => subtask.checkOrNot).length;
   const isShowSkeleton =
     isFetchingSubtasks && !isErrorSubtasks && !subtasksLength;
 
-  const {
-    mutateAsync: doUpdateTaskStatus,
-    isPending: isPendingUpdateTaskStatus,
-  } = useMutation({
-    mutationFn: updateTaskStatus,
-    onSuccess: (_, arg) => {
-      setColumnId(arg.columnId);
-      queryClient.invalidateQueries({
-        queryKey: ["tasks"],
-      });
-    },
-  });
+  const { mutate: doUpdateTaskStatus, isPending: isPendingUpdateTaskStatus } =
+    useMutation({
+      mutationFn: updateTaskStatus,
+      onSuccess: (_, arg) => {
+        setColumnId(arg.columnId);
+        void queryClient.invalidateQueries({
+          queryKey: ["tasks"],
+        });
+      },
+    });
 
   const modalEditTask = () => {
     setModal({
@@ -68,7 +75,7 @@ function TaskDetailModal(props) {
       task: taskInfo,
     });
   };
-  const dotMenuSetting = [
+  const dotMenuSetting: ButtonSetting[] = [
     {
       btnType: "default",
       btnText: "Edit Task",
@@ -96,11 +103,11 @@ function TaskDetailModal(props) {
       <p className={styles.modalContent}>{taskInfo.description}</p>
       <div className={styles.subtask}>
         <span className={styles.modalSubtitle}>
-          {`Subtasks (${finishedNum ?? "-"} of ${taskInfo.totalSubNum})`}
+          {`Subtasks (${finishedNum} of ${taskInfo.totalSubNum})`}
         </span>
         <div className={styles.subtaskContent}>
           {isShowSkeleton && <Skeleton numbers={3} styleType="modal" />}
-          {!isShowSkeleton && !subtasksLength && (
+          {!isShowSkeleton && subtasksLength === 0 && (
             <>
               <div className={styles.subtaskMessage}>
                 No subtask yet. Try to add a new one.
@@ -116,7 +123,6 @@ function TaskDetailModal(props) {
                 <SubtaskCheckbox
                   key={subtask.id}
                   subtaskInfo={subtask}
-                  taskId={taskId}
                   columnId={columnId}
                 />
               );

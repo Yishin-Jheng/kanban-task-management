@@ -1,13 +1,20 @@
 import { useModalStore } from "@/store/useModalStore";
 import styles from "./Modal.module.scss";
 
-function ModalBackground({ isDisable }) {
+interface ModalBackgroundProps {
+  /** 是否禁用 */
+  isDisabled?: boolean;
+}
+
+function ModalBackground(props: ModalBackgroundProps) {
+  const { isDisabled } = props;
   const { closeModal } = useModalStore.getState();
+
   return (
     <div
       className={styles.modalBackground}
       onClick={() => {
-        if (!isDisable) {
+        if (!isDisabled) {
           closeModal();
         }
       }}

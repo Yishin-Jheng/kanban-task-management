@@ -13,17 +13,10 @@ import { useModalStore } from "@/store/useModalStore";
 import styles from "./Modal.module.scss";
 
 function Modal() {
-  const {
-    modalType,
-    isAddNew,
-    task,
-    deleteType,
-    target,
-    errorTitle,
-    errorMsg,
-  } = useModalStore((store) => store.modalState);
+  const modalState = useModalStore((store) => store.modalState);
+  const { modalType } = modalState;
   const [formHeight, setFormHeight] = useState(0);
-  const formRef = useRef("");
+  const formRef = useRef<HTMLDivElement>(null);
   const isMobile2 = useMediaQuery({ query: "(max-width: 515px)" });
   const windowHeight = useWindowHeight();
   const isShowHorizontal = windowHeight - formHeight < 180;
@@ -46,19 +39,30 @@ function Modal() {
               : styles.verticalModal,
           )}
         >
-          {modalType === "taskDetail" && <TaskDetailModal taskInfo={task} />}
+          {modalType === "taskDetail" && (
+            <TaskDetailModal taskInfo={modalState.task} />
+          )}
           {modalType === "taskForm" && (
-            <NewOrEditTaskModal isAddNew={isAddNew} taskInfo={task} />
+            <NewOrEditTaskModal
+              isAddNew={modalState.isAddNew}
+              taskInfo={modalState.isAddNew ? undefined : modalState.task}
+            />
           )}
           {modalType === "boardForm" && (
-            <NewOrEditBoardModal isAddNew={isAddNew} />
+            <NewOrEditBoardModal isAddNew={modalState.isAddNew} />
           )}
           {modalType === "delete" && (
-            <DeleteModal type={deleteType} targetInfo={target} />
+            <DeleteModal
+              type={modalState.deleteType}
+              targetInfo={modalState.target}
+            />
           )}
           {modalType === "success" && <SuccessModal />}
           {modalType === "error" && (
-            <ErrorMessageModal errorTitle={errorTitle} errorMsg={errorMsg} />
+            <ErrorMessageModal
+              errorTitle={modalState.errorTitle}
+              errorMsg={modalState.errorMsg}
+            />
           )}
         </div>
         <ModalBackground />

@@ -1,7 +1,13 @@
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  skipToken,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { getColumns } from "@/api/columns";
 import { getSubtasks } from "@/api/subtasks";
+import type { Task, TaskForm } from "@/api/tasks";
 import { upsertTask } from "@/api/tasks";
 import Button from "@/components/Button/Button";
 import { DeletableInput } from "@/components/formComponents/DeletableInput/DeletableInput";
@@ -13,30 +19,34 @@ import { useBoardStore } from "@/store/useBoardStore";
 import { useModalStore } from "@/store/useModalStore";
 import styles from "../Modal.module.scss";
 
-const defaultTaskInfo = {
+const defaultTaskInfo: Omit<TaskForm, "subtasks"> = {
   title: "",
   description: "",
-  columnId: "",
+  columnId: 0,
 };
 
-/**
- * NewOrEditTaskModal
- * @param {boolean} props.isAddNew 是否為新增任務
- * @param {{ id: number, columnId: number, title: string, description: string, totalSubNum: number,finishedSubNum: number } | undefined} props.taskInfo 任務詳細資訊
- */
-function NewOrEditTaskModal(props) {
+interface NewOrEditTaskModalProps {
+  /** 是否為新增任務 */
+  isAddNew: boolean;
+  /** 任務詳細資訊 */
+  taskInfo?: Task;
+}
+
+function NewOrEditTaskModal(props: NewOrEditTaskModalProps) {
   const { isAddNew, taskInfo = defaultTaskInfo } = props;
   const { id: taskId, columnId } = taskInfo;
 
   const queryClient = useQueryClient();
   const activeBoardId = useBoardStore((store) => store.activeBoardId);
   const { setModal } = useModalStore.getState();
-  const [invalidKeys, setInvalidKeys] = useState([]);
+  const [invalidKeys, setInvalidKeys] = useState<(keyof TaskForm)[]>([]);
 
   const { data: columns = [] } = useQuery({
     queryKey: ["columns", activeBoardId],
-    queryFn: () => getColumns({ boardId: activeBoardId }),
-    enabled: !!activeBoardId,
+    queryFn:
+      typeof activeBoardId === "number"
+        ? () => getColumns({ boardId: activeBoardId })
+        : skipToken,
     select: (data) =>
       data.map((col) => ({ text: col.statusName, value: col.id })),
   });
@@ -44,25 +54,26 @@ function NewOrEditTaskModal(props) {
     ? columns[0]
     : columns.find((col) => col.value === columnId);
 
-  const { data: subtasks = [], refetch: refetchSubtasks } = useQuery({
+  const { data: subtasks } = useQuery({
     queryKey: ["subtasks", taskId],
-    queryFn: () => getSubtasks({ taskId }),
-    enabled: !!taskId,
+    queryFn:
+      typeof taskId === "number" ? () => getSubtasks({ taskId }) : skipToken,
   });
 
-  const { mutateAsync: doUpsertTask, isPending: isPendingUpsertTask } =
-    useMutation({
-      mutationFn: upsertTask,
-      onSuccess: () => {
-        setModal({ modalType: "success" });
-        if (taskId) refetchSubtasks();
-        queryClient.invalidateQueries({
-          queryKey: ["tasks"],
-        });
-      },
-    });
+  const { mutate: doUpsertTask, isPending: isPendingUpsertTask } = useMutation({
+    mutationFn: upsertTask,
+    onSuccess: () => {
+      setModal({ modalType: "success" });
+      void queryClient.invalidateQueries({
+        queryKey: ["tasks"],
+      });
+      void queryClient.invalidateQueries({
+        queryKey: ["subtasks", taskId],
+      });
+    },
+  });
 
-  const [formData, getOnFormChange] = useFormData(
+  const [formData, getOnFormChange] = useFormData<TaskForm>(
     { ...taskInfo, subtasks: [] },
     {
       subtasks,
@@ -71,7 +82,7 @@ function NewOrEditTaskModal(props) {
   );
   const checkInvalid = () => {
     const { title, description } = formData;
-    const invalidKeys = [];
+    const invalidKeys: (keyof TaskForm)[] = [];
     if (!title) invalidKeys.push("title");
     if (!description) invalidKeys.push("description");
     setInvalidKeys(invalidKeys);

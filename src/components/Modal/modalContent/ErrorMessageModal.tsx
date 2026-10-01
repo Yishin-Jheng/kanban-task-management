@@ -2,16 +2,23 @@ import Button from "@/components/Button/Button";
 import { useModalStore } from "@/store/useModalStore";
 import styles from "../Modal.module.scss";
 
-function SuccessModal() {
+interface DeleteModalProps {
+  /** 標題 */
+  errorTitle?: string;
+  /** 內容 */
+  errorMsg?: string;
+}
+
+function ErrorMessageModal(props: DeleteModalProps) {
+  const { errorTitle = "Something is wrong...", errorMsg = "" } = props;
   const { closeModal } = useModalStore.getState();
+
   return (
     <>
       <div className={styles.modalTitle}>
-        <span>Saved Successfully !</span>
+        <span>{errorTitle}</span>
       </div>
-      <p className={styles.modalContent}>
-        Save is done. Click button to close modal window.
-      </p>
+      <p className={styles.modalContent}>{errorMsg}</p>
       <Button type="form" onClick={closeModal}>
         Close
       </Button>
@@ -19,4 +26,4 @@ function SuccessModal() {
   );
 }
 
-export default SuccessModal;
+export default ErrorMessageModal;

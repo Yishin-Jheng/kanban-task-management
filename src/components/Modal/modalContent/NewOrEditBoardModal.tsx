@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  skipToken,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
+import type { BoardForm } from "@/api/boards";
 import { getBoards, upsertBoard } from "@/api/boards";
 import { getColumns } from "@/api/columns";
 import Button from "@/components/Button/Button";
@@ -10,53 +16,58 @@ import { useBoardStore } from "@/store/useBoardStore";
 import { useModalStore } from "@/store/useModalStore";
 import styles from "../Modal.module.scss";
 
-/**
- * NewOrEditBoardModal
- * @param {boolean} props.isAddNew 是否為新增任務
- */
-function NewOrEditBoardModal(props) {
+interface NewOrEditBoardModalProps {
+  /** 是否為新增版塊 */
+  isAddNew: boolean;
+}
+
+function NewOrEditBoardModal(props: NewOrEditBoardModalProps) {
   const { isAddNew } = props;
+  const queryClient = useQueryClient();
   const boardId = useBoardStore((store) =>
     isAddNew ? null : store.activeBoardId,
   );
   const { setActiveBoard } = useBoardStore.getState();
   const { setModal } = useModalStore.getState();
-  const [invalidKeys, setInvalidKeys] = useState([]);
+  const [invalidKeys, setInvalidKeys] = useState<(keyof BoardForm)[]>([]);
 
-  const { data: boardName, refetch: refetchBoards } = useQuery({
+  const { data: boardName } = useQuery({
     queryKey: ["boards"],
     queryFn: getBoards,
-    enabled: !!boardId,
+    enabled: typeof boardId === "number",
     select: (data) => {
       const board = data.find((board) => board.id === boardId);
       return board?.boardName;
     },
   });
 
-  const { data: columns = [], refetch: refetchColumns } = useQuery({
+  const { data: columns } = useQuery({
     queryKey: ["columns", boardId],
-    queryFn: () => getColumns({ boardId }),
-    enabled: !!boardId,
+    queryFn:
+      typeof boardId === "number" ? () => getColumns({ boardId }) : skipToken,
   });
 
-  const { mutateAsync: doUpsertBoard, isPending: isPendingUpsertBoard } =
+  const { mutate: doUpsertBoard, isPending: isPendingUpsertBoard } =
     useMutation({
       mutationFn: upsertBoard,
       onSuccess: (currentboardId) => {
         setModal({ modalType: "success" });
-        if (boardId) refetchColumns();
-        refetchBoards();
         setActiveBoard(currentboardId);
+
+        void queryClient.invalidateQueries({ queryKey: ["boards"] });
+        void queryClient.invalidateQueries({
+          queryKey: ["columns", currentboardId],
+        });
       },
     });
 
-  const [formData, getOnFormChange] = useFormData(
+  const [formData, getOnFormChange] = useFormData<BoardForm>(
     { id: boardId, boardName: "", columns: [] },
     { boardName, columns },
   );
   const checkInvalid = () => {
     const { boardName } = formData;
-    const invalidKeys = [];
+    const invalidKeys: (keyof BoardForm)[] = [];
     if (!boardName) invalidKeys.push("boardName");
     setInvalidKeys(invalidKeys);
     return invalidKeys.length > 0;
