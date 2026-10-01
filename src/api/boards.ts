@@ -5,13 +5,13 @@ export type Board = Tables<"boards">;
 
 interface ColumnForm {
   id?: number;
-  statusName?: string;
+  statusName: string;
 }
 
-interface BoardForm {
-  id?: number;
+export interface BoardForm {
+  id?: number | null;
   boardName: string;
-  columns?: ColumnForm[];
+  columns: ColumnForm[];
 }
 
 export const getBoards = async (): Promise<Board[]> => {

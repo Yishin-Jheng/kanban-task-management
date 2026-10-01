@@ -6,16 +6,16 @@ export type Task = Tables<"tasks">;
 
 interface SubtaskForm {
   id?: number;
-  description?: string;
+  description: string;
   checkOrNot?: boolean;
 }
 
-interface TaskForm {
+export interface TaskForm {
   id?: number;
   title: string;
   description: string;
   columnId: number;
-  subtasks?: SubtaskForm[];
+  subtasks: SubtaskForm[];
 }
 
 export const getTasks = async (arg: { columnId: number }): Promise<Task[]> => {
