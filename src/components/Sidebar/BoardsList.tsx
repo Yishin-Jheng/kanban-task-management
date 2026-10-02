@@ -4,12 +4,13 @@ import { useQuery } from "@tanstack/react-query";
 import { getBoards } from "@/api/boards";
 import { boardIcon } from "@/assets/icon";
 import Skeleton from "@/components/Skeleton/Skeleton";
+import { MOBILE_WIDTH_1 } from "@/constants/breakpoints";
 import { useBoardStore } from "@/store/useBoardStore";
 import { useSidebarStore } from "@/store/useSidebarStore";
 import styles from "./Sidebar.module.scss";
 
 function BoardsList() {
-  const isMobile = useMediaQuery({ query: "(max-width: 670px)" });
+  const isMobile = useMediaQuery({ query: MOBILE_WIDTH_1 });
   const activeBoardId = useBoardStore((store) => store.activeBoardId);
   const { setActiveBoard } = useBoardStore.getState();
   const { toggleSidebar } = useSidebarStore.getState();

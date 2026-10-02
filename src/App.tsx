@@ -9,14 +9,15 @@ import Login from "@/components/Login/Login";
 import Modal from "@/components/Modal/Modal";
 import PageLoading from "@/components/PageLoading/PageLoading";
 import Sidebar from "@/components/Sidebar/Sidebar";
+import { MOBILE_WIDTH_1 } from "@/constants/breakpoints";
 import { useSidebarStore } from "@/store/useSidebarStore";
 import styles from "./App.module.scss";
 
 function App() {
-  const isMobile = useMediaQuery({ query: "(max-width: 670px)" });
+  const isMobile = useMediaQuery({ query: MOBILE_WIDTH_1 });
   const isSidebarHidden = useSidebarStore((store) => store.isSidebarHidden);
   const { toggleSidebar, setSidebarHidden } = useSidebarStore.getState();
-  const showSidebarBackround = isMobile && !isSidebarHidden;
+  const showSidebarBackground = isMobile && !isSidebarHidden;
 
   const { data: isLogin, isPending: isPendingSession } = useQuery({
     queryKey: ["session"],
@@ -25,7 +26,7 @@ function App() {
   });
 
   useEffect(() => {
-    setSidebarHidden(window.matchMedia("(max-width: 670px)").matches);
+    setSidebarHidden(window.matchMedia(MOBILE_WIDTH_1).matches);
   }, []);
 
   if (isPendingSession) {
@@ -46,13 +47,10 @@ function App() {
           <main
             className={styles.main}
             data-sidebar-hidden={isSidebarHidden ? "hidden" : ""}
-            onWheel={(e) => {
-              e.target.scrollLeft += e.deltaY;
-            }}
           >
             <Board />
           </main>
-          {showSidebarBackround && (
+          {showSidebarBackground && (
             <div
               className={styles.mobileSidebarBackground}
               onClick={toggleSidebar}

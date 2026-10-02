@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { downIcon, upIcon } from "@/assets/icon";
 import LoadingIcon from "@/components/LoadingIcon/LoadingIcon";
+import { MOBILE_WIDTH_2 } from "@/constants/breakpoints";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import styles from "./Dropdown.module.scss";
 
@@ -46,7 +47,7 @@ function Dropdown<ValueType extends string | number>(
   const { label, value, options, isLoading = false, onChange } = props;
   const [isOpen, setIsOpen] = useState(false);
   const [overViewport, setOverViewport] = useState(false);
-  const isMobile2 = useMediaQuery({ query: "(max-width: 515px)" });
+  const isMobile2 = useMediaQuery({ query: MOBILE_WIDTH_2 });
   const dropdownRef = useRef<HTMLDivElement>(null);
   const currentOption = options.find((col) => col.value === value);
 

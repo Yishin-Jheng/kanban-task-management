@@ -8,6 +8,7 @@ import NewOrEditBoardModal from "@/components/Modal/modalContent/NewOrEditBoardM
 import NewOrEditTaskModal from "@/components/Modal/modalContent/NewOrEditTaskModal";
 import SuccessModal from "@/components/Modal/modalContent/SuccessModal";
 import TaskDetailModal from "@/components/Modal/modalContent/TaskDetailModal";
+import { MOBILE_WIDTH_2 } from "@/constants/breakpoints";
 import { useWindowHeight } from "@/hooks/useWindowHeight";
 import { useModalStore } from "@/store/useModalStore";
 import styles from "./Modal.module.scss";
@@ -17,7 +18,7 @@ function Modal() {
   const { modalType } = modalState;
   const [formHeight, setFormHeight] = useState(0);
   const formRef = useRef<HTMLDivElement>(null);
-  const isMobile2 = useMediaQuery({ query: "(max-width: 515px)" });
+  const isMobile2 = useMediaQuery({ query: MOBILE_WIDTH_2 });
   const windowHeight = useWindowHeight();
   const isShowHorizontal = windowHeight - formHeight < 180;
 

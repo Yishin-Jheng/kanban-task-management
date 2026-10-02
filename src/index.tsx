@@ -5,9 +5,10 @@ import App from "@/App";
 import "./scss/global.scss";
 
 const element = document.querySelector("#root");
-const root = createRoot(element);
 
-root.render(
+if (!element) throw new Error("Root element not found");
+
+createRoot(element).render(
   <QueryClientProvider client={queryClient}>
     <App />
   </QueryClientProvider>,
