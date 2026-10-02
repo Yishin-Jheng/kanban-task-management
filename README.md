@@ -132,9 +132,11 @@ The project was originally built in 2023 with Create React App, global SCSS and 
 
 ### What I learned 學習收穫
 
-- Using CSS variables and HTML dataset property to manage the theme switching（使用 CSS 變數與 HTML 的 dataset 屬性來實現顏色主題的切換）
+- Using CSS variables and HTML dataset property to manage the theme switching
 
-  **Reference:** [🔗](https://www.youtube.com/watch?v=Xk12JtYG8rw)
+  使用 CSS 變數與 HTML 的 dataset 屬性來實現顏色主題的切換
+
+  **Reference link:** [🔗](https://www.youtube.com/watch?v=Xk12JtYG8rw)
 
   ```html
   <html data-theme="light"></html>
@@ -154,7 +156,9 @@ The project was originally built in 2023 with Create React App, global SCSS and 
   }
   ```
 
-- Since `e.target` is typed as `EventTarget` while `element.contains` only accepts a `Node` argument, the TypeScript check fails. Using `e.composedPath()` avoids this problem and better matches the expected behavior.（由於 `e.target` 的型別為 `EventTarget`，但 `element.contains` 只接收 `Node` 型別的參數，導致 TS 的檢查無法通過。但使用 `e.composedPath` 的話則不會有型別問題，邏輯上也更加符合一般的操作預期。）
+- Since `e.target` is typed as `EventTarget` while `element.contains` only accepts a `Node` argument, the TypeScript check fails. Using `e.composedPath()` avoids this problem and better matches the expected behavior.
+
+  由於 `e.target` 的型別為 `EventTarget`，但 `element.contains` 只接收 `Node` 型別的參數，導致 TS 的檢查無法通過。但使用 `e.composedPath` 的話則不會有型別問題，邏輯上也更加符合一般的操作預期。
 
   ```ts
   const handleClickOutside = function (e: MouseEvent) {
@@ -166,9 +170,11 @@ The project was originally built in 2023 with Create React App, global SCSS and 
   };
   ```
 
-- Using `skipToken` in React Query lets TypeScript narrow the parameter types inside `queryFn`, which `enabled` cannot do. However, it is only safe when the skipping condition is part of the query key; otherwise, use `enabled` instead.（使用 React Query 的 `skipToken` 能讓 TS 在 `queryFn` 中正確收斂參數型別，這是 `enabled` 做不到的。但只有當依賴參數包含在 query key 中時，`skipToken` 才是安全的，否則應改用 `enabled`。）
+- Using `skipToken` in React Query lets TypeScript narrow the parameter types inside `queryFn`, which `enabled` cannot do. However, it is only safe when the skipping condition is part of the query key; otherwise, use `enabled` instead.
 
-  **Reference:** [🔗](https://tanstack.com/query/latest/docs/framework/react/guides/disabling-queries#typesafe-disabling-of-queries-using-skiptoken)
+  使用 React Query 的 `skipToken` 能讓 TS 在 `queryFn` 中正確收斂參數型別，這是 `enabled` 做不到的。但只有當依賴參數包含在 query key 中時，`skipToken` 才是安全的，否則應改用 `enabled`。
+
+  **Reference link:** [🔗](https://tanstack.com/query/latest/docs/framework/react/guides/disabling-queries#typesafe-disabling-of-queries-using-skiptoken)
 
   ```ts
   useQuery({
