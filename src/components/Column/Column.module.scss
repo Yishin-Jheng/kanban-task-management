@@ -10,7 +10,7 @@
 .newColumn {
   @include heading-xl;
   @include transition;
-  width: 300px;
+  width: 280px;
   height: calc(100% - 39px);
   display: flex;
   justify-content: center;
@@ -23,6 +23,7 @@
 
   &:hover {
     color: $color-primary;
+    background-color: var(--color-skeleton-1);
   }
 }
 
