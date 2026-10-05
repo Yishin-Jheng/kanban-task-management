@@ -8,6 +8,7 @@ import {
 } from "@tanstack/react-query";
 import { getBoards } from "@/api/boards";
 import { getColumns } from "@/api/columns";
+import type { Task } from "@/api/tasks";
 import { updateTaskStatus } from "@/api/tasks";
 import Column from "@/components/Column/Column";
 import EmptyColumn from "@/components/Column/EmptyColumn";
@@ -48,10 +49,21 @@ function Board() {
 
   const { mutate: doUpdateTaskStatus, isPending: isPendingUpdateTaskStatus } =
     useMutation({
-      mutationFn: updateTaskStatus,
-      onSuccess: () => {
+      mutationFn: (arg: {
+        taskId: number;
+        prevColumnId: number;
+        newColumnId: number;
+      }) =>
+        updateTaskStatus({
+          taskId: arg.taskId,
+          columnId: arg.newColumnId,
+        }),
+      onSettled: (_data, _error, arg) => {
         void queryClient.invalidateQueries({
-          queryKey: ["tasks"],
+          queryKey: ["tasks", arg.prevColumnId],
+        });
+        void queryClient.invalidateQueries({
+          queryKey: ["tasks", arg.newColumnId],
         });
       },
     });
@@ -60,11 +72,30 @@ function Board() {
     const { source: startPoint, destination: endPoint, draggableId } = results;
 
     if (!endPoint) return;
-    if (startPoint.droppableId === endPoint.droppableId) return;
+
+    const taskId = Number(draggableId);
+    const prevColumnId = Number(startPoint.droppableId);
+    const newColumnId = Number(endPoint.droppableId);
+    if (prevColumnId === newColumnId) return;
+
+    const prevTasks =
+      queryClient.getQueryData<Task[]>(["tasks", prevColumnId]) ?? [];
+    const newTasks =
+      queryClient.getQueryData<Task[]>(["tasks", newColumnId]) ?? [];
+    const task = prevTasks.find((task) => task.id === taskId);
+
+    if (!task) return;
+
+    queryClient.setQueryData(
+      ["tasks", prevColumnId],
+      prevTasks.filter((task) => task.id !== taskId),
+    );
+    queryClient.setQueryData(["tasks", newColumnId], [...newTasks, task]);
 
     doUpdateTaskStatus({
-      taskId: Number(draggableId),
-      columnId: Number(endPoint.droppableId),
+      taskId,
+      prevColumnId,
+      newColumnId,
     });
   };
 
