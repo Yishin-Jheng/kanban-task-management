@@ -36,7 +36,7 @@ Users should be able to:
 - **Bonus**: Keep track of any changes, even after refreshing the browser
 - <s>**Bonus**: Build this project as a full-stack application</s>
 
-p.s. Items with strikethrough are not implemented. Also, data is currently persisted with Supabase rather than a self-built backend.
+Note: Items with strikethrough are not implemented. Data persistence is currently handled by Supabase rather than a self-built backend.
 
 使用者應該能夠：
 
@@ -51,7 +51,7 @@ p.s. Items with strikethrough are not implemented. Also, data is currently persi
 - **加分項目**：即使重新整理瀏覽器，也能保留所有變更
 - <s>**加分項目**：將這個專案做成全端應用程式</s>
 
-p.s. 加上刪除線的項目並未實作。以及目前資料的保存是使用 supabase 而非自行建置的後端。
+註記: 加上刪除線的項目並未實作。目前資料的保存是使用 supabase 而非自行建置的後端。
 
 ### Other features 其他功能
 
@@ -63,12 +63,12 @@ Besides the basic features required by the challenge, the following were also ad
 - `*` marks on required fields
 - Loading animations on form submit buttons
 
-除了上述挑戰要求的基本功能以外，也進行了以下內容調整：
+除了上一個小節當中列出的基本功能以外，也額外進行了以下內容調整：
 
 - 新增了帳號登入畫面
 - 在側邊欄中新增了登出按鈕
 - 新增了尚未存在任何版塊時的空畫面
-- 需要驗證的表單欄位新增了 `*` 標記
+- 需要驗證的表單欄位新增了 `*` 提示標記
 - 在表單的送出按鈕中新增 loading 動畫
 
 ### Screenshot 專案截圖
@@ -87,13 +87,10 @@ Besides the basic features required by the challenge, the following were also ad
 - CSS Modules - Locally scoped CSS
 - [TypeScript](https://www.typescriptlang.org/) - typed superset of JavaScript
 - [React](https://reactjs.org/) - JavaScript library for building user interfaces
-- <s>[React-Redux](https://react-redux.js.org/) - Official React bindings for Redux state management</s>
 - [TanStack Query (React Query)](https://tanstack.com/query/latest) - JavaScript library for server-state management
 - [zustand](https://zustand.docs.pmnd.rs/) - JavaScript library for state-management
-- <s>[react-beautiful-dnd](https://github.com/atlassian/react-beautiful-dnd) - JavaScript library for drag and drop (archived)</s>
 - [@hello-pangea/dnd](https://github.com/hello-pangea/dnd) - JavaScript library for drag and drop
 - [supabase](https://supabase.com/) - an open source Firebase alternative
-
 - [Vite](https://vite.dev/) - frontend build tool
 
 ### Refactoring 重構流程
@@ -126,35 +123,11 @@ The project was originally built in 2023 with Create React App, global SCSS and 
 
 4. **Language: JavaScript → TypeScript**
 
-   The migration was done file by file, in the following order of priority: stores, API functions, custom hooks, components, and finally the app entry.
+   The migration was done file by file, in the following order of priority: stores, API functions, custom hooks, components, and finally the app entry. Since global state and API data are used across many components, defining the upstream data types first made the downstream component migration smoother and reduced repeated rework.
 
-   以逐檔轉換的方式進行，並根據以下優先順序進行重構：store、API function、custom hook、各個元件，最後則是應用程式入口。
+   以逐檔轉換的方式進行，並根據以下優先順序進行重構：store、API function、custom hook、各個元件，最後則是應用程式入口。此順序考量了全域 state 與 API 資料會在多個元件中被使用，因此先確立上游的資料型別，能讓後續下游元件的重構更加順利，也能減少重複修改的成本。
 
 ### What I learned 學習收穫
-
-- Using CSS variables and HTML dataset property to manage the theme switching
-
-  使用 CSS 變數與 HTML 的 dataset 屬性來實現顏色主題的切換
-
-  **Reference link:** [🔗](https://www.youtube.com/watch?v=Xk12JtYG8rw)
-
-  ```html
-  <html data-theme="light"></html>
-  ```
-
-  ```css
-  :root[data-theme="light"] {
-    --color-basic: #fff;
-    --color-background: #f4f7fd;
-    /* ...and others */
-  }
-
-  :root[data-theme="dark"] {
-    --color-basic: #2b2c37;
-    --color-background: #20212c;
-    /* ...and others */
-  }
-  ```
 
 - Since `e.target` is typed as `EventTarget` while `element.contains` only accepts a `Node` argument, the TypeScript check fails. Using `e.composedPath()` avoids this problem and better matches the expected behavior.
 
@@ -172,7 +145,7 @@ The project was originally built in 2023 with Create React App, global SCSS and 
 
 - Using `skipToken` in React Query lets TypeScript narrow the parameter types inside `queryFn`, which `enabled` cannot do. However, it is only safe when the skipping condition is part of the query key; otherwise, use `enabled` instead.
 
-  使用 React Query 的 `skipToken` 能讓 TS 在 `queryFn` 中正確收斂參數型別，這是 `enabled` 做不到的。但只有當依賴參數包含在 query key 中時，`skipToken` 才是安全的，否則應改用 `enabled`。
+  使用 React Query 的 `skipToken` 能讓 TS 在 `queryFn` 中正確收斂參數型別，這是 `enabled` 做不到的。但只有當依賴參數包含在 query key 中時，`skipToken` 才是合適的選擇，否則應改用 `enabled`。
 
   **Reference link:** [🔗](https://tanstack.com/query/latest/docs/framework/react/guides/disabling-queries#typesafe-disabling-of-queries-using-skiptoken)
 
