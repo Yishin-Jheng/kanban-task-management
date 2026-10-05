@@ -76,6 +76,7 @@ function Board() {
     const taskId = Number(draggableId);
     const prevColumnId = Number(startPoint.droppableId);
     const newColumnId = Number(endPoint.droppableId);
+
     if (prevColumnId === newColumnId) return;
 
     const prevTasks =
@@ -86,6 +87,8 @@ function Board() {
 
     if (!task) return;
 
+    void queryClient.cancelQueries({ queryKey: ["tasks", prevColumnId] });
+    void queryClient.cancelQueries({ queryKey: ["tasks", newColumnId] });
     queryClient.setQueryData(
       ["tasks", prevColumnId],
       prevTasks.filter((task) => task.id !== taskId),
