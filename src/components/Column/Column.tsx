@@ -13,12 +13,17 @@ interface ColumnProps {
   decorationColor: string;
   /** 狀態列ID */
   columnId: number;
-  /** 是否載入中 */
-  isLoading?: boolean;
+  /** 是否禁用拖曳 */
+  isDragDisabled?: boolean;
 }
 
 function Column(props: ColumnProps) {
-  const { statusName, decorationColor, columnId, isLoading = false } = props;
+  const {
+    statusName,
+    decorationColor,
+    columnId,
+    isDragDisabled = false,
+  } = props;
   const { setModal } = useModalStore.getState();
 
   const {
@@ -70,7 +75,7 @@ function Column(props: ColumnProps) {
                     key={task.id}
                     index={index}
                     draggableId={String(task.id)}
-                    isDragDisabled={isLoading}
+                    isDragDisabled={isDragDisabled}
                   >
                     {(provided) => (
                       <li

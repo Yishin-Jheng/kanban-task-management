@@ -125,7 +125,7 @@ function Board() {
                   statusName={col.statusName}
                   decorationColor={col.decorationColor}
                   columnId={col.id}
-                  isLoading={isPendingUpdateTaskStatus}
+                  isDragDisabled={isPendingUpdateTaskStatus}
                 />
               );
             })}
