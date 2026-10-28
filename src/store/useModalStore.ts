@@ -2,6 +2,8 @@ import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import type { Task } from "@/api/tasks";
 
+export type DeleteTargetInfo = { id: number; title: string };
+
 type ModalState =
   | { modalType: null }
   | { modalType: "taskDetail"; task: Task }
@@ -10,8 +12,9 @@ type ModalState =
   | { modalType: "boardForm"; isAddNew: boolean }
   | {
       modalType: "delete";
-      deleteType: "task" | "board";
-      target: { id: number; title: string };
+      deleteType: "board" | "task";
+      target: DeleteTargetInfo;
+      onDeleteSuccess?: () => void;
     }
   | { modalType: "success" }
   | { modalType: "error"; errorTitle?: string; errorMsg: string };

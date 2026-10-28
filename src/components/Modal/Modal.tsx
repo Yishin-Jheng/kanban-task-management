@@ -56,6 +56,7 @@ function Modal() {
             <DeleteModal
               type={modalState.deleteType}
               targetInfo={modalState.target}
+              onSuccess={modalState.onDeleteSuccess}
             />
           )}
           {modalType === "success" && <SuccessModal />}

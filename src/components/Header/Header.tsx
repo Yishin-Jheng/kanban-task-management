@@ -1,4 +1,4 @@
-import { skipToken, useQuery } from "@tanstack/react-query";
+import { skipToken, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getBoards } from "@/api/boards";
 import { getColumns } from "@/api/columns";
 import { addIcon, downIcon, upIcon } from "@/assets/icon";
@@ -19,9 +19,11 @@ interface HeaderProps {
 
 function Header(props: HeaderProps) {
   const { isMobile } = props;
+  const queryClient = useQueryClient();
   const isSidebarHidden = useSidebarStore((store) => store.isSidebarHidden);
   const activeBoardId = useBoardStore((store) => store.activeBoardId);
   const { toggleSidebar } = useSidebarStore.getState();
+  const { setActiveBoard } = useBoardStore.getState();
   const { setModal } = useModalStore.getState();
 
   const modalAddTask = () => {
@@ -70,6 +72,12 @@ function Header(props: HeaderProps) {
           modalType: "delete",
           deleteType: "board",
           target: { id: activeBoardId, title: boardName },
+          onDeleteSuccess: () => {
+            setActiveBoard(null);
+            void queryClient.invalidateQueries({
+              queryKey: ["boards"],
+            });
+          },
         });
       },
     },

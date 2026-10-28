@@ -1,15 +1,14 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { deleteBoard } from "@/api/boards";
 import { deleteTask } from "@/api/tasks";
 import Button from "@/components/Button/Button";
-import { useBoardStore } from "@/store/useBoardStore";
+import type { DeleteTargetInfo } from "@/store/useModalStore";
 import { useModalStore } from "@/store/useModalStore";
 import styles from "../Modal.module.scss";
 
 const typeSettingMap = {
   board: {
     mutateFunc: (id: number) => deleteBoard({ boardId: id }),
-    refetchQueryKey: ["boards"],
     getModalContent: (title: string) => {
       return `Are you sure you want to delete the ‘${title}’ board? This action
         will remove all columns and tasks and cannot be reversed.`;
@@ -17,7 +16,6 @@ const typeSettingMap = {
   },
   task: {
     mutateFunc: (id: number) => deleteTask({ taskId: id }),
-    refetchQueryKey: ["tasks"],
     getModalContent: (title: string) => {
       return `Are you sure you want to delete the ‘${title}’ task and its subtasks? This action cannot be reversed.`;
     },
@@ -28,27 +26,22 @@ interface DeleteModalProps {
   /** 元件類型 */
   type: keyof typeof typeSettingMap;
   /** 元件詳細資訊 */
-  targetInfo: { id: number; title: string };
+  targetInfo: DeleteTargetInfo;
+  /** 刪除成功後的 callback */
+  onSuccess?: () => void;
 }
 
 function DeleteModal(props: DeleteModalProps) {
-  const { type, targetInfo } = props;
+  const { type, targetInfo, onSuccess } = props;
   const { id, title } = targetInfo;
-  const { setActiveBoard } = useBoardStore.getState();
   const { setModal, closeModal } = useModalStore.getState();
-  const queryClient = useQueryClient();
   const setting = typeSettingMap[type];
 
   const { mutate: doDeleteItem, isPending: isPendingDeleteItem } = useMutation({
     mutationFn: setting.mutateFunc,
     onSuccess: () => {
-      if (type === "board") {
-        setActiveBoard(null);
-      }
+      if (onSuccess) onSuccess();
       setModal({ modalType: "success" });
-      void queryClient.invalidateQueries({
-        queryKey: setting.refetchQueryKey,
-      });
     },
   });
 

@@ -61,10 +61,13 @@ function TaskDetailModal(props: TaskDetailModalProps) {
     useMutation({
       mutationFn: updateTaskStatus,
       onSuccess: (_, arg) => {
-        setColumnId(arg.columnId);
         void queryClient.invalidateQueries({
-          queryKey: ["tasks"],
+          queryKey: ["tasks", columnId],
         });
+        void queryClient.invalidateQueries({
+          queryKey: ["tasks", arg.columnId],
+        });
+        setColumnId(arg.columnId);
       },
     });
 
@@ -72,7 +75,19 @@ function TaskDetailModal(props: TaskDetailModalProps) {
     setModal({
       modalType: "taskForm",
       isAddNew: false,
-      task: taskInfo,
+      task: { ...taskInfo, columnId },
+    });
+  };
+  const modalDeleteTask = () => {
+    setModal({
+      modalType: "delete",
+      deleteType: "task",
+      target: taskInfo,
+      onDeleteSuccess: () => {
+        void queryClient.invalidateQueries({
+          queryKey: ["tasks", columnId],
+        });
+      },
     });
   };
   const dotMenuSetting: ButtonSetting[] = [
@@ -84,13 +99,7 @@ function TaskDetailModal(props: TaskDetailModalProps) {
     {
       btnType: "warning",
       btnText: "Delete Task",
-      onClick: () => {
-        setModal({
-          modalType: "delete",
-          deleteType: "task",
-          target: taskInfo,
-        });
-      },
+      onClick: modalDeleteTask,
     },
   ];
 
@@ -138,6 +147,7 @@ function TaskDetailModal(props: TaskDetailModalProps) {
         options={columns}
         isLoading={isPendingUpdateTaskStatus}
         onChange={(value) => {
+          if (value === columnId) return;
           doUpdateTaskStatus({
             taskId,
             columnId: value,

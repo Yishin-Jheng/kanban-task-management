@@ -62,14 +62,22 @@ function NewOrEditTaskModal(props: NewOrEditTaskModalProps) {
 
   const { mutate: doUpsertTask, isPending: isPendingUpsertTask } = useMutation({
     mutationFn: upsertTask,
-    onSuccess: () => {
+    onSuccess: (_data, taskForm) => {
       setModal({ modalType: "success" });
+
       void queryClient.invalidateQueries({
-        queryKey: ["tasks"],
+        queryKey: ["tasks", taskForm.columnId],
       });
-      void queryClient.invalidateQueries({
-        queryKey: ["subtasks", taskId],
-      });
+      if (!isAddNew && columnId !== taskForm.columnId) {
+        void queryClient.invalidateQueries({
+          queryKey: ["tasks", columnId],
+        });
+      }
+      if (!isAddNew) {
+        void queryClient.invalidateQueries({
+          queryKey: ["subtasks", taskId],
+        });
+      }
     },
   });
 
