@@ -98,12 +98,15 @@ function TaskDetailModal(props: TaskDetailModalProps) {
     <>
       <div className={styles.modalTitle}>
         <span>{taskInfo.title}</span>
-        <DotMenu settings={dotMenuSetting} />
+        <DotMenu
+          settings={dotMenuSetting}
+          isDisabled={isPendingUpdateTaskStatus}
+        />
       </div>
       <p className={styles.modalContent}>{taskInfo.description}</p>
       <div className={styles.subtask}>
         <span className={styles.modalSubtitle}>
-          {`Subtasks (${finishedNum} of ${taskInfo.totalSubNum})`}
+          {`Subtasks (${finishedNum} of ${subtasksLength})`}
         </span>
         <div className={styles.subtaskContent}>
           {isShowSkeleton && <Skeleton numbers={3} styleType="modal" />}

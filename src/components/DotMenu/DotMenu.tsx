@@ -16,10 +16,11 @@ export type ButtonSetting = {
 
 interface DotMenuProps {
   settings: ButtonSetting[];
+  isDisabled?: boolean;
 }
 
 function DotMenu(props: DotMenuProps) {
-  const { settings } = props;
+  const { settings, isDisabled = false } = props;
   const dotMenuRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -31,7 +32,9 @@ function DotMenu(props: DotMenuProps) {
     <div
       ref={dotMenuRef}
       className={styles.dotMenu}
-      onClick={() => setIsOpen((pre) => !pre)}
+      onClick={() => {
+        if (!isDisabled) setIsOpen((pre) => !pre);
+      }}
     >
       {dotMenuIcon}
       <ul className={styles.menuList} data-open={isOpen ? "open" : ""}>
@@ -41,7 +44,9 @@ function DotMenu(props: DotMenuProps) {
             <li
               key={`${btnType}-${btnText}`}
               className={buttonTypeMap[btnType]}
-              onClick={onClick}
+              onClick={() => {
+                if (!isDisabled) onClick();
+              }}
             >
               {btnText}
             </li>
