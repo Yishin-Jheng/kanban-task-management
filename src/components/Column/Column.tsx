@@ -1,5 +1,5 @@
 import { Draggable, Droppable } from "@hello-pangea/dnd";
-import { skipToken, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import type { Task } from "@/api/tasks";
 import { getTasks } from "@/api/tasks";
 import LoadingTask from "@/components/Column/LoadingTask";
@@ -32,8 +32,7 @@ function Column(props: ColumnProps) {
     isError: isErrorTasks,
   } = useQuery({
     queryKey: ["tasks", columnId],
-    queryFn:
-      typeof columnId === "number" ? () => getTasks({ columnId }) : skipToken,
+    queryFn: () => getTasks({ columnId }),
   });
 
   const tasksLength = tasks.length;

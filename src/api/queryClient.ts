@@ -4,7 +4,7 @@ import { useModalStore } from "@/store/useModalStore";
 const { setModal } = useModalStore.getState();
 
 export const queryClient = new QueryClient({
-  defaultOptions: { queries: { staleTime: 1000 * 60 * 30, retry: 1 } },
+  defaultOptions: { queries: { staleTime: 1000 * 60 * 5, retry: 1 } },
   queryCache: new QueryCache({
     onError: (_error, query) => {
       if (query.state.data !== undefined) return;
